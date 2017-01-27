@@ -1,0 +1,13 @@
+version: '2'
+services:
+  my_floating_video_panels:
+    build: ./
+    volumes:
+      - ./code:/home/code
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - $HOME/.Xauthority:/root/.Xauthority:rw
+    environment:
+      DISPLAY: unix$DISPLAY
+    network_mode: 'host'
+    working_dir: /home/code
+    tty: true 
