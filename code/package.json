@@ -1,0 +1,19 @@
+{
+  "name": "my-floating-video-panels",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "./node_modules/.bin/electron .",
+    "rebuild": "./node_modules/.bin/electron-rebuild -v 1.4.15"
+   
+  },
+  "author": "Vik Borges",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^1.4.15"
+  },
+  "devDependencies": {
+    "electron-rebuild": "^1.5.7"
+  }
+}
