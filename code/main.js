@@ -1,5 +1,6 @@
 const {electron, app, BrowserWindow} = require('electron');
 const http = require('http');
+const url = require('url');
 // screen management funcs module
 const screen_helper = require('./helpers/screen-helper');
 // Videos window
@@ -46,17 +47,49 @@ function start(){
 
 	console.log('Get all displays: ', require('electron').screen.getAllDisplays());
 
-	// width && height offset of the new video window
-	let b_x, b_y = null;
+	
+	let b_x, b_y = null;  // width && height offset of the new video window
+	let requested_url = null;       // request url 
 
 	// Create server
 	const server = http.createServer((req, res) =>{
-			console.log(req.headers);
+			console.log('Request Headers: ', req.headers);
+			console.log('Request Method: ', req.method);
+			console.log('Request Url: ', req.url);
 
-			// set header
-			res.writeHead(200, {'Content-Type': 'application/json'});
+			// Get parsed request url
+			requested_url = url.parse(req.url);
 
-			// Select position of new screens
+			// body for the request
+			let request_body = [];
+
+			// If I'm being pinged then announce I am alive
+			if(req.method == 'GET' && requested_url.pathname == '/ping'){
+				// set headers
+				res.writeHead(200, {'Content-Type': 'application/json'});
+
+				res.end(JSON.stringify({status: 'alive'}));
+			} 
+
+			// Process video panel request
+			if(req.method == 'POST' && requested_url.pathname == '/start_video'){
+				//handle body of the request
+				req.on('data', chunk =>{
+					request_body.push(chunk);
+
+				}).on('error', err =>{
+					console.error(err.stack);
+
+				}).on('end', function(){
+					request_body = JSON.parse(Buffer.concat(request_body).toString());
+					console.log('Body: ', request_body);
+					res.end(JSON.stringify({status: 'ok'}));	
+
+				});
+
+			}
+
+			/*// Select position of new screens
 			b_x = screen_helper.getXoffset(workAreaSize.width, config.VIDEO_WINDOW_WIDTH);
 			b_y = screen_helper.getYoffset(workAreaSize.height, config.VIDEO_WINDOW_HEIGHT);
 
@@ -85,10 +118,8 @@ function start(){
 			});
 
 			console.log('Window size: ', videoWindow.getSize());
-			console.log('Window position: ', videoWindow.getPosition());
+			console.log('Window position: ', videoWindow.getPosition());*/
 
-			// Let's end this conversation
-			res.end('Heyooo from server');
 	});
 	// get last port on ports list
 	let port = config.SERVER_PORTS.pop();
