@@ -63,32 +63,43 @@ function start(){
 			// body for the request
 			let request_body = [];
 
-			// If I'm being pinged then announce I am alive
-			if(req.method == 'GET' && requested_url.pathname == '/ping'){
-				// set headers
-				res.writeHead(200, {'Content-Type': 'application/json'});
+			// set headers
+			res.writeHead(200, {'Content-Type': 'application/json'});
 
-				res.end(JSON.stringify({status: 'alive'}));
-			} 
+			// Handle request
+			switch(true){
+				// for ping requests
+				case (req.method == 'GET' && requested_url.pathname == '/ping'):
 
-			// Process video panel request
-			if(req.method == 'POST' && requested_url.pathname == '/start_video'){
-				//handle body of the request
-				req.on('data', chunk =>{
-					request_body.push(chunk);
+					res.end(JSON.stringify({status: 'alive'}));
 
-				}).on('error', err =>{
-					console.error(err.stack);
+				break;
 
-				}).on('end', function(){
-					request_body = JSON.parse(Buffer.concat(request_body).toString());
-					console.log('Body: ', request_body);
-					res.end(JSON.stringify({status: 'ok'}));	
+				// For video requests
+				case (req.method == 'POST' && requested_url.pathname == '/start_video'):
+					//handle body of the request
+					req.on('data', chunk =>{
+						request_body.push(chunk);
 
-				});
+					}).on('error', err =>{
+						console.error(err.stack);
 
+					}).on('end', function(){
+						request_body = JSON.parse(Buffer.concat(request_body).toString());
+						console.log('Body: ', request_body);
+						res.end(JSON.stringify({status: 'ok'}));	
+
+					});
+
+				break;
+
+				// For anything else..
+				default:
+					res.end(JSON.stringify({status: 'not_allowed..'}));	
+				break;
 			}
 
+			
 			/*// Select position of new screens
 			b_x = screen_helper.getXoffset(workAreaSize.width, config.VIDEO_WINDOW_WIDTH);
 			b_y = screen_helper.getYoffset(workAreaSize.height, config.VIDEO_WINDOW_HEIGHT);
