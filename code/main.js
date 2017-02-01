@@ -108,7 +108,7 @@ function start(){
 
 						// encode request_body into url param
 						let query = url.format({ query: request_body })
-						
+
 						// Load window
 						videoWindow.loadURL(`file://${__dirname}/videoWindow.html${query}`);
 
@@ -127,7 +127,6 @@ function start(){
 						res.end(JSON.stringify({status: 'ok'}));	
 
 					});
-
 				break;
 
 				// For anything else..
