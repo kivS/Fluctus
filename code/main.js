@@ -85,8 +85,45 @@ function start(){
 						console.error(err.stack);
 
 					}).on('end', function(){
+						// concat Buffer data; parse it to string; then parse it to JSON object
 						request_body = JSON.parse(Buffer.concat(request_body).toString());
 						console.log('Body: ', request_body);
+
+						// Select position of new screens
+						b_x = screen_helper.getXoffset(workAreaSize.width, config.VIDEO_WINDOW_WIDTH);
+						b_y = screen_helper.getYoffset(workAreaSize.height, config.VIDEO_WINDOW_HEIGHT);
+
+						// Create videoWindow
+						videoWindow = new BrowserWindow({
+							width:           config.VIDEO_WINDOW_WIDTH,
+							height:          config.VIDEO_WINDOW_HEIGHT,
+							backgroundColor: config.WINDOW_BG_COLOR,
+							alwaysOnTop:     true,
+							show:            false,
+							x:               b_x,
+							y:               b_y,
+							frame:           true
+
+						});
+
+						// encode request_body into url param
+						let query = url.format({ query: request_body })
+						
+						// Load window
+						videoWindow.loadURL(`file://${__dirname}/videoWindow.html${query}`);
+
+						// Window events
+						videoWindow.on('closed', () => {
+							videoWindow = null;
+						});
+
+						videoWindow.once('ready-to-show', () => {
+							videoWindow.show();
+						});
+
+						console.log('Window size: ', videoWindow.getSize());
+						console.log('Window position: ', videoWindow.getPosition());
+
 						res.end(JSON.stringify({status: 'ok'}));	
 
 					});
@@ -99,37 +136,6 @@ function start(){
 				break;
 			}
 
-			
-			/*// Select position of new screens
-			b_x = screen_helper.getXoffset(workAreaSize.width, config.VIDEO_WINDOW_WIDTH);
-			b_y = screen_helper.getYoffset(workAreaSize.height, config.VIDEO_WINDOW_HEIGHT);
-
-			// Create videoWindow
-			videoWindow = new BrowserWindow({
-				width:           config.VIDEO_WINDOW_WIDTH,
-				height:          config.VIDEO_WINDOW_HEIGHT,
-				backgroundColor: config.WINDOW_BG_COLOR,
-				alwaysOnTop:     true,
-				show:            false,
-				x:               b_x,
-				y:               b_y,
-				frame:           true
-
-			});
-			// Load 
-			videoWindow.loadURL(`file://${__dirname}/videoWindow.html`);
-
-			// Window events
-			videoWindow.on('closed', () => {
-				videoWindow = null;
-			});
-
-			videoWindow.once('ready-to-show', () => {
-				videoWindow.show();
-			});
-
-			console.log('Window size: ', videoWindow.getSize());
-			console.log('Window position: ', videoWindow.getPosition());*/
 
 	});
 	// get last port on ports list
