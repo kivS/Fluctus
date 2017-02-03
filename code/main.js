@@ -15,7 +15,7 @@ let videoWindow;
 const config = {
 	VIDEO_WINDOW_WIDTH: 600,
 	VIDEO_WINDOW_HEIGHT: 500,
-	WINDOW_BG_COLOR: '#000',
+	VIDEO_WINDOW_BG_COLOR: '#000',
 	SERVER_PORTS: [60,53,4000,5000,6000],
 	SERVER_HOSTNAME: 'hostname'
 
@@ -97,7 +97,7 @@ function start(){
 						videoWindow = new BrowserWindow({
 							width:           config.VIDEO_WINDOW_WIDTH,
 							height:          config.VIDEO_WINDOW_HEIGHT,
-							backgroundColor: config.WINDOW_BG_COLOR,
+							backgroundColor: config.VIDEO_WINDOW_BG_COLOR,
 							alwaysOnTop:     true,
 							show:            false,
 							x:               b_x,

@@ -4,13 +4,45 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Hello World!</title>
+    <link rel="stylesheet" href="resources/plyr.css">
+    <style>
+      body{
+        width: 100vw;
+        height: 100vh;
+        margin: 0px;
+      }
+      .app{
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
   </head>
-  <body style="background-color:#6CC58B">
-    <p>Hello world....not!</p>
-    
+  <body>
+    <div class="app">
+        <div id="video_player_container">Hello world...not</div>
+    </div>
   </body>
  <script>
-    // You can also require other files to run in this process
-   
+    const url = require('url');
+    const plyr = require('plyr');
+
+    // Parse url search request into object 
+    const video_request = url.parse(location.search, true).query;
+    console.log(video_request);
+
+    // Substitute data from video_player_container
+    video_player_container.dataset.type = video_request.video_type;
+    video_player_container.dataset.videoId = video_request.video_id;
+
+    // Load plyr and get the first video_player match
+    const video_player = plyr.setup({
+      debug: false,
+      disableContextMenu: false,
+      title: video_request.video_title || "Video",
+
+    })[0];
+
+
+ 
   </script>
 </html>
