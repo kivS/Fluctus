@@ -6,12 +6,12 @@
   "scripts": {
     "start": "./node_modules/.bin/electron .",
     "rebuild": "./node_modules/.bin/electron-rebuild -v 1.4.15"
-   
   },
   "author": "Vik Borges",
   "license": "ISC",
   "dependencies": {
-    "electron": "^1.4.15"
+    "electron": "^1.4.15",
+    "plyr": "^2.0.11"
   },
   "devDependencies": {
     "electron-rebuild": "^1.5.7"

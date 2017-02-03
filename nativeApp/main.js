@@ -1,8 +1,6 @@
 const {electron, app, BrowserWindow} = require('electron');
 const http = require('http');
 const url = require('url');
-// screen management funcs module
-const screen_helper = require('./helpers/screen-helper');
 // Videos window
 let videoWindow;
 
@@ -17,10 +15,19 @@ const config = {
 	VIDEO_WINDOW_HEIGHT: 500,
 	VIDEO_WINDOW_BG_COLOR: '#000',
 	SERVER_PORTS: [60,53,4000,5000,6000],
-	SERVER_HOSTNAME: 'hostname'
+	SERVER_HOSTNAME: 'hostname',
+
+	VIDEO_WINDOW_getXoffset: function(work_area_width){
+		// will position the window to the right side
+		return work_area_width - this.VIDEO_WINDOW_WIDTH - 5;
+	},
+
+	VIDEO_WINDOW_getYoffset: function(work_area_height){
+		// will position the window to the right side
+		return work_area_height - this.VIDEO_WINDOW_HEIGHT;
+	}
 
 }
-
 
 
 //*****************************************************
@@ -47,8 +54,6 @@ function start(){
 
 	console.log('Get all displays: ', require('electron').screen.getAllDisplays());
 
-	
-	let b_x, b_y = null;  // width && height offset of the new video window
 	let requested_url = null;       // request url 
 
 	// Create server
@@ -89,10 +94,6 @@ function start(){
 						request_body = JSON.parse(Buffer.concat(request_body).toString());
 						console.log('Body: ', request_body);
 
-						// Select position of new screens
-						b_x = screen_helper.getXoffset(workAreaSize.width, config.VIDEO_WINDOW_WIDTH);
-						b_y = screen_helper.getYoffset(workAreaSize.height, config.VIDEO_WINDOW_HEIGHT);
-
 						// Create videoWindow
 						videoWindow = new BrowserWindow({
 							width:           config.VIDEO_WINDOW_WIDTH,
@@ -100,8 +101,8 @@ function start(){
 							backgroundColor: config.VIDEO_WINDOW_BG_COLOR,
 							alwaysOnTop:     true,
 							show:            false,
-							x:               b_x,
-							y:               b_y,
+							x:               config.VIDEO_WINDOW_getXoffset(workAreaSize.width),
+							y:               config.VIDEO_WINDOW_getYoffset(workAreaSize.height),
 							frame:           true
 
 						});
@@ -110,7 +111,7 @@ function start(){
 						let query = url.format({ query: request_body })
 
 						// Load window
-						videoWindow.loadURL(`file://${__dirname}/videoWindow.html${query}`);
+						videoWindow.loadURL(`file://${__dirname}/resources/browserWindows/videoPanel.html${query}`);
 
 						// Window events
 						videoWindow.on('closed', () => {

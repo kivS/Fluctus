@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Hello World!</title>
-    <link rel="stylesheet" href="resources/plyr.css">
+    <link rel="stylesheet" href="../vendorResources/plyr/plyr.css">
     <style>
       body{
         width: 100vw;
@@ -24,7 +24,7 @@
   </body>
  <script>
     const url = require('url');
-    const plyr = require('plyr');
+    const plyr = require('../vendorResources/plyr/plyr');
 
     // Parse url search request into object 
     const video_request = url.parse(location.search, true).query;

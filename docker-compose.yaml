@@ -3,7 +3,7 @@ services:
   my_floating_video_panels:
     build: ./
     volumes:
-      - ./code:/home/code
+      - ./:/home/code
       - /tmp/.X11-unix:/tmp/.X11-unix
       - $HOME/.Xauthority:/root/.Xauthority:rw
     environment:
