@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello World!</title>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <style>
+      body{
+        width: 100vw;
+        height: 100vh;
+        margin: 0px;
+      }
+      .app{
+        width: 100vw;
+        height: 99vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+        <div id="video_player"></div>
+    </div>
+  </body>
+ <script>
+
+    const url = require('url');
+
+    // Parse url search request into object 
+    const video_request = url.parse(location.search, true).query;
+    console.log(video_request);
+
+    // Youtube video player
+    let player;
+
+    function onYouTubeIframeAPIReady() {
+           player = new YT.Player('video_player', {
+             height: '100%',
+             width: '100%',
+             videoId: video_request.video_id,
+             events: {
+               'onReady': onPlayerReady,
+               'onStateChange': onPlayerStateChange,
+               'onError': onError
+             }
+           });
+    }
+
+    // Events
+    function onPlayerReady(){
+    console.log('Youtube Player Ready');
+    }
+
+    function onError(err){
+    console.error(err);
+    }
+
+    function onPlayerStateChange(e){
+    //console.log(e);
+    }
+
+  </script>
+</html>

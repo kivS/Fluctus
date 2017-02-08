@@ -11,8 +11,8 @@ let videoWindow;
 //									  				   				
 //*****************************************************
 const config = {
-	VIDEO_WINDOW_WIDTH: 600,
-	VIDEO_WINDOW_HEIGHT: 500,
+	VIDEO_WINDOW_WIDTH: 480,
+	VIDEO_WINDOW_HEIGHT: 360,
 	VIDEO_WINDOW_BG_COLOR: '#000',
 	SERVER_PORTS: [60,53,4000,5000,6000],
 	SERVER_HOSTNAME: 'hostname',
@@ -59,8 +59,8 @@ function start(){
 	// Create server
 	const server = http.createServer((req, res) =>{
 			console.log('Request Headers: ', req.headers);
-			console.log('Request Method: ', req.method);
-			console.log('Request Url: ', req.url);
+			console.log('Request Method: ',  req.method);
+			console.log('Request Url: ',     req.url);
 
 			// Get parsed request url
 			requested_url = url.parse(req.url);
@@ -111,7 +111,7 @@ function start(){
 						let query = url.format({ query: request_body })
 
 						// Load window
-						videoWindow.loadURL(`file://${__dirname}/resources/browserWindows/videoPanel.html${query}`);
+						videoWindow.loadURL(`file://${__dirname}/resources/browserWindows/youtubeVideoPanel.html${query}`);
 
 						// Window events
 						videoWindow.on('closed', () => {
