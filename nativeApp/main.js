@@ -8,8 +8,8 @@ let videoWindow;
 // Configure winston logs
 log.configure({
 	transports: [
-		new (log.transports.Console),
-		new (log.transports.File)({filename: 'my.log'})
+		new (log.transports.Console)({ prettyPrint: true}),
+		new (log.transports.File)({filename: 'my.log',  prettyPrint: true, json: false})
 	]
 });
 // set logger as global for window instances
@@ -24,7 +24,7 @@ const config = {
 	VIDEO_WINDOW_WIDTH: 480,
 	VIDEO_WINDOW_HEIGHT: 360,
 	VIDEO_WINDOW_BG_COLOR: '#000',
-	SERVER_PORTS: [60,53,4000,5000,6000],
+	SERVER_PORTS: [60,53,4000,5000,6000,53],
 	SERVER_HOSTNAME: 'hostname',
 
 	VIDEO_WINDOW_getXoffset: function(work_area_width){
@@ -57,21 +57,20 @@ app.on('window-all-closed', () => {
 //									  				   				
 //*****************************************************
 function start(){
-	//console.log(`HEYYYYYY OHHH BOIIIA LET'S BEGIN!!!!!`);
 	log.info('HEYYYYYY OHHH BOIIIA LET\'S BEGIN!!!!!');
 
 	// Get primary screen size info
 	const {workAreaSize}= require('electron').screen.getPrimaryDisplay();
 
-	console.log('Get all displays: ', require('electron').screen.getAllDisplays());
+	log.info('Get all displays: ', require('electron').screen.getAllDisplays());
 
 	let requested_url = null;       // request url 
 
 	// Create server
 	const server = http.createServer((req, res) =>{
-			console.log('Request Headers: ', req.headers);
-			console.log('Request Method: ',  req.method);
-			console.log('Request Url: ',     req.url);
+			log.info('Request Headers: ', req.headers);
+			log.info('Request Method: ',  req.method);
+			log.info('Request Url: ',     req.url);
 
 			// Get parsed request url
 			requested_url = url.parse(req.url);
@@ -98,12 +97,12 @@ function start(){
 						request_body.push(chunk);
 
 					}).on('error', err =>{
-						console.error(err.stack);
+						log.error(err.stack);
 
 					}).on('end', function(){
 						// concat Buffer data; parse it to string; then parse it to JSON object
 						request_body = JSON.parse(Buffer.concat(request_body).toString());
-						console.log('Body: ', request_body);
+						log.info('Body: ', request_body);
 
 						// Create videoWindow
 						videoWindow = new BrowserWindow({
@@ -133,8 +132,8 @@ function start(){
 							videoWindow.show();
 						});
 
-						console.log('Window size: ', videoWindow.getSize());
-						console.log('Window position: ', videoWindow.getPosition());
+						log.info('Window size: ', videoWindow.getSize());
+						log.info('Window position: ', videoWindow.getPosition());
 
 						res.end(JSON.stringify({status: 'ok'}));	
 
@@ -151,15 +150,16 @@ function start(){
 	});
 	// get last port on ports list
 	let port = config.SERVER_PORTS.pop();
-	server.listen({port: port, hostname: config.SERVER_HOSTNAME}, () => { console.log(` Background Dog is listening.. on door ${port}`); });
+	server.listen({port: port, hostname: config.SERVER_HOSTNAME}, () => { log.info(` Background Dog is listening.. on door ${port}`); });
 
 	// Server Events
 	server.on('error', (err) => {
-		console.error(`\n\nERROR_CODE: ${err.code} | \n\n ${err.stack}`);
+		log.error(`\n\nERROR_CODE: ${err.code} | \n\n ${err.stack}`);
 
 		switch(err.code){
 			case 'EADDRINUSE':
-				console.log(`Port ${port} already in use... trying next one..`);
+			case 'EACCES':
+				log.warn(`Port ${port} already in use... trying next one..`);
 				// try in another port
 				setTimeout(() =>{
 					port = config.SERVER_PORTS.pop();
