@@ -1,9 +1,19 @@
 const {electron, app, BrowserWindow} = require('electron');
 const http = require('http');
 const url = require('url');
+const log = require('winston');
 // Videos window
 let videoWindow;
 
+// Configure winston logs
+log.configure({
+	transports: [
+		new (log.transports.Console),
+		new (log.transports.File)({filename: 'my.log'})
+	]
+});
+// set logger as global for window instances
+global.logger = log;
 
 
 //*****************************************************
@@ -47,7 +57,8 @@ app.on('window-all-closed', () => {
 //									  				   				
 //*****************************************************
 function start(){
-	console.log(`HEYYYYYY OHHH BOIIIA LET'S BEGIN!!!!!`);
+	//console.log(`HEYYYYYY OHHH BOIIIA LET'S BEGIN!!!!!`);
+	log.info('HEYYYYYY OHHH BOIIIA LET\'S BEGIN!!!!!');
 
 	// Get primary screen size info
 	const {workAreaSize}= require('electron').screen.getPrimaryDisplay();

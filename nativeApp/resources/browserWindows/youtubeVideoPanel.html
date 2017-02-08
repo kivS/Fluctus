@@ -23,8 +23,12 @@
     </div>
   </body>
  <script>
-
+    const remote = require('electron').remote;
     const url = require('url');
+    const log = remote.getGlobal('logger');
+
+    log.info("Hello from video panel!!!");
+
 
     // Parse url search request into object 
     const video_request = url.parse(location.search, true).query;
