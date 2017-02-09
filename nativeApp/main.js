@@ -1,9 +1,9 @@
-const {electron, app, BrowserWindow} = require('electron');
+const {electron, app, BrowserWindow, Tray, Menu} = require('electron');
 const http = require('http');
 const url = require('url');
 const log = require('winston');
 // Videos window
-let videoWindow;
+let videoWindow, trayIcon;
 
 // Configure winston logs
 log.configure({
@@ -59,6 +59,24 @@ app.on('window-all-closed', () => {
 function start(){
 	log.info('HEYYYYYY OHHH BOIIIA LET\'S BEGIN!!!!!');
 
+	
+	let icon = `${__dirname}/resources/images/icon.png`;
+
+	// Set Tray icon
+	trayIcon = new Tray(icon);
+	trayIcon.setToolTip('Floating dog at your service..');
+
+	const contextMenu = Menu.buildFromTemplate([
+			{
+				label: 'Exit',
+				click: () => {
+					app.quit();
+				}
+			}
+	]);
+	trayIcon.setContextMenu(contextMenu);
+
+
 	// Get primary screen size info
 	const {workAreaSize}= require('electron').screen.getPrimaryDisplay();
 
@@ -113,7 +131,8 @@ function start(){
 							show:            false,
 							x:               config.VIDEO_WINDOW_getXoffset(workAreaSize.width),
 							y:               config.VIDEO_WINDOW_getYoffset(workAreaSize.height),
-							frame:           true
+							frame:           true,
+							icon: 			 icon
 
 						});
 
