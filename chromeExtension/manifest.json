@@ -4,6 +4,11 @@
   "version": "1.0.0",
   "description": "Open youtube videos on a floating video panel",
 
+  "permissions": [
+      "activeTab",
+      "declarativeContent"
+  ],
+
   "background" : {
 	"scripts": ["background.js"],
 	"persistent": false
