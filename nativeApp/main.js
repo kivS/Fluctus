@@ -2,7 +2,7 @@ const {electron, app, BrowserWindow, Tray, Menu} = require('electron');
 const http = require('http');
 const url = require('url');
 const log = require('winston');
-// Videos window
+
 let videoWindow, trayIcon;
 
 // Configure winston logs
