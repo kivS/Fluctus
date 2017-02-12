@@ -2,21 +2,22 @@ console.log('Hello there from the background......huhhh');
 
 // Define config constant
 const config = {
-	SUPPORTED_PORTS: [8001,9000,7000,8000,5000,10000]
+	SUPPORTED_PORTS: [8001,9000,7000,8001,5000,10000],
+	NATIVE_APP_INSTALL: 'https://vikborges.com'
 }
 
-// native app port
+// native app default port
 let NATIVE_APP_PORT = null;
 
 
-// When extension is installed on upgraded
+// ADD RULES - When extension is installed on upgraded
 chrome.runtime.onInstalled.addListener( () => {
 	// Replace all rules
 	chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
 		// With a new rule
 		chrome.declarativeContent.onPageChanged.addRules([
 		 	{
-		 		// Trigger me!!
+		 		// Youtube Trigger me!!
 		 		conditions: [
 		 			new chrome.declarativeContent.PageStateMatcher({
 		 				pageUrl: { hostContains: 'youtube',  pathContains: 'watch' }
@@ -40,6 +41,7 @@ chrome.pageAction.onClicked.addListener( tab => {
 
 	if(NATIVE_APP_PORT){
 		// Send POST request to open video
+		console.log('Using native app default port: ', NATIVE_APP_PORT);
 		openVideoRequest(tab.url);
 
 	}else{
@@ -64,10 +66,10 @@ chrome.pageAction.onClicked.addListener( tab => {
 					})
 			))
 			.then(responses =>{
-				// Check promises for port | r != null : [8000] | r[0] : 8000
+				// Check promises for port
 				let port = responses.filter(r => r != null)[0];
 				if(port){
-					console.log('server found on port found: ', port);
+					console.log('pinged server successfully on port: ', port);
 
 					// Cache server port
 					NATIVE_APP_PORT = port;
@@ -90,18 +92,26 @@ chrome.pageAction.onClicked.addListener( tab => {
 });
 
 
+
 //*****************************************************
 //			   HELPER FUNCTIONS						   
 //									  				   				
 //*****************************************************
 
-
-
-function showNoServerError(){
-	alert("Error.. no server");
-}
-
-
 function openVideoRequest(url){
 	console.log('Open video request: ', url);
 }
+
+
+/**
+ * Shows dialog to user if server is not alive
+ * and links to download page of native app
+ * 
+ */
+function showNoServerError(){
+	if(confirm('Companion app is not installed or running.. \n\n Install companion app?')){
+		chrome.tabs.create({ url: config.NATIVE_APP_INSTALL });
+	}
+}
+
+
