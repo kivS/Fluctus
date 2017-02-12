@@ -1,8 +1,8 @@
-console.log('Hello there from the background......huhhh');
+console.log('Background here.. prepare for lift off..');
 
 // Define config constant
 const config = {
-	SUPPORTED_PORTS: [8001,9000,7000,8000,5000,10000],
+	SUPPORTED_PORTS: [8001,9000,7000,8001,5000,10000],
 	NATIVE_APP_INSTALL: 'https://vikborges.com'
 }
 
@@ -37,7 +37,7 @@ chrome.runtime.onInstalled.addListener( () => {
 
 // Page_action click event
 chrome.pageAction.onClicked.addListener( tab => {
-	console.log('page_action clicked..', tab);
+	//console.debug('page_action clicked..', tab);
 
 	if(NATIVE_APP_PORT){
 		// Send POST request to open video
@@ -98,6 +98,12 @@ chrome.pageAction.onClicked.addListener( tab => {
 //									  				   				
 //*****************************************************
 
+
+/**
+ * Send request to native app to open video panel
+ * @param  {[string]} url 
+ * @return {[type]}     
+ */
 function openVideoRequest(url){
 	console.log('Open video request: ', url);
 
@@ -126,7 +132,11 @@ function openVideoRequest(url){
 		}
 	})
 	.catch(err => {
-		console.error(err);
+		console.error('Failed to send request to native app: ', err);
+
+		// If request fails let's reset default native app port, that way we'll have to ping for new port
+		NATIVE_APP_PORT = null;
+
 	});
 
 }
