@@ -2,12 +2,13 @@ console.log('Background here.. prepare for lift off..');
 
 // Define config constant
 const config = {
-	SUPPORTED_PORTS: [8001,9000,7000,8001,5000,10000],
-	NATIVE_APP_INSTALL: 'https://vikborges.com'
+	SUPPORTED_PORTS: [8001,9000,7000,8000,5000,10000],
+	NATIVE_APP_INSTALL: 'https://vikborges.com',
+	STORAGE_KEY_NATIVE_APP_PORT : 'fd_native_app_port'
 }
 
 // native app default port
-let NATIVE_APP_PORT = null;
+let NATIVE_APP_PORT = getNativeAppPortFromStorage();
 
 
 // ADD RULES - When extension is installed on upgraded
@@ -73,6 +74,7 @@ chrome.pageAction.onClicked.addListener( tab => {
 
 					// Cache server port
 					NATIVE_APP_PORT = port;
+					setNativeAppPortToStorage(port);
 
 					// Send POST request to open video
 					openVideoRequest(tab.url);
@@ -136,6 +138,7 @@ function openVideoRequest(url){
 
 		// If request fails let's reset default native app port, that way we'll have to ping for new port
 		NATIVE_APP_PORT = null;
+		setNativeAppPortToStorage("");
 
 	});
 
@@ -154,3 +157,23 @@ function showNoServerError(){
 }
 
 
+/**
+ * Get saved native app port
+ * and set it to NATIVE_APP_PORT
+ * @return {[string]} port
+ */
+function getNativeAppPortFromStorage(){
+	port = localStorage.getItem(config.STORAGE_KEY_NATIVE_APP_PORT);
+	
+	return port;
+	
+}
+
+/**
+ * Save native_app_port to storage
+ * @param  {[int]} port
+ */
+function setNativeAppPortToStorage(port){
+	localStorage.setItem(config.STORAGE_KEY_NATIVE_APP_PORT, port);
+	
+}
