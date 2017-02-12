@@ -2,7 +2,7 @@ console.log('Hello there from the background......huhhh');
 
 // Define config constant
 const config = {
-	SUPPORTED_PORTS: [8001,9000,7000,8001,5000,10000],
+	SUPPORTED_PORTS: [8001,9000,7000,8000,5000,10000],
 	NATIVE_APP_INSTALL: 'https://vikborges.com'
 }
 
@@ -100,6 +100,35 @@ chrome.pageAction.onClicked.addListener( tab => {
 
 function openVideoRequest(url){
 	console.log('Open video request: ', url);
+
+	let payload = {};
+	let port = NATIVE_APP_PORT;
+
+	payload.video_url = url;
+	
+	// Check video type
+	switch(true){
+		case url.includes('youtube'):
+			payload.video_type = 'youtube';
+		break;
+	}
+	console.log('Payload to send: ', payload);
+
+	// Make request
+	fetch(`http://localhost:${port}/start_video`,{
+		method: 'POST',
+		headers: new Headers({"Content-Type": "application/json"}),
+		body: JSON.stringify(payload)
+	})
+	.then(response =>{
+		if(response.ok){
+			console.info('Video start request sent!');
+		}
+	})
+	.catch(err => {
+		console.error(err);
+	});
+
 }
 
 
