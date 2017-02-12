@@ -3,7 +3,7 @@ console.log('Background here.. prepare for lift off..');
 // Define config constant
 const config = {
 	SUPPORTED_PORTS: [8001,9000,7000,8000,5000,10000],
-	NATIVE_APP_INSTALL: 'https://vikborges.com',
+	NATIVE_APP_INSTALL_URL: 'https://vikborges.com',
 	STORAGE_KEY_NATIVE_APP_PORT : 'fd_native_app_port'
 }
 
@@ -81,7 +81,7 @@ chrome.pageAction.onClicked.addListener( tab => {
 					
 				}else{
 					// No server found
-					showNoServerError();
+					showNoServerErrorMsg();
 				}
 			})
 			.catch(err =>{
@@ -107,7 +107,6 @@ chrome.pageAction.onClicked.addListener( tab => {
  * @return {[type]}     
  */
 function openVideoRequest(url){
-	console.log('Open video request: ', url);
 
 	let payload = {};
 	let port = NATIVE_APP_PORT;
@@ -147,20 +146,20 @@ function openVideoRequest(url){
 
 /**
  * Shows dialog to user if server is not alive
- * and links to download page of native app
+ * and lets link to download page for the native app
  * 
  */
-function showNoServerError(){
+function showNoServerErrorMsg(){
 	if(confirm('Companion app is not installed or running.. \n\n Install companion app?')){
-		chrome.tabs.create({ url: config.NATIVE_APP_INSTALL });
+		chrome.tabs.create({ url: config.NATIVE_APP_INSTALL_URL });
 	}
 }
 
 
 /**
  * Get saved native app port
- * and set it to NATIVE_APP_PORT
- * @return {[string]} port
+ * 
+ *@return {[string]} port
  */
 function getNativeAppPortFromStorage(){
 	port = localStorage.getItem(config.STORAGE_KEY_NATIVE_APP_PORT);
