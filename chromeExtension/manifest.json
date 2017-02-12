@@ -6,7 +6,8 @@
 
   "permissions": [
       "activeTab",
-      "declarativeContent"
+      "declarativeContent",
+      "http://localhost/*"
   ],
 
   "background" : {
