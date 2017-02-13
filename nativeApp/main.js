@@ -24,7 +24,7 @@ const config = {
 	VIDEO_WINDOW_WIDTH: 480,
 	VIDEO_WINDOW_HEIGHT: 360,
 	VIDEO_WINDOW_BG_COLOR: '#000',
-	SERVER_PORTS: [8000,53],
+	SERVER_PORTS: [8791,8238,8753],
 	SERVER_HOSTNAME: 'hostname',
 
 	VIDEO_WINDOW_getXoffset: function(work_area_width){

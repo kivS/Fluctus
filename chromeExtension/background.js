@@ -2,7 +2,7 @@ console.log('Background here.. prepare for lift off..');
 
 // Define config constant
 const config = {
-	SUPPORTED_PORTS: [8001,9000,7000,8000,5000,10000],
+	SUPPORTED_PORTS: [8753,8238,8791],
 	NATIVE_APP_INSTALL_URL: 'https://vikborges.com',
 	STORAGE_KEY_NATIVE_APP_PORT : 'fd_native_app_port'
 }
@@ -138,6 +138,8 @@ function openVideoRequest(url){
 		// If request fails let's reset default native app port, that way we'll have to ping for new port
 		NATIVE_APP_PORT = null;
 		setNativeAppPortToStorage("");
+		// TODO: Remove user interaction here..
+		alert('Something went down.. try again');
 
 	});
 
