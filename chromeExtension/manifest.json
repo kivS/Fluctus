@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "floating-dog-companion",
+  "version": "1.0.0",
+  "description": "Open youtube videos on a floating video panel",
+
+  "permissions": [
+      "activeTab",
+      "declarativeContent",
+      "http://localhost/*",
+      "tabs"
+  ],
+
+  "background" : {
+	"scripts": ["background.js"],
+	"persistent": false
+  },
+
+  "page_action":{
+  	"default_icon":{
+  		"16": "images/icon_016.png",
+  		"32": "images/icon_032.png"
+  	},
+  	"default_title": "Float me.."
+  	
+  }
+
+}
