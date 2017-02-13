@@ -1,7 +1,7 @@
 {
   "name": "my-floating-video-panels",
   "version": "1.0.0",
-  "description": "",
+  "description": "Watch yotube videos from a floating panel",
   "main": "main.js",
   "scripts": {
     "start": "./node_modules/.bin/electron .",
@@ -14,6 +14,7 @@
     "plyr": "^2.0.11"
   },
   "devDependencies": {
+    "electron-builder": "^13.6.0",
     "electron-rebuild": "^1.5.7",
     "winston": "^2.3.1"
   }

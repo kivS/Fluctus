@@ -63,15 +63,17 @@
     function onPlayerReady(){
       console.log('Youtube Player Ready');
 
-      //  Choose between single video or playlist
+      // For playlists
       if('list' in video_query){
 
         player.cuePlaylist({
             list: video_query.list,
-            listType: 'playlist',
-            index: video_query.index
+           /* listType: 'playlist',*/
+            index: parseInt(video_query.index - 1)
         });
 
+
+      // For single videos
       }else{
 
         player.cueVideoById({
