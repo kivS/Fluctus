@@ -30,9 +30,19 @@
     log.info("Hello from video panel!!!");
 
 
-    // Parse url search request into object 
-    const video_request = url.parse(location.search, true).query;
-    console.log(video_request);
+    // Parse payload in URL and parse it into object 
+    const payload = url.parse(location.search, true).query;
+    console.log('Payload: ', payload);
+
+    // Get video info from payload
+    const video = url.parse(payload.video_url, true);
+    console.log('Youtube Video Parsed query: ', video);
+
+    // Get video query (videoId & listId)
+    const video_query = video.query;
+   
+
+
 
     // Youtube video player
     let player;
@@ -41,7 +51,7 @@
        player = new YT.Player('video_player', {
          height: '100%',
          width: '100%',
-         videoId: video_request.video_id,
+         videoId: video_query.v,
          events: {
            'onReady': onPlayerReady,
            'onStateChange': onPlayerStateChange,
