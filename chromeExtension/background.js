@@ -10,6 +10,8 @@ const config = {
 // native app default port
 let NATIVE_APP_PORT = getNativeAppPortFromStorage();
 
+let current_tab = null;
+
 
 // ADD RULES - When extension is installed on upgraded
 chrome.runtime.onInstalled.addListener( () => {
@@ -39,6 +41,8 @@ chrome.runtime.onInstalled.addListener( () => {
 // Page_action click event
 chrome.pageAction.onClicked.addListener( tab => {
 	//console.debug('page_action clicked..', tab);
+	//
+	current_tab = tab;
 	
 	if(NATIVE_APP_PORT){
 		// Send POST request to open video
@@ -47,11 +51,9 @@ chrome.pageAction.onClicked.addListener( tab => {
 
 	}else{
 		// PING NATIVE APP
-		pingNativeAppServer(tab);
+		pingNativeAppServer();
 
 	}
-
-	
 
 });
 
@@ -65,10 +67,9 @@ chrome.pageAction.onClicked.addListener( tab => {
 
 /**
  * Ping native app server
- * @param  {[object]} current_tab [Current tab to send to openVideoRequest]
  * 
  */
-function pingNativeAppServer(current_tab){
+function pingNativeAppServer(){
 
 	let ping_urls = config.SUPPORTED_PORTS.map(port =>{
 		return [`http://localhost:${port}/ping`, port];
@@ -152,7 +153,7 @@ function openVideoRequest(url){
 		
 		// Ping server again
 		console.log('Trying to connect again...');
-		pingNativeAppServer();
+		pingNativeAppServer(current_tab.url);
 
 	});
 
