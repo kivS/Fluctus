@@ -46,7 +46,7 @@ chrome.pageAction.onClicked.addListener( tab => {
 	
 	if(NATIVE_APP_PORT){
 		// Send POST request to open video
-		console.log('Using native app default port: ', NATIVE_APP_PORT);
+		console.log('Using native app port from storage: ', NATIVE_APP_PORT);
 		openVideoRequest(tab.url);
 
 	}else{
@@ -166,7 +166,7 @@ function openVideoRequest(url){
  * 
  */
 function showNoServerErrorMsg(){
-	if(confirm('Companion app is not installed or running.. \n\n Install companion app?')){
+	if(confirm('Companion app is not running or maybe it\'s not installed.. \n\n Install companion app?')){
 		chrome.tabs.create({ url: config.NATIVE_APP_INSTALL_URL });
 	}
 }
