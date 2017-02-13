@@ -2,7 +2,7 @@ console.log('Background here.. prepare for lift off..');
 
 // Define config constant
 const config = {
-	SUPPORTED_PORTS: [8753,8238,8791],
+	SUPPORTED_PORTS: [8791,8238,8753],
 	NATIVE_APP_INSTALL_URL: 'https://vikborges.com',
 	STORAGE_KEY_NATIVE_APP_PORT : 'fd_native_app_port'
 }
@@ -39,54 +39,16 @@ chrome.runtime.onInstalled.addListener( () => {
 // Page_action click event
 chrome.pageAction.onClicked.addListener( tab => {
 	//console.debug('page_action clicked..', tab);
-
+	
 	if(NATIVE_APP_PORT){
 		// Send POST request to open video
 		console.log('Using native app default port: ', NATIVE_APP_PORT);
 		openVideoRequest(tab.url);
 
 	}else{
-
 		// PING NATIVE APP
+		pingNativeAppServer(tab);
 
-		let ping_urls = config.SUPPORTED_PORTS.map(port =>{
-			return [`http://localhost:${port}/ping`, port];
-		})
-
-		Promise.all(ping_urls.map(url => 
-				fetch(url[0])
-					.then(response =>{
-						if(response.ok){
-							// If server is found let's return the port
-							return url[1];
-						}
-					})
-					.catch(error =>{
-						console.warn(`${url[0]}: was not the chosen one!`);
-						return null;
-					})
-			))
-			.then(responses =>{
-				// Check promises for port
-				let port = responses.filter(r => r != null)[0];
-				if(port){
-					console.log('pinged server successfully on port: ', port);
-
-					// Cache server port
-					NATIVE_APP_PORT = port;
-					setNativeAppPortToStorage(port);
-
-					// Send POST request to open video
-					openVideoRequest(tab.url);
-					
-				}else{
-					// No server found
-					showNoServerErrorMsg();
-				}
-			})
-			.catch(err =>{
-				console.error('Something went wrong...', err);
-			});
 	}
 
 	
@@ -99,6 +61,55 @@ chrome.pageAction.onClicked.addListener( tab => {
 //			   HELPER FUNCTIONS						   
 //									  				   				
 //*****************************************************
+
+
+/**
+ * Ping native app server
+ * @param  {[object]} current_tab [Current tab to send to openVideoRequest]
+ * 
+ */
+function pingNativeAppServer(current_tab){
+
+	let ping_urls = config.SUPPORTED_PORTS.map(port =>{
+		return [`http://localhost:${port}/ping`, port];
+	})
+
+	Promise.all(ping_urls.map(url => 
+			fetch(url[0])
+				.then(response =>{
+					if(response.ok){
+						// If server is found let's return the port
+						return url[1];
+					}
+				})
+				.catch(error =>{
+					console.warn(`${url[0]}: was not the chosen one!`);
+					return null;
+				})
+		))
+		.then(responses =>{
+			// Check promises for port
+			let port = responses.filter(r => r != null)[0];
+			if(port){
+				console.log('pinged server successfully on port: ', port);
+
+				// Cache server port
+				NATIVE_APP_PORT = port;
+				setNativeAppPortToStorage(port);
+
+				// Send POST request to open video
+				openVideoRequest(current_tab.url);
+				
+			}else{
+				// No server found
+				showNoServerErrorMsg();
+			}
+		})
+		.catch(err =>{
+			console.error('Something went wrong...', err);
+		});
+}
+
 
 
 /**
@@ -138,8 +149,10 @@ function openVideoRequest(url){
 		// If request fails let's reset default native app port, that way we'll have to ping for new port
 		NATIVE_APP_PORT = null;
 		setNativeAppPortToStorage("");
-		// TODO: Remove user interaction here..
-		alert('Something went down.. try again');
+		
+		// Ping server again
+		console.log('Trying to connect again...');
+		pingNativeAppServer();
 
 	});
 
@@ -159,7 +172,7 @@ function showNoServerErrorMsg(){
 
 
 /**
- * Get saved native app port
+ * Get saved native app port from storage
  * 
  *@return {[string]} port
  */
@@ -172,7 +185,7 @@ function getNativeAppPortFromStorage(){
 
 /**
  * Save native_app_port to storage
- * @param  {[int]} port
+ * @param  {[string]} port
  */
 function setNativeAppPortToStorage(port){
 	localStorage.setItem(config.STORAGE_KEY_NATIVE_APP_PORT, port);
