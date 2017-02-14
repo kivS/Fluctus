@@ -1,21 +1,34 @@
 {
-  "name": "my-floating-video-panels",
+  "name": "my-floating-dog",
+  "productName": "Floating dog",
   "version": "1.0.0",
   "description": "Watch yotube videos from a floating panel",
+  "author": "Vik Borges <v1k@protonmail.com>",
+  "copyright": "© 2016, Vik Borges.",
+  "homepage": "https://vikborges.com",
+
   "main": "main.js",
   "scripts": {
     "start": "./node_modules/.bin/electron .",
-    "rebuild": "./node_modules/.bin/electron-rebuild -v 1.4.15"
+    "rebuild": "./node_modules/.bin/electron-rebuild -v 1.4.15",
+    "pack": "build --dir",
+    "dist": "build",
+    "postinstall": "install-app-deps"
   },
-  "author": "Vik Borges",
-  "license": "ISC",
+  "build": {
+    "appId": "vik.my.floating.dog",
+
+    "win": {
+      "iconUrl": "http://eatodo.s3.amazonaws.com/icon.ico"
+    }
+
+  },
   "dependencies": {
-    "electron": "^1.4.15",
-    "plyr": "^2.0.11"
+    "winston": "^2.3.1"
   },
   "devDependencies": {
     "electron-builder": "^13.6.0",
     "electron-rebuild": "^1.5.7",
-    "winston": "^2.3.1"
+    "electron": "^1.4.15" 
   }
 }

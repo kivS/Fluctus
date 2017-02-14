@@ -9,7 +9,7 @@ let videoWindow, trayIcon;
 log.configure({
 	transports: [
 		new (log.transports.Console)({ prettyPrint: true}),
-		new (log.transports.File)({filename: 'my.log',  prettyPrint: true, json: false})
+		//new (log.transports.File)({filename: 'my.log',  prettyPrint: true, json: false})
 	]
 });
 // set logger as global for window instances
