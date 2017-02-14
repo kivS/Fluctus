@@ -1,5 +1,5 @@
 {
-  "name": "my-floating-dog",
+  "name": "floatingDog",
   "productName": "Floating dog",
   "version": "1.0.0",
   "description": "Watch yotube videos from a floating panel",
@@ -11,7 +11,7 @@
   "scripts": {
     "start": "./node_modules/.bin/electron .",
     "rebuild": "./node_modules/.bin/electron-rebuild -v 1.4.15",
-    "pack": "build --dir",
+    "pack": "build --dir --win --linux --x64",
     "dist": "build",
     "postinstall": "install-app-deps"
   },
@@ -19,9 +19,8 @@
     "appId": "vik.my.floating.dog",
 
     "win": {
-      "iconUrl": "http://eatodo.s3.amazonaws.com/icon.ico"
+      
     }
-
   },
   "dependencies": {
     "winston": "^2.3.1"
