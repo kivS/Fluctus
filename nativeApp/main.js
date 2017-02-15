@@ -1,4 +1,4 @@
-const {electron, app, BrowserWindow, Tray, Menu} = require('electron');
+const {electron, app, BrowserWindow, Tray, Menu, dialog} = require('electron');
 const http = require('http');
 const url = require('url');
 const path = require('path');
@@ -154,7 +154,10 @@ function start(){
 						// Load window
 						videoWindow.loadURL(`file://${__dirname}/resources/browserWindows/youtubeVideoPanel.html${query}`);
 
-						// Window events
+						// Debug
+						videoWindow.webContents.openDevTools();
+
+						// WINDOW EVENTS
 						videoWindow.on('closed', () => {
 							videoWindow = null;
 						});
@@ -162,6 +165,42 @@ function start(){
 						videoWindow.once('ready-to-show', () => {
 							videoWindow.show();
 						});
+
+						// Window Error events
+						videoWindow.webContents.on('crashed', () =>{
+							const options = {
+								type: 'info',
+								title: 'Floating dog crashed',
+								message: 'something made this crash..',
+								buttons: ['Reload', 'close'],
+							}
+							dialog.showMessageBox(options, index =>{
+								if(index === 0){
+									 videoWindow.reload();
+
+								}else{
+									videoWindow.close();
+								}
+							});
+						});
+
+						videoWindow.on('unresponsive', () =>{
+							const options = {
+								type: 'info',
+								title: 'Floating dog is still waiting..',
+								message: 'This is taking too long..',
+								buttons: ['Reload', 'close'],
+							}
+							dialog.showMessageBox(options, index =>{
+								if(index === 0){
+									 videoWindow.reload();
+
+								}else{
+									videoWindow.close();
+								}
+							});
+						});
+
 
 						log.info('Window size: ', videoWindow.getSize());
 						log.info('Window position: ', videoWindow.getPosition());

@@ -26,8 +26,9 @@
     const remote = require('electron').remote;
     const url = require('url');
     const log = remote.getGlobal('logger');
+    const TAG = 'From youtubeVideoPanel.html - ';
 
-    log.info("Hello from video panel!!!");
+    log.info(TAG, "Hello from video panel!!!");
 
 
     // Parse payload in URL and parse it into object 
@@ -84,8 +85,30 @@
     }
 
     function onError(err){
-      console.error(err);
-      log.error(err);
+      let youtube_error_code = err.data;
+
+      let error_codes = {
+        '2':   'The request contains an invalid parameter value.',
+        '5':   'error related to the HTML5 player has occurred.',
+        '100': 'The video requested was not found.',
+        '101': 'The owner of the requested video does not allow it to be played in embedded players.',
+        '150': 'The owner of the requested video does not allow it to be played in embedded players.'
+
+      }
+
+      let yotube_error = error_codes[`${youtube_error_code}`] || 'Weird youtube error... no ideia what!';
+
+      if(youtube_error_code){
+
+        log.error(TAG, yotube_error);
+        console.error('kaput: ', yotube_error);
+
+      }else{
+        // make it crash..
+        process.crash();
+      }
+
+      
     }
 
     function onPlayerStateChange(e){
