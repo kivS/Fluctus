@@ -11,8 +11,12 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
 RUN apt-get install -y build-essential
 
-# Graphical and sound libs
+# Linux Graphical and sound libs
 RUN apt-get -y install libgtk2.0-0 libxss1 libgconf-2-4 libnss3 libasound2 libxtst6
+RUN apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
+
+# Build for 32 bits support
+RUN apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
 
 # Wine 
 RUN apt-get install -y software-properties-common
@@ -26,3 +30,4 @@ RUN  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328
 RUN echo "deb http://download.mono-project.com/repo/debian wheezy main" | tee /etc/apt/sources.list.d/mono-xamarin.list
 RUN apt-get update -y
 RUN apt-get install --no-install-recommends -y mono-devel ca-certificates-mono
+
