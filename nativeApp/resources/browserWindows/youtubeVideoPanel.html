@@ -41,12 +41,9 @@
 
     // Get video query (videoId & listId)
     const video_query = video.query;
-   
-
-
 
     // Youtube video player
-    window.player;
+    let player;
 
     function onYouTubeIframeAPIReady() {
        player = new YT.Player('video_player', {

@@ -138,11 +138,13 @@ function start(){
 						videoWindow = new BrowserWindow({
 							width:           config.VIDEO_WINDOW_WIDTH,
 							height:          config.VIDEO_WINDOW_HEIGHT,
+							minWidth:        config.VIDEO_WINDOW_WIDTH,
+							minHeight:       config.VIDEO_WINDOW_HEIGHT,
+							x:               config.VIDEO_WINDOW_getXoffset(workAreaSize.width),
+							y:               config.VIDEO_WINDOW_getYoffset(workAreaSize.height),
 							backgroundColor: config.VIDEO_WINDOW_BG_COLOR,
 							alwaysOnTop:     true,
 							show:            false,
-							x:               config.VIDEO_WINDOW_getXoffset(workAreaSize.width),
-							y:               config.VIDEO_WINDOW_getYoffset(workAreaSize.height),
 							frame:           true,
 							icon: 			 icon
 
