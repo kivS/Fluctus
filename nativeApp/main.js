@@ -1,15 +1,27 @@
 const {electron, app, BrowserWindow, Tray, Menu} = require('electron');
 const http = require('http');
 const url = require('url');
+const path = require('path');
 const log = require('winston');
 
 let videoWindow, trayIcon;
 
+// get location for logs
+let logs_path = path.join(app.getPath('home'), 'floating_dog.log');
+
 // Configure winston logs
 log.configure({
 	transports: [
-		new (log.transports.Console)({ prettyPrint: true}),
-		new (log.transports.File)({filename: 'my.log',  prettyPrint: true, json: false})
+		new (log.transports.Console)({
+			level: 'info',
+			prettyPrint: true
+		}),
+		new (log.transports.File)({
+			level: 'info',
+			filename: logs_path,
+			prettyPrint: true, 
+			json: false
+		})
 	]
 });
 // set logger as global for window instances
@@ -22,7 +34,7 @@ global.logger = log;
 //*****************************************************
 const config = {
 	VIDEO_WINDOW_WIDTH: 480,
-	VIDEO_WINDOW_HEIGHT: 360,
+	VIDEO_WINDOW_HEIGHT: 400,
 	VIDEO_WINDOW_BG_COLOR: '#000',
 	SERVER_PORTS: [8791,8238,8753],
 	SERVER_HOSTNAME: 'hostname',
