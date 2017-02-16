@@ -4,7 +4,9 @@ const url = require('url');
 const path = require('path');
 const log = require('winston');
 
-let videoWindow, trayIcon;
+let trayIcon;
+let videoBoxContainers = Array();
+let videoBoxCounter = -1;
 
 // get location for logs
 let logs_path = path.join(app.getPath('home'), 'floating_dog.log');
@@ -59,7 +61,7 @@ const config = {
 app.on('ready', start);
 
 app.on('window-all-closed', () => {
-	return;
+	videoBoxContainers = Array();
 });
 
 
@@ -134,8 +136,10 @@ function start(){
 						request_body = JSON.parse(Buffer.concat(request_body).toString());
 						log.info('Body: ', request_body);
 
+						log.info('VideoBoxCounter: ', videoBoxCounter);
+
 						// Create videoWindow
-						videoWindow = new BrowserWindow({
+						videoBoxContainers[++videoBoxCounter] = new BrowserWindow({
 							width:           config.VIDEO_WINDOW_WIDTH,
 							height:          config.VIDEO_WINDOW_HEIGHT,
 							minWidth:        config.VIDEO_WINDOW_WIDTH,
@@ -150,26 +154,29 @@ function start(){
 
 						});
 
+						// local videoBox reference
+						const videoBox = videoBoxContainers[videoBoxCounter];
+
 						// encode request_body into url param
 						let query = url.format({ query: request_body })
 
 						// Load window
-						videoWindow.loadURL(`file://${__dirname}/resources/browserWindows/youtubeVideoPanel.html${query}`);
+						videoBox.loadURL(`file://${__dirname}/resources/browserWindows/youtubeVideoPanel.html${query}`);
 
 						// Debug
-						videoWindow.webContents.openDevTools();
+						videoBox.webContents.openDevTools();
 
 						// WINDOW EVENTS
-						videoWindow.on('closed', () => {
-							videoWindow = null;
+						videoBox.on('closed', () => {
+							videoBoxContainers.splice(videoBoxCounter, 1);
 						});
 
-						videoWindow.once('ready-to-show', () => {
-							videoWindow.show();
+						videoBox.once('ready-to-show', () => {
+							videoBox.show();
 						});
 
 						// Window Error events
-						videoWindow.webContents.on('crashed', () =>{
+						videoBox.webContents.on('crashed', () =>{
 							const options = {
 								type: 'info',
 								title: 'Floating dog crashed',
@@ -178,15 +185,15 @@ function start(){
 							}
 							dialog.showMessageBox(options, index =>{
 								if(index === 0){
-									 videoWindow.reload();
+									 videoBox.reload();
 
 								}else{
-									videoWindow.close();
+									videoBox.close();
 								}
 							});
 						});
 
-						videoWindow.on('unresponsive', () =>{
+						videoBox.on('unresponsive', () =>{
 							const options = {
 								type: 'info',
 								title: 'Floating dog is still waiting..',
@@ -195,17 +202,17 @@ function start(){
 							}
 							dialog.showMessageBox(options, index =>{
 								if(index === 0){
-									 videoWindow.reload();
+									 videoBox.reload();
 
 								}else{
-									videoWindow.close();
+									videoBox.close();
 								}
 							});
 						});
 
 
-						log.info('Window size: ', videoWindow.getSize());
-						log.info('Window position: ', videoWindow.getPosition());
+						log.info('Window size: ', videoBox.getSize());
+						log.info('Window position: ', videoBox.getPosition());
 
 						res.end(JSON.stringify({status: 'ok'}));	
 
