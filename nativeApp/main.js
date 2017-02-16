@@ -164,10 +164,11 @@ function start(){
 						videoBox.loadURL(`file://${__dirname}/resources/browserWindows/youtubeVideoPanel.html${query}`);
 
 						// Debug
-						videoBox.webContents.openDevTools();
+						/*videoBox.webContents.openDevTools();*/
 
 						// WINDOW EVENTS
 						videoBox.on('closed', () => {
+							// Remove current videoBox from global reference
 							videoBoxContainers.splice(videoBoxCounter, 1);
 						});
 
