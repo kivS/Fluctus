@@ -29,6 +29,12 @@ log.configure({
 // set logger as global for window instances
 global.logger = log;
 
+// Make sure that only one instance of the program gets to trive!
+const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => {});
+if(shouldSeppuku) app.quit();
+
+
+
 
 //*****************************************************
 //			   CONFIGS					   
