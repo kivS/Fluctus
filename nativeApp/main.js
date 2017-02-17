@@ -164,7 +164,12 @@ function start(){
 						videoBox.loadURL(`file://${__dirname}/resources/browserWindows/youtubeVideoPanel.html${query}`);
 
 						// Debug
-						/*videoBox.webContents.openDevTools();*/
+						if(process.env.NODE_ENV === 'dev'){
+							videoBox.webContents.openDevTools({
+								detach: true
+							});
+						}
+						
 
 						// WINDOW EVENTS
 						videoBox.on('closed', () => {

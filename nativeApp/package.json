@@ -9,7 +9,7 @@
 
   "main": "main.js",
   "scripts": {
-    "start": "./node_modules/.bin/electron .",
+    "start": "NODE_ENV=dev ./node_modules/.bin/electron .",
     "rebuild": "./node_modules/.bin/electron-rebuild -v 1.4.15",
     "pack": "build --dir --win --linux --x64",
     "dist": "build",
