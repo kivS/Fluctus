@@ -1,10 +1,12 @@
-const {electron, app, BrowserWindow, Tray, Menu} = require('electron');
+const {electron, app, BrowserWindow, Tray, Menu, dialog} = require('electron');
 const http = require('http');
 const url = require('url');
 const path = require('path');
 const log = require('winston');
 
-let videoWindow, trayIcon;
+let trayIcon;
+let videoBoxContainers = Array();
+let videoBoxCounter = -1;
 
 // get location for logs
 let logs_path = path.join(app.getPath('home'), 'floating_dog.log');
@@ -26,6 +28,12 @@ log.configure({
 });
 // set logger as global for window instances
 global.logger = log;
+
+// Make sure that only one instance of the program gets to trive!
+const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => {});
+if(shouldSeppuku) app.quit();
+
+
 
 
 //*****************************************************
@@ -59,7 +67,7 @@ const config = {
 app.on('ready', start);
 
 app.on('window-all-closed', () => {
-	return;
+	videoBoxContainers = Array();
 });
 
 
@@ -134,37 +142,89 @@ function start(){
 						request_body = JSON.parse(Buffer.concat(request_body).toString());
 						log.info('Body: ', request_body);
 
+						log.info('VideoBoxCounter: ', videoBoxCounter);
+
 						// Create videoWindow
-						videoWindow = new BrowserWindow({
+						videoBoxContainers[++videoBoxCounter] = new BrowserWindow({
 							width:           config.VIDEO_WINDOW_WIDTH,
 							height:          config.VIDEO_WINDOW_HEIGHT,
+							minWidth:        config.VIDEO_WINDOW_WIDTH,
+							minHeight:       config.VIDEO_WINDOW_HEIGHT,
+							x:               config.VIDEO_WINDOW_getXoffset(workAreaSize.width),
+							y:               config.VIDEO_WINDOW_getYoffset(workAreaSize.height),
 							backgroundColor: config.VIDEO_WINDOW_BG_COLOR,
 							alwaysOnTop:     true,
 							show:            false,
-							x:               config.VIDEO_WINDOW_getXoffset(workAreaSize.width),
-							y:               config.VIDEO_WINDOW_getYoffset(workAreaSize.height),
 							frame:           true,
 							icon: 			 icon
 
 						});
 
+						// local videoBox reference
+						const videoBox = videoBoxContainers[videoBoxCounter];
+
 						// encode request_body into url param
 						let query = url.format({ query: request_body })
 
 						// Load window
-						videoWindow.loadURL(`file://${__dirname}/resources/browserWindows/youtubeVideoPanel.html${query}`);
+						videoBox.loadURL(`file://${__dirname}/resources/browserWindows/youtubeVideoPanel.html${query}`);
 
-						// Window events
-						videoWindow.on('closed', () => {
-							videoWindow = null;
+						// Debug
+						if(process.env.NODE_ENV === 'dev'){
+							videoBox.webContents.openDevTools({
+								detach: true
+							});
+						}
+						
+
+						// WINDOW EVENTS
+						videoBox.on('closed', () => {
+							// Remove current videoBox from global reference
+							videoBoxContainers.splice(videoBoxCounter, 1);
 						});
 
-						videoWindow.once('ready-to-show', () => {
-							videoWindow.show();
+						videoBox.once('ready-to-show', () => {
+							videoBox.show();
 						});
 
-						log.info('Window size: ', videoWindow.getSize());
-						log.info('Window position: ', videoWindow.getPosition());
+						// Window Error events
+						videoBox.webContents.on('crashed', () =>{
+							const options = {
+								type: 'info',
+								title: 'Floating dog crashed',
+								message: 'something made this crash..',
+								buttons: ['Reload', 'close'],
+							}
+							dialog.showMessageBox(options, index =>{
+								if(index === 0){
+									 videoBox.reload();
+
+								}else{
+									videoBox.close();
+								}
+							});
+						});
+
+						videoBox.on('unresponsive', () =>{
+							const options = {
+								type: 'info',
+								title: 'Floating dog is still waiting..',
+								message: 'This is taking too long..',
+								buttons: ['Reload', 'close'],
+							}
+							dialog.showMessageBox(options, index =>{
+								if(index === 0){
+									 videoBox.reload();
+
+								}else{
+									videoBox.close();
+								}
+							});
+						});
+
+
+						log.info('Window size: ', videoBox.getSize());
+						log.info('Window position: ', videoBox.getPosition());
 
 						res.end(JSON.stringify({status: 'ok'}));	
 
