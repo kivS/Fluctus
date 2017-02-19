@@ -8,8 +8,13 @@
       "activeTab",
       "declarativeContent",
       "http://localhost/*",
-      "tabs"
+      "tabs",
+      "contextMenus"
   ],
+
+  "icons":{
+      "16": "images/icon_016.png"
+  }, 
 
   "background" : {
 	"scripts": ["background.js"],

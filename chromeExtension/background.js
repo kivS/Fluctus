@@ -15,7 +15,22 @@ let current_tab = null;
 
 // ADD RULES - When extension is installed on upgraded
 chrome.runtime.onInstalled.addListener( () => {
-	// Replace all rules
+
+	// Add contextMenus
+	chrome.contextMenus.create({
+		id: 'contextMenu_1',
+		title: 'Float this video',
+		contexts: ['link', 'selection'],
+		targetUrlPatterns: [
+			// YOUTUBE
+			// For clean urls like in youtube page and etc
+			'https://www.youtube.com/watch*',
+			// For dirty urls like in google search results..dirty..
+			`https://*/*${encodeURIComponent('www.youtube.com/watch')}*`
+		]
+	});
+
+	// Replace all rules for filtering page depending on content
 	chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
 		// With a new rule
 		chrome.declarativeContent.onPageChanged.addRules([
@@ -55,6 +70,10 @@ chrome.pageAction.onClicked.addListener( tab => {
 
 	}
 
+});
+
+chrome.contextMenus.onClicked.addListener((object_info, tab) =>{
+	console.log('Context Menu cliked: ', object_info);
 });
 
 
