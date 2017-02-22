@@ -3,7 +3,7 @@ console.log('Background here.. prepare for lift off..');
 // Define config constant
 const config = {
 	SUPPORTED_PORTS: [8791,8238,8753],
-	SUPPORTED_HOSTNAMES: ['youtube', 'potato'],
+	SUPPORTED_HOSTNAMES: ['youtube'],
 	NATIVE_APP_INSTALL_URL: 'https://vikborges.com',
 	STORAGE_KEY_NATIVE_APP_PORT : 'fd_native_app_port',
 	CONTENT_MENU_TITLE: 'Float this video!'
@@ -84,11 +84,13 @@ chrome.contextMenus.onClicked.addListener((object_info, tab) =>{
 	// get 'cleaned' url
 	let cleaned_url = getCleanedUrl(parser.href);
 
-	// Set current_tab url
-	current_tab = {url: cleaned_url};
+	if(cleaned_url){
+		// Set current_tab url
+		current_tab = {url: cleaned_url};
 
-	// Open video request
-	openVideoRequest(cleaned_url);
+		// Open video request
+		openVideoRequest(cleaned_url);
+	}
 
 });
 
@@ -249,10 +251,18 @@ function getCleanedUrl(dirty_url){
 		console.log(`Hostname: ${parsed_dirty_url.hostname} is not supported.. let\s try to retrieve clean  url from it`);
 
 		// Get clean url if its hostname is supported
-		let clean_url = getSupportedUrlFromDirtyUrl(parsed_dirty_url.search);
+		let clean_url;
 
-		// Eat my own tail 
-		return getCleanedUrl(clean_url);
+		try{
+
+			clean_url = getSupportedUrlFromDirtyUrl(parsed_dirty_url.search);
+			
+			// Eat my own tail 
+			return getCleanedUrl(clean_url);
+
+		}catch(e){
+			alert(`This url is not supported!`);
+		}
 	}
 	
 }
