@@ -3,8 +3,10 @@ console.log('Background here.. prepare for lift off..');
 // Define config constant
 const config = {
 	SUPPORTED_PORTS: [8791,8238,8753],
+	SUPPORTED_HOSTNAMES: ['youtube', 'potato'],
 	NATIVE_APP_INSTALL_URL: 'https://vikborges.com',
-	STORAGE_KEY_NATIVE_APP_PORT : 'fd_native_app_port'
+	STORAGE_KEY_NATIVE_APP_PORT : 'fd_native_app_port',
+	CONTENT_MENU_TITLE: 'Float this video!'
 }
 
 // native app default port
@@ -13,9 +15,24 @@ let NATIVE_APP_PORT = getNativeAppPortFromStorage();
 let current_tab = null;
 
 
-// ADD RULES - When extension is installed on upgraded
+// ADD Stuff - When extension is installed on upgraded
 chrome.runtime.onInstalled.addListener( () => {
-	// Replace all rules
+
+	// Add contextMenus
+	chrome.contextMenus.create({
+		id: 'contextMenu_1',
+		title: config.CONTENT_MENU_TITLE,
+		contexts: ['link', 'selection'],
+		targetUrlPatterns: [
+			// YOUTUBE
+			// For clean urls links like in youtube page and etc
+			'https://www.youtube.com/watch*',
+			// For dirty urls like in google search results..dirty..
+			`https://*/*${encodeURIComponent('www.youtube.com/watch')}*`
+		]
+	});
+
+	// Replace all rules for filtering page depending on content
 	chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
 		// With a new rule
 		chrome.declarativeContent.onPageChanged.addRules([
@@ -53,6 +70,26 @@ chrome.pageAction.onClicked.addListener( tab => {
 		// PING NATIVE APP
 		pingNativeAppServer();
 
+	}
+
+});
+
+chrome.contextMenus.onClicked.addListener((object_info, tab) =>{
+	console.log('Context Menu cliked: ', object_info);
+
+	// parser for url
+	let parser = document.createElement('a');
+	parser.href = decodeURIComponent(object_info.linkUrl || object_info.selectionText);
+
+	// get 'cleaned' url
+	let cleaned_url = getCleanedUrl(parser.href);
+
+	if(cleaned_url){
+		// Set current_tab url
+		current_tab = {url: cleaned_url};
+
+		// Open video request
+		openVideoRequest(cleaned_url);
 	}
 
 });
@@ -125,12 +162,9 @@ function openVideoRequest(url){
 
 	payload.video_url = url;
 	
-	// Check video type
-	switch(true){
-		case url.includes('youtube'):
-			payload.video_type = 'youtube';
-		break;
-	}
+	// Get video type
+	payload.video_type = getVideoType(url);
+
 	console.log('Payload to send: ', payload);
 
 	// Make request
@@ -191,4 +225,128 @@ function getNativeAppPortFromStorage(){
 function setNativeAppPortToStorage(port){
 	localStorage.setItem(config.STORAGE_KEY_NATIVE_APP_PORT, port);
 	
+}
+
+/**
+ * Checks if url is allowed and cleans dirty url if there's a need for it
+ * @param  {[string]} dirty_url --> Presumable dirty link
+ * @return {[string || null]}   --> clean url or if it's not allowed null
+ */
+function getCleanedUrl(dirty_url){
+	console.log('Url :', dirty_url);
+
+	// url object
+	let parsed_dirty_url = parseUrl(dirty_url);
+
+	if(isHostnameSupported(parsed_dirty_url.hostname)){
+		console.log(`Hostname: ${parsed_dirty_url.hostname} is supported!`);
+		// If dirty_url is already supported lets return it
+		return dirty_url;
+
+	}else{
+		console.log(`Hostname: ${parsed_dirty_url.hostname} is not supported.. let\s try to retrieve clean  url from it`);
+
+		// Get clean url if its hostname is supported
+		let clean_url;
+
+		try{
+
+			clean_url = getSupportedUrlFromDirtyUrl(parsed_dirty_url.search);
+			
+			// Eat my own tail 
+			return getCleanedUrl(clean_url);
+
+		}catch(e){
+			alert(`This url is not supported!`);
+		}
+	}
+	
+}
+
+/**
+ * Parses url and returns object with url's various components
+ * @param  {[string]} url 
+ * @return {[object]}     -> Url object
+ */
+function parseUrl(url){
+	let parser = document.createElement('a');
+	parser.href = decodeURIComponent(url);
+
+	return parser;
+}
+
+/**
+ * Checks if hostname is supported by the program
+ * @param  {[string]}  hostname 
+ * @return {Boolean}
+ */
+function isHostnameSupported(hostname){
+	let isIt = null;
+
+	// for each supported hostname config check if it's present in hostname -> (*.host.*) == "www.host.com"
+	isIt = config.SUPPORTED_HOSTNAMES.filter(host => RegExp(`.*\\.${host}\\..*`).test(hostname) == true);
+
+
+	if(isIt != false){
+		return true;
+	}
+
+	// default
+	return false;
+}
+
+/**
+ * Retrieves supported url from dirty url search param
+ * @param  {[string]} url_search --> url search object of dirty url
+ * @return {[string]}    --> supported Url
+ */
+function getSupportedUrlFromDirtyUrl(url_search){
+	console.log('Dirty url\'s search object: ', url_search);
+
+	let result = null;
+
+	// For each hostname in supported array let's match against url_search and retrieve the url
+	config.SUPPORTED_HOSTNAMES.forEach(host =>{
+
+		let match_exp = RegExp(`https:\\/\\/(www)?\\.${host}\\..+`,'g');
+		console.log('Match RegExp: ', match_exp);
+
+		let matched_val = url_search.match(match_exp);
+		console.log('Match result: ', matched_val);
+
+		if(matched_val) return result = matched_val[0];
+	
+	});	
+
+	if(!result) throw `No match for dirty url: ${url_search}`;
+
+	return result;
+}
+
+
+/**
+ * Will go over supported hostnames array and get the value corresponding to the url
+ * @param  {[type]} url 
+ * @return {[string]}     --> Type of video
+ */
+function getVideoType(url){
+	console.log('Get video type of: ', url);
+	let result;
+
+	// Go over supported hostnames
+	config.SUPPORTED_HOSTNAMES.forEach(host =>{
+		// build reg rexp to match host in url
+		let match_exp = RegExp(`https:\\/\\/(www)?\\.${host}\\..+`,'g');
+		console.log('Match RegExp: ', match_exp);
+
+		// execute it
+		let matched_val = url.match(match_exp);
+		console.log('Match result: ', matched_val);
+
+		if(matched_val) return result = host;
+	});
+
+	if(!result) throw `Video type not found for: ${url}`;
+
+	return result;
 }
