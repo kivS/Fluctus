@@ -236,7 +236,6 @@ function setNativeAppPortToStorage(port){
  * @return {[string || null]}   --> clean url or if it's not allowed null
  */
 function getCleanedUrl(dirty_url){
-	let clean_url =  null;
 	console.log('Url :', dirty_url);
 
 	// url object
