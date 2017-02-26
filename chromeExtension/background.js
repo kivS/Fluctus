@@ -308,13 +308,13 @@ function getSupportedUrlFromDirtyUrl(url_search){
 	// For each hostname in supported array let's match against url_search and retrieve the url
 	config.SUPPORTED_HOSTNAMES.forEach(host =>{
 
-		let match_exp = RegExp(`https:\\/\\/(www)?\\.${host}.+`,'g');
+		let match_exp = RegExp(`https:\\/\\/(www)?\\.${host}\\..+`,'g');
 		console.log('Match RegExp: ', match_exp);
 
 		let matched_val = url_search.match(match_exp);
 		console.log('Match result: ', matched_val);
 
-		if(matched_val) result = matched_val[0];
+		if(matched_val) return result = matched_val[0];
 	
 	});	
 
