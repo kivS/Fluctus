@@ -3,7 +3,7 @@ console.log('Background here.. prepare for lift off..');
 // Define config constant
 const config = {
 	SUPPORTED_PORTS: [8791,8238,8753],
-	SUPPORTED_HOSTNAMES: ['youtube'],
+	SUPPORTED_HOSTNAMES: ['youtube', 'potato'],
 	NATIVE_APP_INSTALL_URL: 'https://vikborges.com',
 	STORAGE_KEY_NATIVE_APP_PORT : 'fd_native_app_port',
 	CONTENT_MENU_TITLE: 'Float this video!'
@@ -162,12 +162,9 @@ function openVideoRequest(url){
 
 	payload.video_url = url;
 	
-	// Check video type
-	switch(true){
-		case url.includes('youtube'):
-			payload.video_type = 'youtube';
-		break;
-	}
+	// Get video type
+	payload.video_type = getVideoType(url);
+
 	console.log('Payload to send: ', payload);
 
 	// Make request
@@ -322,6 +319,34 @@ function getSupportedUrlFromDirtyUrl(url_search){
 	});	
 
 	if(!result) throw `No match for dirty url: ${url_search}`;
+
+	return result;
+}
+
+
+/**
+ * Will go over supported hostnames array and get the value corresponding to the url
+ * @param  {[type]} url 
+ * @return {[string]}     --> Type of video
+ */
+function getVideoType(url){
+	console.log('Get video type of: ', url);
+	let result;
+
+	// Go over supported hostnames
+	config.SUPPORTED_HOSTNAMES.forEach(host =>{
+		// build reg rexp to match host in url
+		let match_exp = RegExp(`https:\\/\\/(www)?\\.${host}\\..+`,'g');
+		console.log('Match RegExp: ', match_exp);
+
+		// execute it
+		let matched_val = url.match(match_exp);
+		console.log('Match result: ', matched_val);
+
+		if(matched_val) return result = host;
+	});
+
+	if(!result) throw `Video type not found for: ${url}`;
 
 	return result;
 }
