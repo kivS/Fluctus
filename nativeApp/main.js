@@ -1,4 +1,4 @@
-const {electron, app, BrowserWindow, Tray, Menu, dialog} = require('electron');
+const {electron, app, BrowserWindow, Tray, Menu, dialog, shell} = require('electron');
 const http = require('http');
 const url = require('url');
 const path = require('path');
@@ -186,6 +186,18 @@ function start(){
 						videoBox.once('ready-to-show', () => {
 							videoBox.show();
 						});
+
+				
+						videoBox.webContents.on('new-window', (e, w_url, frameName, disposition, options) =>{
+							e.preventDefault();
+							log.info('On new-window event: ', {url: w_url, frame_name: frameName, disposition: disposition, options: options});
+
+							// Open all external links externally(Web browser..etc) by Default
+							log.info(`Opening ${w_url} externally..`);
+							shell.openExternal(w_url);
+							
+						});
+
 
 						// Window Error events
 						videoBox.webContents.on('crashed', () =>{
