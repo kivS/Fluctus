@@ -9,8 +9,18 @@ const config = {
 	CONTENT_MENU_TITLE: 'Float this video!'
 }
 
-// native app default port
+// native app default port from storage
 let NATIVE_APP_PORT = getNativeAppPortFromStorage();
+
+// Set default port
+if(!NATIVE_APP_PORT){
+	// Set last value of supported ports array as default
+	NATIVE_APP_PORT = config.SUPPORTED_PORTS[config.SUPPORTED_PORTS.length-1]
+
+	// Save to storage
+	setNativeAppPortToStorage(NATIVE_APP_PORT);
+}
+console.log('Using default native port:', NATIVE_APP_PORT);
 
 let current_tab = null;
 
