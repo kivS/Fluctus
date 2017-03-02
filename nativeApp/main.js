@@ -72,12 +72,22 @@ app.on('window-all-closed', () => {
 
 
 
+
+
+
 //*****************************************************
 //			   Background dog Start						   
 //									  				   				
 //*****************************************************
 function start(){
 	log.info('HEYYYYYY OHHH BOIIIA LET\'S BEGIN!!!!!');
+
+	// If test mode is on -> Dummy window so end2end tests can run
+	if(process.env.NODE_ENV === 'test'){
+		let test_window = 	new BrowserWindow({alwaysOnTop: true, show: false});
+		test_window.loadURL(`file://${__dirname}/resources/browserWindows/test.html`);
+
+	}
 
 	
 	let icon = `${__dirname}/resources/images/icon.png`;

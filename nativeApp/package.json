@@ -6,28 +6,29 @@
   "author": "Vik Borges <v1k@protonmail.com>",
   "copyright": "© 2016, Vik Borges.",
   "homepage": "https://vikborges.com",
-
   "main": "main.js",
   "scripts": {
     "start": "NODE_ENV=dev ./node_modules/.bin/electron .",
     "rebuild": "./node_modules/.bin/electron-rebuild -v 1.4.15",
     "pack": "build --dir --win --linux --x64",
     "dist": "build",
-    "postinstall": "install-app-deps"
+    "postinstall": "install-app-deps",
+    "test:e2e": "NODE_ENV=test ./node_modules/mocha/bin/mocha tests/test.js"
   },
   "build": {
     "appId": "vik.my.floating.dog",
-
-    "win": {
-      
-    }
+    "win": {}
   },
   "dependencies": {
     "winston": "^2.3.1"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "electron": "^1.4.15",
     "electron-builder": "^13.6.0",
     "electron-rebuild": "^1.5.7",
-    "electron": "^1.4.15" 
+    "mocha": "^3.2.0",
+    "spectron": "^3.6.0"
   }
 }
