@@ -1,6 +1,8 @@
 const Application = require('spectron').Application;
 const path = require('path');
 const assert = require('assert');
+
+
 const app_path = path.join(__dirname, '..', 'main.js');
 
 function new_app() {
@@ -10,7 +12,7 @@ function new_app() {
     })
 }
 
-describe('application launch', function () {
+describe('Application launch', function () {
   this.timeout(60000)
 
   beforeEach(function () {
@@ -34,8 +36,12 @@ describe('application launch', function () {
   })
 
 
-  it('It\'s up boy', () =>{
-      console.log('well well well!');
+  it('should get Dummy test page', function() {
+      return this.app.browserWindow.getTitle().then(title =>{
+         assert.equal(title, "TEST_PAGE");
+      });
   })
 
 }) //
+
+
