@@ -46,6 +46,7 @@ const config = {
 	VIDEO_WINDOW_BG_COLOR: '#000',
 	SERVER_PORTS: [8791,8238,8753],
 	SERVER_HOSTNAME: 'hostname',
+	SUPPORTED_REQUESTS: ['youtube'],
 
 	VIDEO_WINDOW_getXoffset: function(work_area_width){
 		// will position the window to the right side
@@ -72,12 +73,22 @@ app.on('window-all-closed', () => {
 
 
 
+
+
+
 //*****************************************************
 //			   Background dog Start						   
 //									  				   				
 //*****************************************************
 function start(){
 	log.info('HEYYYYYY OHHH BOIIIA LET\'S BEGIN!!!!!');
+
+	// If test mode is on -> Dummy window so end2end tests can run
+	if(process.env.NODE_ENV === 'test'){
+		let test_window = 	new BrowserWindow({alwaysOnTop: true, show: false});
+		test_window.loadURL(`file://${__dirname}/resources/browserWindows/test.html`);
+
+	}
 
 	
 	let icon = `${__dirname}/resources/images/icon.png`;
@@ -144,6 +155,13 @@ function start(){
 
 						log.info('VideoBoxCounter: ', videoBoxCounter);
 
+						// Check if video_type of request_body is supported
+						const supported_request = config.SUPPORTED_REQUESTS.find(item => item == request_body.video_type);
+
+						// If request type is not supported.. let's end this conversation
+						if(!supported_request) res.end(JSON.stringify({status: 'not_supported'}));
+
+
 						// Create videoWindow
 						videoBoxContainers[++videoBoxCounter] = new BrowserWindow({
 							width:           config.VIDEO_WINDOW_WIDTH,
@@ -166,8 +184,8 @@ function start(){
 						// encode request_body into url param
 						let query = url.format({ query: request_body })
 
-						// Load window
-						videoBox.loadURL(`file://${__dirname}/resources/browserWindows/youtubeVideoPanel.html${query}`);
+						// Load window -> Naming convention:(supported_request value + VideoPanel.html)
+						videoBox.loadURL(`file://${__dirname}/resources/browserWindows/${supported_request}VideoPanel.html${query}`);
 
 						// Debug
 						if(process.env.NODE_ENV === 'dev'){
