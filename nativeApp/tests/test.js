@@ -186,6 +186,26 @@ describe('Application Startup', function () {
           })
           
       })
+
+      it('should return status: "not_supported" when the request type is... not supported!', function(){
+          // open youtube video panel
+          let payload = {
+            video_type: 'potato',
+            video_url: 'https://www.xpotatox.com/watch?p=ahahhah'
+          }
+
+          return new Promise((resolve) =>{
+            start_video_request(payload, (err, res, body) =>{
+              let response = JSON.parse(body);
+              resolve(response.status)
+            })
+
+          }).then(result =>{
+             assert.equal('not_supported', result);
+          })
+          
+      })
+
   })
 
 
