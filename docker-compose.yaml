@@ -8,7 +8,8 @@ services:
       - $HOME/.Xauthority:/root/.Xauthority:rw
     environment:
       DISPLAY: unix$DISPLAY
-      te2e: "npm run test:e2e" 
+      te2e: "npm run test:e2e"
+      start: "npm run start" 
     network_mode: 'host'
     working_dir: /home/code
     tty: true 

@@ -12,14 +12,21 @@
     "rebuild": "./node_modules/.bin/electron-rebuild -v 1.4.15",
     "pack": "build --dir --win --linux --x64",
     "dist": "build -wl",
+    "publish": "build -wl -p always",
     "postinstall": "install-app-deps",
     "test:e2e": "NODE_ENV=test ./node_modules/mocha/bin/mocha tests/test.js"
   },
   "build": {
     "appId": "vik.my.floating.dog",
-    "win": {}
+    "win": {},
+    "publish": [{
+        "provider": "github",
+        "owner": "kivS",
+        "repo": "floating-dog"  
+    }]
   },
   "dependencies": {
+    "electron-updater": "^1.8.2",
     "winston": "^2.3.1"
   },
   "devDependencies": {
