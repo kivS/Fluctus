@@ -1,7 +1,7 @@
 {
   "name": "floatingDog",
   "productName": "Floating dog",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Watch videos from youtube and more in a floating window",
   "author": "Vik Borges <v1k@protonmail.com>",
   "copyright": "© 2017, Vik Borges.",
@@ -23,8 +23,8 @@
       {
         "provider": "s3",
         "owner": "v1k",
-        "bucket": "floating-dog.s3.amazonaws.com",
-        "path": "/native_app_updates"
+        "bucket": "floating-dog",
+        "path": "native_app_updates"
       }
     ]
   },
