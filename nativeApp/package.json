@@ -2,24 +2,31 @@
   "name": "floatingDog",
   "productName": "Floating dog",
   "version": "1.0.0",
-  "description": "Watch yotube videos from a floating panel",
+  "description": "Watch videos from youtube and more in a floating window",
   "author": "Vik Borges <v1k@protonmail.com>",
-  "copyright": "© 2016, Vik Borges.",
+  "copyright": "© 2017, Vik Borges.",
   "homepage": "https://vikborges.com",
   "main": "main.js",
   "scripts": {
     "start": "NODE_ENV=dev ./node_modules/.bin/electron .",
     "rebuild": "./node_modules/.bin/electron-rebuild -v 1.4.15",
     "pack": "build --dir --win --linux --x64",
-    "dist": "build",
+    "dist": "build -wl",
+    "publish": "build -wl -p always",
     "postinstall": "install-app-deps",
     "test:e2e": "NODE_ENV=test ./node_modules/mocha/bin/mocha tests/test.js"
   },
   "build": {
     "appId": "vik.my.floating.dog",
-    "win": {}
+    "win": {},
+    "publish": [{
+        "provider": "github",
+        "owner": "kivS",
+        "repo": "floating-dog"  
+    }]
   },
   "dependencies": {
+    "electron-updater": "^1.8.2",
     "winston": "^2.3.1"
   },
   "devDependencies": {

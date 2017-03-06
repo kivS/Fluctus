@@ -3,6 +3,7 @@ const http = require('http');
 const url = require('url');
 const path = require('path');
 const log = require('winston');
+const {autoUpdater} = require('electron-updater');
 
 let trayIcon;
 let videoBoxContainers = Array();
@@ -28,11 +29,23 @@ log.configure({
 });
 // set logger as global for window instances
 global.logger = log;
+// Set autoUpdater log to winston
+autoUpdater.logger = log;
+//autoUpdater.logger.transports.file.level = 'info';
+
 
 // Make sure that only one instance of the program gets to trive!
 const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => {});
 if(shouldSeppuku) app.quit();
 
+function send_info(msg){
+	dialog.showMessageBox({
+		type: 'info',
+		title: 'Info',
+		message: msg,
+		buttons: ['ok']
+	})	
+}
 
 
 
@@ -73,6 +86,30 @@ app.on('window-all-closed', () => {
 
 
 
+////*****************************************************
+//			   autoUpdater events						   
+//									  				   				
+//*****************************************************
+autoUpdater.on('checking-for-update', () => {
+  log.info('Checking for updates...');
+  send_info('Checking for update...');
+})
+autoUpdater.on('update-available', (ev, info) => {
+  send_info('Update available.');
+})
+autoUpdater.on('update-not-available', (ev, info) => {
+  send_info('Update not available.');
+})
+autoUpdater.on('error', (ev, err) => {
+  send_info('Error in auto-updater.');
+})
+autoUpdater.on('download-progress', (ev, progressObj) => {
+  send_info('Download progress...');
+})
+autoUpdater.on('update-downloaded', (ev, info) => {
+  send_info('Update downloaded; will install in 5 seconds');
+});
+
 
 
 
@@ -82,6 +119,10 @@ app.on('window-all-closed', () => {
 //*****************************************************
 function start(){
 	log.info('HEYYYYYY OHHH BOIIIA LET\'S BEGIN!!!!!');
+
+	// Check for updates
+	autoUpdater.checkForUpdates();
+
 
 	// If test mode is on -> Dummy window so end2end tests can run
 	if(process.env.NODE_ENV === 'test'){
