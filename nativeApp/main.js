@@ -34,11 +34,16 @@ autoUpdater.logger = log;
 //autoUpdater.logger.transports.file.level = 'info';
 
 
+log.info(`Prepare for take off!  Version: ${app.getVersion()}`);
+
+
 // Make sure that only one instance of the program gets to trive!
 const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => {});
 if(shouldSeppuku) app.quit();
 
 function send_info(msg){
+	log.info(msg);
+
 	dialog.showMessageBox({
 		type: 'info',
 		title: 'Info',
@@ -91,7 +96,6 @@ app.on('window-all-closed', () => {
 //									  				   				
 //*****************************************************
 autoUpdater.on('checking-for-update', () => {
-  log.info('Checking for updates...');
   send_info('Checking for update...');
 })
 autoUpdater.on('update-available', (ev, info) => {
