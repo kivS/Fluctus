@@ -23,7 +23,7 @@
       {
         "provider": "s3",
         "owner": "v1k",
-        "bucket": "floating-dog",
+        "bucket": "floating-dog.s3.amazonaws.com",
         "path": "/native_app_updates"
       }
     ]
