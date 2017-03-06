@@ -41,17 +41,6 @@ log.info(`Prepare for take off!  Version: ${app.getVersion()}`);
 const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => {});
 if(shouldSeppuku) app.quit();
 
-function send_info(msg){
-	log.info(msg);
-
-	dialog.showMessageBox({
-		type: 'info',
-		title: 'Info',
-		message: msg,
-		buttons: ['ok']
-	})	
-}
-
 
 
 //*****************************************************
@@ -95,23 +84,14 @@ app.on('window-all-closed', () => {
 //			   autoUpdater events						   
 //									  				   				
 //*****************************************************
-autoUpdater.on('checking-for-update', () => {
-  send_info('Checking for update...');
-})
-autoUpdater.on('update-available', (ev, info) => {
-  send_info('Update available.');
-})
-autoUpdater.on('update-not-available', (ev, info) => {
-  send_info('Update not available.');
-})
-autoUpdater.on('error', (ev, err) => {
-  send_info('Error in auto-updater.');
-})
-autoUpdater.on('download-progress', (ev, progressObj) => {
-  send_info('Download progress...');
-})
 autoUpdater.on('update-downloaded', (ev, info) => {
-  send_info('Update downloaded; will install in 5 seconds');
+	
+  autoUpdater.quitAndInstall()
+
+  send_info('info', 'You Have a new update', 'blah blah blah!');
+  log.info('update_info',{version: autoUpdater.VersionInfo, info: autoUpdater.UpdateInfo});
+
+
 });
 
 
@@ -338,3 +318,25 @@ function start(){
 
 
 }// end of start()
+
+
+
+////*****************************************************
+//			   HELPER FUNCTIONS						   
+//									  				   				
+//*****************************************************
+
+/**
+ * Send message dialog to user
+ * @param  {[string]} msg -> message
+ * @return {[type]}     [description]
+ */
+function sendMsgToUser(type,title, msg){
+	dialog.showMessageBox({
+		type: type ,
+		title: title,
+		message: msg,
+		buttons: ['ok']
+	})	
+}
+
