@@ -1,7 +1,7 @@
 {
   "name": "floatingDog",
   "productName": "Floating dog",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Watch videos from youtube and more in a floating window",
   "author": "Vik Borges <v1k@protonmail.com>",
   "copyright": "© 2017, Vik Borges.",
@@ -19,11 +19,14 @@
   "build": {
     "appId": "vik.my.floating.dog",
     "win": {},
-    "publish": [{
-        "provider": "github",
-        "owner": "kivS",
-        "repo": "floating-dog"  
-    }]
+    "publish": [
+      {
+        "provider": "s3",
+        "owner": "v1k",
+        "bucket": "floating-dog",
+        "path": "native_app_updates"
+      }
+    ]
   },
   "dependencies": {
     "electron-updater": "^1.8.2",
@@ -32,6 +35,7 @@
   "devDependencies": {
     "electron": "^1.4.15",
     "electron-builder": "^13.6.0",
+    "electron-publisher-s3": "^15.0.1",
     "electron-rebuild": "^1.5.7",
     "mocha": "^3.2.0",
     "request": "^2.79.0",

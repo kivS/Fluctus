@@ -31,7 +31,7 @@ log.configure({
 global.logger = log;
 // Set autoUpdater log to winston
 autoUpdater.logger = log;
-//autoUpdater.logger.transports.file.level = 'info';
+
 
 
 log.info(`Prepare for take off!  Version: ${app.getVersion()}`);
@@ -40,17 +40,6 @@ log.info(`Prepare for take off!  Version: ${app.getVersion()}`);
 // Make sure that only one instance of the program gets to trive!
 const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => {});
 if(shouldSeppuku) app.quit();
-
-function send_info(msg){
-	log.info(msg);
-
-	dialog.showMessageBox({
-		type: 'info',
-		title: 'Info',
-		message: msg,
-		buttons: ['ok']
-	})	
-}
 
 
 
@@ -95,23 +84,19 @@ app.on('window-all-closed', () => {
 //			   autoUpdater events						   
 //									  				   				
 //*****************************************************
-autoUpdater.on('checking-for-update', () => {
-  send_info('Checking for update...');
-})
-autoUpdater.on('update-available', (ev, info) => {
-  send_info('Update available.');
-})
-autoUpdater.on('update-not-available', (ev, info) => {
-  send_info('Update not available.');
-})
-autoUpdater.on('error', (ev, err) => {
-  send_info('Error in auto-updater.');
-})
-autoUpdater.on('download-progress', (ev, progressObj) => {
-  send_info('Download progress...');
-})
+
 autoUpdater.on('update-downloaded', (ev, info) => {
-  send_info('Update downloaded; will install in 5 seconds');
+
+	const title = 'New Update';
+	const msg = 'My human peasant has given me new commands.. updating core directives..';
+	const btns = ['ok', 'later'];
+
+
+	sendMsgToUser('info', title, msg, btns, index =>{
+		// if ok let's update app!
+		if(index == '0') autoUpdater.quitAndInstall();
+	});
+ 	
 });
 
 
@@ -122,7 +107,7 @@ autoUpdater.on('update-downloaded', (ev, info) => {
 //									  				   				
 //*****************************************************
 function start(){
-	log.info('HEYYYYYY OHHH BOIIIA LET\'S BEGIN!!!!!');
+	log.info('We\'ve go a lif off!');
 
 	// Check for updates
 	autoUpdater.checkForUpdates();
@@ -140,7 +125,7 @@ function start(){
 
 	// Set Tray icon
 	trayIcon = new Tray(icon);
-	trayIcon.setToolTip('Floating dog at your service..');
+	trayIcon.setToolTip('Floating dog is listening..');
 
 	const contextMenu = Menu.buildFromTemplate([
 			{
@@ -338,3 +323,31 @@ function start(){
 
 
 }// end of start()
+
+
+
+////*****************************************************
+//			   HELPER FUNCTIONS						   
+//									  				   				
+//*****************************************************
+
+/**
+ * Send message dialog to user
+ * @param  {[string]} type -> info, error ,etc..
+ * @param  {[string]} title -> title
+ * @param  {[string]} msg -> message
+ * @param  {[string]} btns -> array of butttons : ["ok" , "zz"]
+ * @return {[type]}     [description]
+ */
+function sendMsgToUser(type,title, msg, btns,  cb){
+	dialog.showMessageBox({
+		"type": type ,
+		"title": title,
+		"message": msg,
+		"buttons": btns
+
+	}, index =>{
+
+		cb(index);
+	})	
+}
