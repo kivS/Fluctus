@@ -31,7 +31,7 @@ log.configure({
 global.logger = log;
 // Set autoUpdater log to winston
 autoUpdater.logger = log;
-//autoUpdater.logger.transports.file.level = 'info';
+
 
 
 log.info(`Prepare for take off!  Version: ${app.getVersion()}`);
@@ -84,14 +84,19 @@ app.on('window-all-closed', () => {
 //			   autoUpdater events						   
 //									  				   				
 //*****************************************************
+
 autoUpdater.on('update-downloaded', (ev, info) => {
-	
-  autoUpdater.quitAndInstall()
 
-  send_info('info', 'You Have a new update', 'blah blah blah!');
-  log.info('update_info',{version: autoUpdater.VersionInfo, info: autoUpdater.UpdateInfo});
+	const title = 'New Update';
+	const msg = 'My human peasant has given me new commands.. updating core directives..';
+	const btns = ['ok', 'later'];
 
 
+	sendMsgToUser('info', title, msg, btns, index =>{
+		// if ok let's update app!
+		if(index == '0') autoUpdater.quitAndInstall();
+	});
+ 	
 });
 
 
@@ -102,7 +107,7 @@ autoUpdater.on('update-downloaded', (ev, info) => {
 //									  				   				
 //*****************************************************
 function start(){
-	log.info('HEYYYYYY OHHH BOIIIA LET\'S BEGIN!!!!!');
+	log.info('We\'ve go a lif off!');
 
 	// Check for updates
 	autoUpdater.checkForUpdates();
@@ -120,7 +125,7 @@ function start(){
 
 	// Set Tray icon
 	trayIcon = new Tray(icon);
-	trayIcon.setToolTip('Floating dog at your service..');
+	trayIcon.setToolTip('Floating dog is listening..');
 
 	const contextMenu = Menu.buildFromTemplate([
 			{
@@ -328,15 +333,21 @@ function start(){
 
 /**
  * Send message dialog to user
+ * @param  {[string]} type -> info, error ,etc..
+ * @param  {[string]} title -> title
  * @param  {[string]} msg -> message
+ * @param  {[string]} btns -> array of butttons : ["ok" , "zz"]
  * @return {[type]}     [description]
  */
-function sendMsgToUser(type,title, msg){
+function sendMsgToUser(type,title, msg, btns,  cb){
 	dialog.showMessageBox({
-		type: type ,
-		title: title,
-		message: msg,
-		buttons: ['ok']
+		"type": type ,
+		"title": title,
+		"message": msg,
+		"buttons": btns
+
+	}, index =>{
+
+		cb(index);
 	})	
 }
-
