@@ -107,7 +107,7 @@ autoUpdater.on('update-downloaded', (ev, info) => {
 //									  				   				
 //*****************************************************
 function start(){
-	log.info('We\'ve go a lif off!');
+	log.info('Lift Off of the floating dog!!');
 
 	// Check for updates
 	autoUpdater.checkForUpdates();
@@ -201,6 +201,7 @@ function start(){
 							x:               config.VIDEO_WINDOW_getXoffset(workAreaSize.width),
 							y:               config.VIDEO_WINDOW_getYoffset(workAreaSize.height),
 							backgroundColor: config.VIDEO_WINDOW_BG_COLOR,
+							maximizable: 	 false, 	
 							alwaysOnTop:     true,
 							show:            false,
 							frame:           true,
