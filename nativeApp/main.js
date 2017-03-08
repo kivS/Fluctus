@@ -4,6 +4,7 @@ const url = require('url');
 const path = require('path');
 const log = require('winston');
 const {autoUpdater} = require('electron-updater');
+const autoLaunch = require('auto-launch');
 
 let trayIcon;
 let videoBoxContainers = Array();
@@ -31,6 +32,12 @@ log.configure({
 global.logger = log;
 // Set autoUpdater log to winston
 autoUpdater.logger = log;
+
+// Set auto launch
+let auto_launch = new autoLaunch({
+	name: app.getName()
+
+}).enable();
 
 
 

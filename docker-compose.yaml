@@ -10,6 +10,7 @@ services:
       DISPLAY: unix$DISPLAY
       te2e: "npm run test:e2e"
       start: "npm run start" 
+      rebuild: "npm run rebuild"
     network_mode: 'host'
     working_dir: /home/code
     tty: true 
