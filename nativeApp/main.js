@@ -14,17 +14,19 @@ let videoBoxCounter = -1;
 let logs_path = path.join(app.getPath('home'), 'floating_dog.log');
 
 // Configure winston logs
+const canHandleExceptions = (process.env.NODE_ENV === 'dev') ? false:true;
 log.configure({
 	transports: [
 		new (log.transports.Console)({
 			level: 'info',
-			prettyPrint: true
+			prettyPrint: true,
 		}),
 		new (log.transports.File)({
-			level: 'info',
-			filename: logs_path,
-			prettyPrint: true, 
-			json: false
+			level: 				'info',
+			filename:           logs_path,
+			prettyPrint:        true, 
+			json:               false,
+			handleExceptions:   canHandleExceptions
 		})
 	]
 });
@@ -39,14 +41,13 @@ let auto_launch = new autoLaunch({
 
 }).enable();
 
+// Make sure that only one instance of the program gets to trive!
+const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => {});
+if(shouldSeppuku) app.quit();
 
 
 log.info(`Prepare for take off!  Version: ${app.getVersion()}`);
 
-
-// Make sure that only one instance of the program gets to trive!
-const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => {});
-if(shouldSeppuku) app.quit();
 
 
 
