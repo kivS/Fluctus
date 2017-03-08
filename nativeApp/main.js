@@ -22,7 +22,7 @@ log.configure({
 			prettyPrint: true,
 		}),
 		new (log.transports.File)({
-			level: 				'info',
+			level: 				'error',
 			filename:           logs_path,
 			prettyPrint:        true, 
 			json:               false,
