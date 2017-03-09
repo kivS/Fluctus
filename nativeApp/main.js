@@ -133,7 +133,7 @@ function start(){
 
 	// Set Tray icon
 	trayIcon = new Tray(icon);
-	trayIcon.setToolTip('Floating dog is listening..');
+	trayIcon.setToolTip('Floating dog is waiting..');
 
 	const contextMenu = Menu.buildFromTemplate([
 			{
@@ -144,6 +144,13 @@ function start(){
 			}
 	]);
 	trayIcon.setContextMenu(contextMenu);
+	// Show ballon for windows
+	trayIcon.displayBalloon({
+		title: 'Start up',
+		content: 'Floating dog is up!'
+	});
+
+
 
 
 	// Get primary screen size info
