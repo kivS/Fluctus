@@ -137,6 +137,12 @@ function start(){
 
 	const contextMenu = Menu.buildFromTemplate([
 			{
+				label: 'Show logs',
+				click: () => {
+					shell.openItem(logs_path);
+				}
+			},
+			{
 				label: 'Exit',
 				click: () => {
 					app.quit();
