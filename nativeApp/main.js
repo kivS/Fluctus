@@ -1,4 +1,11 @@
-const {electron, app, BrowserWindow, Tray, Menu, dialog, shell} = require('electron');
+const {app} = require('electron');
+
+// Make sure that only one instance of the program gets to trive!
+const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => {});
+if(shouldSeppuku) app.quit();
+
+
+const {electron, BrowserWindow, Tray, Menu, dialog, shell} = require('electron');
 const http = require('http');
 const url = require('url');
 const path = require('path');
@@ -41,9 +48,6 @@ let auto_launch = new autoLaunch({
 
 }).enable();
 
-// Make sure that only one instance of the program gets to trive!
-const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => {});
-if(shouldSeppuku) app.quit();
 
 
 log.info(`Prepare for take off!  Version: ${app.getVersion()}`);
