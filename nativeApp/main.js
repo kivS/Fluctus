@@ -161,12 +161,9 @@ function start(){
 	});
 
 
-
-
 	// Get primary screen size info
 	const {workAreaSize}= require('electron').screen.getPrimaryDisplay();
 
-	log.info('Get all displays: ', require('electron').screen.getAllDisplays());
 
 	let requested_url = null;       // request url 
 
@@ -204,6 +201,12 @@ function start(){
 						log.error(err.stack);
 
 					}).on('end', function(){
+
+						// get opens windows
+						let opened_video_panels =  BrowserWindow.getAllWindows().length;
+						log.info('Number of opened video panels: ', opened_video_panels);
+
+
 						// concat Buffer data; parse it to string; then parse it to JSON object
 						request_body = JSON.parse(Buffer.concat(request_body).toString());
 						log.info('Body: ', request_body);
@@ -216,6 +219,10 @@ function start(){
 						// If request type is not supported.. let's end this conversation
 						if(!supported_request) res.end(JSON.stringify({status: 'not_supported'}));
 
+						
+						// Get video panel position [x,y]
+						const video_panel_position = getVideoPanelPosition(workAreaSize, opened_video_panels);
+
 
 						// Create videoWindow
 						videoBoxContainers[++videoBoxCounter] = new BrowserWindow({
@@ -223,8 +230,8 @@ function start(){
 							height:          config.VIDEO_WINDOW_HEIGHT,
 							minWidth:        config.VIDEO_WINDOW_WIDTH,
 							minHeight:       config.VIDEO_WINDOW_HEIGHT,
-							x:               config.VIDEO_WINDOW_getXoffset(workAreaSize.width),
-							y:               config.VIDEO_WINDOW_getYoffset(workAreaSize.height),
+							x:               video_panel_position[0],
+							y:               video_panel_position[1],
 							backgroundColor: config.VIDEO_WINDOW_BG_COLOR,
 							maximizable: 	 false, 	
 							alwaysOnTop:     true,
@@ -376,4 +383,60 @@ function sendMsgToUser(type,title, msg, btns,  cb){
 
 		cb(index);
 	})	
+}
+
+
+/**
+ * Get position for video panel
+ * @param  {[object]} work_area_size          --> screen size available
+ * @param  {[int]} number_of_opened_panels 
+ * @return {[array]}       left and top offset for video panel   
+ */
+function getVideoPanelPosition(work_area_size,number_of_opened_panels){
+
+	console.log("work area: ", work_area_size);
+	console.log("opened video panels: ", number_of_opened_panels);
+
+	// Increment number of opened panels to compensate delay (starts at 0)
+	number_of_opened_panels++;
+
+	// Padding for window on screen
+	const padding_y = 10;
+	const padding_x = 10;
+
+	// get panels per row
+	let panels_per_row = Math.floor(work_area_size.width / (config.VIDEO_WINDOW_WIDTH + padding_x) );
+	log.info('boxes per row: ', panels_per_row);
+
+	// Start at bottom right of screen
+	let initial_x = (work_area_size.width - config.VIDEO_WINDOW_WIDTH - padding_x);
+	let initial_y = (work_area_size.height - config.VIDEO_WINDOW_HEIGHT - padding_y);
+
+
+	 let x = null;
+	 let y = null;
+	
+	 switch(true){
+	     // For first row
+	     case number_of_opened_panels <= panels_per_row:
+	         x = initial_x - (config.VIDEO_WINDOW_WIDTH + padding_x)*(number_of_opened_panels - 1);
+	         y = initial_y;
+	     break;
+
+	     // for second row
+	     case number_of_opened_panels > panels_per_row && number_of_opened_panels <= panels_per_row * 2:
+	         x = initial_x - (config.VIDEO_WINDOW_WIDTH + padding_x)*(number_of_opened_panels - panels_per_row - 1);
+	         y = initial_y - ( config.VIDEO_WINDOW_HEIGHT + padding_y + 20);
+	     break;
+
+	     // Anything taking more than 2 rows let's place them at bottom right of screen
+	     default:
+	         x = initial_x;
+	         y = initial_y;
+	     break;
+	 }
+	 
+
+	 return [parseInt(x),parseInt(y)];
+
 }
