@@ -237,6 +237,7 @@ function start(){
 							alwaysOnTop:     true,
 							show:            false,
 							frame:           true,
+							skipTaskbar:     true,
 							icon: 			 icon
 
 						});
