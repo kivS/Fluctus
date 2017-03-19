@@ -65,17 +65,7 @@ const config = {
 	VIDEO_WINDOW_BG_COLOR: '#000',
 	SERVER_PORTS: [8791,8238,8753],
 	SERVER_HOSTNAME: 'hostname',
-	SUPPORTED_REQUESTS: ['youtube'],
-
-	VIDEO_WINDOW_getXoffset: function(work_area_width){
-		// will position the window to the right side
-		return work_area_width - this.VIDEO_WINDOW_WIDTH - 5;
-	},
-
-	VIDEO_WINDOW_getYoffset: function(work_area_height){
-		// will position the window to the right side
-		return work_area_height - this.VIDEO_WINDOW_HEIGHT;
-	}
+	SUPPORTED_REQUESTS: ['youtube']
 
 }
 
