@@ -68,7 +68,10 @@ chrome.runtime.onInstalled.addListener( () => {
 // Page_action click event
 chrome.pageAction.onClicked.addListener( tab => {
 	//console.debug('page_action clicked..', tab);
-	//
+	
+	// pause current video
+	chrome.tabs.executeScript(null, {file: "actions_on_videos.js"});
+
 	current_tab = tab;
 	
 	if(NATIVE_APP_PORT){
