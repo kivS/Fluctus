@@ -62,12 +62,16 @@
     function onPlayerReady(){
       console.log('Youtube Player Ready');
 
+      // Check if start time on video is set then remove all non number characters and return int
+      const starting_time = (video_query.t)? parseInt(video_query.t.replace(/\D/g, '')): 0;
+      console.log('Starting video at(seconds): ', starting_time);
+
       // For playlists
       if('list' in video_query){
 
         player.cuePlaylist({
             list: video_query.list,
-           /* listType: 'playlist',*/
+            startSeconds: starting_time,
             index: parseInt(video_query.index - 1)
         });
 
@@ -76,7 +80,8 @@
       }else{
 
         player.cueVideoById({
-            videoId: video_query.v
+            videoId: video_query.v,
+            startSeconds: starting_time
         });
 
       }
