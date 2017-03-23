@@ -10,9 +10,9 @@
   "scripts": {
     "start": "NODE_ENV=dev ./node_modules/.bin/electron .",
     "rebuild": "./node_modules/.bin/electron-rebuild -v 1.4.15",
-    "pack": "build --dir --win --linux --x64",
-    "dist": "build -wl",
-    "publish": "build -wl -p always",
+    "pack": "./node_modules/.bin/build --dir --win --linux --x64",
+    "dist": "./node_modules/.bin/build -wl",
+    "publish": "./node_modules/.bin/build -wl -p always",
     "postinstall": "install-app-deps",
     "test:e2e": "NODE_ENV=test ./node_modules/mocha/bin/mocha tests/test.js"
   },
