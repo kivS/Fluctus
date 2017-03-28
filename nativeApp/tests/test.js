@@ -67,7 +67,7 @@ describe('Application Startup', function () {
   })
 
 
-  /*describe('On launch', function() {
+  describe('On launch', function() {
       it('should get Dummy test page', function(done) {
           this.app.browserWindow.getTitle().then(title =>{
              assert.equal(title, "TEST_PAGE");
@@ -113,7 +113,6 @@ describe('Application Startup', function () {
           })
 
       })
-
  
   })
 
@@ -142,8 +141,27 @@ describe('Application Startup', function () {
           
       })
 
+      it('should display vimeo video panel if the request type is vimeo', function(){
+          // open vimeo video panel
+          let payload = {
+            video_type: 'vimeo',
+            video_url: '76979871'
+          }
 
+          return new Promise((resolve) =>{
+            start_video_request(payload, (err, res, body) =>{
+                this.app.client.windowByIndex(1).then(() =>{
+                    this.app.client.getHTML('#page_id', false).then(page_id =>{
+                        resolve(page_id)
+                    })
+                })
+            })
 
+          }).then(result =>{
+              assert.equal('VIMEO_PAGE', result);
+          })
+          
+      })
 
       it('should return status: "not_supported" when the request type is... not supported!', function(){
           // open youtube video panel
@@ -164,32 +182,6 @@ describe('Application Startup', function () {
           
       })
 
-  })*/
-
-
-
-
-
-  it('should display vimeo video panel if the request type is vimeo', function(){
-      // open vimeo video panel
-      let payload = {
-        video_type: 'vimeo',
-        video_url: 'https://www.youtube.com/watch?v=RWUPhKPjaBw&t=2560s'
-      }
-
-      return new Promise((resolve) =>{
-        start_video_request(payload, (err, res, body) =>{
-            this.app.client.windowByIndex(1).then(() =>{
-                this.app.client.getHTML('#page_id', false).then(page_id =>{
-                    //resolve(page_id)
-                })
-            })
-        })
-
-      }).then(result =>{
-         // assert.equal('YOUTUBE_PAGE', result);
-      })
-      
   })
 
 
