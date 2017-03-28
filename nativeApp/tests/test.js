@@ -145,7 +145,7 @@ describe('Application Startup', function () {
           // open vimeo video panel
           let payload = {
             video_type: 'vimeo',
-            video_url: '76979871'
+            video_url: 'pokimane'
           }
 
           return new Promise((resolve) =>{
@@ -159,6 +159,28 @@ describe('Application Startup', function () {
 
           }).then(result =>{
               assert.equal('VIMEO_PAGE', result);
+          })
+          
+      })
+
+      it('should display twitch video panel if the request type is twitch', function(){
+          // open twitch video panel
+          let payload = {
+            video_type: 'twitch',
+            video_url: 'pokimane'
+          }
+
+          return new Promise((resolve) =>{
+            start_video_request(payload, (err, res, body) =>{
+                this.app.client.windowByIndex(1).then(() =>{
+                    this.app.client.getHTML('#page_id', false).then(page_id =>{
+                        resolve(page_id)
+                    })
+                })
+            })
+
+          }).then(result =>{
+              assert.equal('TWITCH_PAGE', result);
           })
           
       })
