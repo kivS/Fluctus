@@ -38,7 +38,7 @@
       const remote = require('electron').remote;
       const log = remote.getGlobal('logger');
       const url = require('url');
-      const TAG = 'From panel_template.html - ';
+      const TAG = 'From twitchVideoPanel.html - ';
 
       log.info(TAG, "Hello from video panel!!!");
 
@@ -47,12 +47,11 @@
       console.log('Payload: ', payload);
 
       // create player
-      let player = new Twitch.Player("video_player", {
-  
-      });
+      let player = new Twitch.Player("video_player", {});
 
-      // play video on channel
-      player.setChannel(payload.video_channel);
+      // play online video on channel
+      player.setChannel(payload.video_url);
+      
  
     
   </script>
