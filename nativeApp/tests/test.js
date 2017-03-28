@@ -67,7 +67,7 @@ describe('Application Startup', function () {
   })
 
 
-  describe('On launch', function() {
+  /*describe('On launch', function() {
       it('should get Dummy test page', function(done) {
           this.app.browserWindow.getTitle().then(title =>{
              assert.equal(title, "TEST_PAGE");
@@ -114,57 +114,12 @@ describe('Application Startup', function () {
 
       })
 
- /*     it('should return "not_allowed" when trying to enter from the back-door... :D', function(){
-          let bad_bad_urls = [
-              '/give_me_monaye',
-              '?tutu=true',
-              '/destroy_program',
-              '/ping'
-
-          ];
-
-          bad_bad_urls.forEach(bad_url => {
-              return new Promise((resolve, reject) =>{
-
-                  let url = `${config.server+bad_url}`;
-
-                  http.get(url, response =>{
-                      response.setEncoding('utf8');
-
-                      var response_data = [];
-
-                      response.on('data', data => {
-                        response_data.push(data);
-                      });
-
-                      response.on('end', () => {
-                        var resp = JSON.parse(response_data.toString());
-                        
-                        if(assert.equal('not_allowed..', resp.status)) resolve();
-                        else reject();
-                        
-                        
-                      });
-
-                      response.on('error', error => { 
-                        reject(error);
-                      });
-                  })
-              }).then(result =>{
-                  console.log('ok');
-              }).catch(error =>{
-                  console.log(error);
-              })
-
-          })
-      })
-*/
-
  
   })
 
 
   describe('On video panel startup', function (){
+
       it('should display youtube video panel if the request type is youtube', function(){
           // open youtube video panel
           let payload = {
@@ -187,6 +142,9 @@ describe('Application Startup', function () {
           
       })
 
+
+
+
       it('should return status: "not_supported" when the request type is... not supported!', function(){
           // open youtube video panel
           let payload = {
@@ -206,6 +164,32 @@ describe('Application Startup', function () {
           
       })
 
+  })*/
+
+
+
+
+
+  it('should display vimeo video panel if the request type is vimeo', function(){
+      // open vimeo video panel
+      let payload = {
+        video_type: 'vimeo',
+        video_url: 'https://www.youtube.com/watch?v=RWUPhKPjaBw&t=2560s'
+      }
+
+      return new Promise((resolve) =>{
+        start_video_request(payload, (err, res, body) =>{
+            this.app.client.windowByIndex(1).then(() =>{
+                this.app.client.getHTML('#page_id', false).then(page_id =>{
+                    //resolve(page_id)
+                })
+            })
+        })
+
+      }).then(result =>{
+         // assert.equal('YOUTUBE_PAGE', result);
+      })
+      
   })
 
 

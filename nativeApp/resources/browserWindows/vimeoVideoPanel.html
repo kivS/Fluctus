@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello World!</title>
+    <style>
+      body{
+        width: 100vw;
+        height: 100vh;
+        margin: 0px;
+      }
+      .app{
+        width: 100vw;
+        height: 99vh;
+      }
+
+       #video_player iframe, #video_player object, #video_player embed {
+          position: absolute; 
+          top: 0; 
+          left: 0; 
+          width: 100%; 
+          height: 100%;
+       }
+
+    </style>
+  </head>
+  <body>
+    <div id="page_id" style="display: none;">VIMEO_PAGE</div>
+    <div class="app">
+        <div id="video_player"></div>
+    </div>
+  </body>
+  <script src="https://player.vimeo.com/api/player.js"></script>
+ <script>
+    const remote = require('electron').remote;
+    const log = remote.getGlobal('logger');
+    const TAG = 'From panel_template.html - ';
+
+    log.info(TAG, "Hello from video panel!!!");
+
+    // create video player
+    let player = new Vimeo.Player('video_player', {
+        id: 76979871,
+ 
+    });
+
+  
+
+  
+  </script>
+</html>
