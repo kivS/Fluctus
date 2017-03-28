@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Hello World!</title>
+    <title>Vimeo</title>
     <style>
       body{
         width: 100vw;
@@ -32,21 +32,38 @@
     </div>
   </body>
   <script src="https://player.vimeo.com/api/player.js"></script>
- <script>
+  <script>
     const remote = require('electron').remote;
+    const url = require('url');
     const log = remote.getGlobal('logger');
-    const TAG = 'From panel_template.html - ';
+    const TAG = 'From vimeoVideoPanel.html - ';
 
     log.info(TAG, "Hello from video panel!!!");
 
+    // get payload and parse it into object 
+    const payload = url.parse(location.search, true).query;
+    console.log('Payload: ', payload);
+
     // create video player
     let player = new Vimeo.Player('video_player', {
-        id: 76979871,
- 
+        id: payload.video_url,
+        color: "c13e3e",
+        autopause: false
+
     });
 
-  
+   // set video time if there's time
+    if(payload.time){
+      player.setCurrentTime(parseFloat(payload.time)).then(seconds =>{
+        player.pause();
 
-  
+      }).catch(error =>{
+          console.error(error);
+          log.error(TAG, error);
+      });
+
+    }
+
+    
   </script>
 </html>
