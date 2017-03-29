@@ -33,6 +33,7 @@
   </body>
   <script src="https://player.vimeo.com/api/player.js"></script>
   <script>
+    require('../helpers/checkInternet.js');
     const remote = require('electron').remote;
     const url = require('url');
     const log = remote.getGlobal('logger');

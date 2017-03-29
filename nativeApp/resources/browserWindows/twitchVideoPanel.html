@@ -35,6 +35,7 @@
   </body>
   <script src= "http://player.twitch.tv/js/embed/v1.js"></script>
   <script>
+      require('../helpers/checkInternet.js');
       const remote = require('electron').remote;
       const log = remote.getGlobal('logger');
       const url = require('url');

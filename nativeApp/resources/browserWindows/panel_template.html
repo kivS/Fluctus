@@ -23,6 +23,7 @@
     </div>
   </body>
  <script>
+    require('../helpers/checkInternet.js');
     const remote = require('electron').remote;
     const log = remote.getGlobal('logger');
     const TAG = 'From panel_template.html - ';
