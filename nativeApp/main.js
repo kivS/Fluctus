@@ -101,6 +101,9 @@ autoUpdater.on('update-downloaded', (ev, info) => {
  	
 });
 
+autoUpdater.on('error', err =>{
+	log.error('Error while updating: ',err);
+});
 
 
 
