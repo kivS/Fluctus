@@ -129,6 +129,7 @@ function start(){
 	trayIcon = new Tray(icon);
 	trayIcon.setToolTip('Floating dog is waiting..');
 
+	// create menu
 	const contextMenu = Menu.buildFromTemplate([
 			{
 				label: 'Show logs',
@@ -137,18 +138,29 @@ function start(){
 				}
 			},
 			{
+				label: `Version: ${app.getVersion()}`,
+			},
+			{
+				type: 'separator',
+			},
+			{
 				label: 'Exit',
-				click: () => {
-					app.quit();
-				}
+				role: 'quit'
 			}
 	]);
+	// set menu
 	trayIcon.setContextMenu(contextMenu);
-	// Show ballon for windows
+
+	// Show start up ballon for windows
 	trayIcon.displayBalloon({
 		title: 'Start up',
-		content: 'Floating dog is up!'
+		content: `Floating dog(V: ${app.getVersion()}) is starting up!`
 	});
+
+	trayIcon.on('click', () => {
+		// popup menu
+		trayIcon.popUpContextMenu(contextMenu);
+	})
 
 
 	// Get primary screen size info
