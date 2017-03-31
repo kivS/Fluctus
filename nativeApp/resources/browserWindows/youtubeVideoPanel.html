@@ -33,7 +33,7 @@
     log.info(TAG, "Hello from video panel!!!");
 
 
-    // Parse payload in URL and parse it into object 
+    // Parse payload in URL and parse it into object
     const payload = url.parse(location.search, true).query;
     console.log('Payload: ', payload);
 
@@ -64,7 +64,7 @@
       console.log('Youtube Player Ready');
 
       // Check if start time on video is set then remove all non number characters and return int
-      const starting_time = (video_query.t)? parseInt(video_query.t.replace(/\D/g, '')): 0;
+      const starting_time = (payload.time)? parseFloat(payload.time): 0;
       console.log('Starting video at(seconds): ', starting_time);
 
       // For playlists
@@ -112,7 +112,7 @@
         process.crash();
       }
 
-      
+
     }
 
     function onPlayerStateChange(e){
