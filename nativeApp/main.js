@@ -31,7 +31,7 @@ log.configure({
 		new (log.transports.File)({
 			level: 				'error',
 			filename:           logs_path,
-			prettyPrint:        true, 
+			prettyPrint:        true,
 			json:               false,
 			handleExceptions:   canHandleExceptions
 		})
@@ -56,8 +56,8 @@ log.info(`Prepare for take off!  Version: ${app.getVersion()}`);
 
 
 //*****************************************************
-//			   CONFIGS					   
-//									  				   				
+//			   CONFIGS
+//
 //*****************************************************
 const config = {
 	VIDEO_WINDOW_WIDTH: 480,
@@ -71,8 +71,8 @@ const config = {
 
 
 //*****************************************************
-//			   APP Events						   
-//									  				   				
+//			   APP Events
+//
 //*****************************************************
 app.on('ready', start);
 
@@ -83,8 +83,8 @@ app.on('window-all-closed', () => {
 
 
 ////*****************************************************
-//			   autoUpdater events						   
-//									  				   				
+//			   autoUpdater events
+//
 //*****************************************************
 
 autoUpdater.on('update-downloaded', (ev, info) => {
@@ -98,7 +98,7 @@ autoUpdater.on('update-downloaded', (ev, info) => {
 		// if ok let's update app!
 		if(index == '0') autoUpdater.quitAndInstall();
 	});
- 	
+
 });
 
 autoUpdater.on('error', err =>{
@@ -108,8 +108,8 @@ autoUpdater.on('error', err =>{
 
 
 //*****************************************************
-//			   Background dog Start						   
-//									  				   				
+//			   Background dog Start
+//
 //*****************************************************
 function start(){
 	log.info('Lift Off of the floating dog!!');
@@ -125,7 +125,7 @@ function start(){
 
 	}
 
-	
+
 	let icon = `${__dirname}/resources/images/icon.png`;
 
 	// Set Tray icon
@@ -157,7 +157,7 @@ function start(){
 	// Show start up ballon for windows
 	trayIcon.displayBalloon({
 		title: 'Start up',
-		content: `Floating dog(V: ${app.getVersion()}) is starting up!`
+		content: `Floating dog(${app.getVersion()}) is starting up!`
 	});
 
 	trayIcon.on('click', () => {
@@ -170,7 +170,7 @@ function start(){
 	const {workAreaSize}= require('electron').screen.getPrimaryDisplay();
 
 
-	let requested_url = null;       // request url 
+	let requested_url = null;       // request url
 
 	// Create server
 	const server = http.createServer((req, res) =>{
@@ -224,7 +224,7 @@ function start(){
 						// If request type is not supported.. let's end this conversation
 						if(!supported_request) res.end(JSON.stringify({status: 'not_supported'}));
 
-						
+
 						// Get video panel position [x,y]
 						const video_panel_position = getVideoPanelPosition(workAreaSize, opened_video_panels);
 
@@ -238,7 +238,7 @@ function start(){
 							x:               video_panel_position[0],
 							y:               video_panel_position[1],
 							backgroundColor: config.VIDEO_WINDOW_BG_COLOR,
-							maximizable: 	 false, 	
+							maximizable: 	 false,
 							alwaysOnTop:     true,
 							show:            false,
 							frame:           true,
@@ -261,7 +261,7 @@ function start(){
 								detach: true
 							});
 						}
-						
+
 
 						// WINDOW EVENTS
 						videoBox.on('closed', () => {
@@ -273,7 +273,7 @@ function start(){
 							videoBox.show();
 						});
 
-				
+
 						videoBox.webContents.on('new-window', (e, w_url, frameName, disposition, options) =>{
 							e.preventDefault();
 							log.info('On new-window event: ', {url: w_url, frame_name: frameName, disposition: disposition, options: options});
@@ -281,7 +281,7 @@ function start(){
 							// Open all external links externally(Web browser..etc) by Default
 							log.info(`Opening ${w_url} externally..`);
 							shell.openExternal(w_url);
-							
+
 						});
 
 
@@ -324,14 +324,14 @@ function start(){
 						log.info('Window size: ', videoBox.getSize());
 						log.info('Window position: ', videoBox.getPosition());
 
-						res.end(JSON.stringify({status: 'ok'}));	
+						res.end(JSON.stringify({status: 'ok'}));
 
 					});
 				break;
 
 				// For anything else..
 				default:
-					res.end(JSON.stringify({status: 'not_allowed..'}));	
+					res.end(JSON.stringify({status: 'not_allowed..'}));
 				break;
 			}
 
@@ -365,8 +365,8 @@ function start(){
 
 
 ////*****************************************************
-//			   HELPER FUNCTIONS						   
-//									  				   				
+//			   HELPER FUNCTIONS
+//
 //*****************************************************
 
 /**
@@ -387,15 +387,15 @@ function sendMsgToUser(type,title, msg, btns,  cb){
 	}, index =>{
 
 		cb(index);
-	})	
+	})
 }
 
 
 /**
  * Get position for video panel
  * @param  {[object]} work_area_size          --> screen size available
- * @param  {[int]} number_of_opened_panels 
- * @return {[array]}       left and top offset for video panel   
+ * @param  {[int]} number_of_opened_panels
+ * @return {[array]}       left and top offset for video panel
  */
 function getVideoPanelPosition(work_area_size,number_of_opened_panels){
 
@@ -420,7 +420,7 @@ function getVideoPanelPosition(work_area_size,number_of_opened_panels){
 
 	 let x = null;
 	 let y = null;
-	
+
 	 switch(true){
 	     // For first row
 	     case number_of_opened_panels <= panels_per_row:
@@ -440,7 +440,7 @@ function getVideoPanelPosition(work_area_size,number_of_opened_panels){
 	         y = initial_y;
 	     break;
 	 }
-	 
+
 
 	 return [parseInt(x),parseInt(y)];
 
