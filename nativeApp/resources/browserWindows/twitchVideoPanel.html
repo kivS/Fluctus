@@ -17,10 +17,10 @@
 
 
       #video_player iframe, #video_player object, #video_player embed {
-         position: absolute; 
-         top: 0; 
-         left: 0; 
-         width: 100%; 
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
          height: 100%;
       }
 
@@ -43,7 +43,7 @@
 
       log.info(TAG, "Hello from video panel!!!");
 
-      //get payload and parse it into object 
+      //get payload and parse it into object
       const payload = url.parse(location.search, true).query;
       console.log('Payload: ', payload);
 
@@ -52,8 +52,8 @@
 
       // play online video on channel
       player.setChannel(payload.video_url);
-      
- 
-    
+
+
+
   </script>
 </html>
