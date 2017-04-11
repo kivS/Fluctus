@@ -8,13 +8,13 @@
   "homepage": "https://vikborges.com",
   "main": "main.js",
   "scripts": {
-    "start": "NODE_ENV=dev ./node_modules/.bin/electron .",
-    "rebuild": "./node_modules/.bin/electron-rebuild -v 1.4.15",
-    "pack": "./node_modules/.bin/build --dir --win --linux --x64",
-    "dist": "./node_modules/.bin/build -wl",
-    "publish": "./node_modules/.bin/build -wl -p always",
+    "start": "NODE_ENV=dev electron .",
+    "rebuild": "electron-rebuild -v 1.6.2",
+    "pack": "build --dir --win --linux --x64",
+    "dist": "build -wl",
+    "publish": "build -wl -p always",
     "postinstall": "install-app-deps",
-    "test:e2e": "NODE_ENV=test ./node_modules/mocha/bin/mocha tests/test.js"
+    "test:e2e": "NODE_ENV=test mocha tests/test.js"
   },
   "build": {
     "appId": "vik.my.floating.dog",
@@ -34,7 +34,7 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
-    "electron": "^1.4.15",
+    "electron": "^1.6.2",
     "electron-builder": "^13.6.0",
     "electron-publisher-s3": "^15.0.1",
     "electron-rebuild": "^1.5.7",
