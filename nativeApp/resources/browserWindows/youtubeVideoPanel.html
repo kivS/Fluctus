@@ -64,7 +64,7 @@
       console.log('Youtube Player Ready');
 
       // Check if start time on video is set then remove all non number characters and return int
-      const starting_time = (payload.time)? parseFloat(payload.time): 0;
+      const starting_time = payload.video_currentTime || video_query.t || 0;
       console.log('Starting video at(seconds): ', starting_time);
 
       // For playlists
