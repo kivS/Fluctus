@@ -1,8 +1,8 @@
 {
-  "name": "floatingDog",
-  "productName": "Floating dog",
-  "version": "1.0.8",
-  "description": "Watch videos from youtube and more in a floating window",
+  "name": "Fluctus",
+  "productName": "Fluctus",
+  "version": "1.0.9",
+  "description": "Watch videos from youtube(and more) in a floating window",
   "author": "Vik Borges <v1k@protonmail.com>",
   "copyright": "© 2017, Vik Borges.",
   "homepage": "https://vikborges.com",
@@ -17,7 +17,7 @@
     "test:e2e": "NODE_ENV=test mocha tests/test.js"
   },
   "build": {
-    "appId": "vik.my.floating.dog",
+    "appId": "vik.my.fluctus",
     "win": {},
     "publish": [
       {
