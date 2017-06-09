@@ -5,14 +5,14 @@
   "description": "Watch videos from youtube(and more) in a floating window",
   "author": "Vik Borges <v1k@protonmail.com>",
   "copyright": "© 2017, Vik Borges.",
-  "homepage": "https://vikborges.com",
+  "homepage": "https://kivs.github.io/Fluctus",
   "main": "main.js",
   "scripts": {
     "start": "NODE_ENV=dev electron .",
     "rebuild": "electron-rebuild -v 1.6.2",
     "pack": "build --dir --win --linux --x64",
-    "dist": "build -wl",
-    "publish": "build -wl -p always",
+    "dist": "build --win --linux --x64 --ia32",
+    "publish": "build --win --linux --x64 --ia32 -p always",
     "postinstall": "install-app-deps",
     "test:e2e": "NODE_ENV=test mocha tests/test.js"
   },
