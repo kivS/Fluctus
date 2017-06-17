@@ -1,17 +1,17 @@
-const {app} = require('electron');
+import {app} from 'electron';
 
 // Make sure that only one instance of the program gets to trive!
 const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => {});
 if(shouldSeppuku) app.quit();
 
 
-const {electron, BrowserWindow, Tray, Menu, dialog, shell} = require('electron');
-const http = require('http');
-const url = require('url');
-const path = require('path');
-const log = require('winston');
-const {autoUpdater} = require('electron-updater');
-const autoLaunch = require('auto-launch');
+import  {BrowserWindow, Tray, Menu, dialog, shell} from 'electron';
+import * as http from 'http';
+import * as url from 'url';
+import * as path from 'path';
+import * as log from 'winston';
+import {autoUpdater} from 'electron-updater';
+import * as autoLaunch from 'auto-launch';
 
 let trayIcon;
 let videoBoxContainers = Array();
@@ -38,7 +38,7 @@ log.configure({
     ]
 });
 // set logger as global for window instances
-global.logger = log;
+global['logger'] = log;
 // Set autoUpdater log to winston
 autoUpdater.logger = log;
 
