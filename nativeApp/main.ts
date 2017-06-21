@@ -1,16 +1,14 @@
-import {app} from 'electron';
+import { app, BrowserWindow, Tray, Menu, dialog, shell, screen } from 'electron';
 
 // Make sure that only one instance of the program gets to trive!
-const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => {});
-if(shouldSeppuku) app.quit();
+const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => { });
+if (shouldSeppuku) app.quit();
 
-
-import  {BrowserWindow, Tray, Menu, dialog, shell} from 'electron';
 import * as http from 'http';
 import * as url from 'url';
 import * as path from 'path';
 import * as log from 'winston';
-import {autoUpdater} from 'electron-updater';
+import { autoUpdater } from 'electron-updater';
 import * as autoLaunch from 'auto-launch';
 
 let trayIcon;
@@ -21,7 +19,7 @@ let videoBoxCounter = -1;
 let logs_path = path.join(app.getPath('home'), 'fluctus.log');
 
 // Configure winston logs
-const canHandleExceptions = (process.env.NODE_ENV === 'dev') ? false:true;
+const canHandleExceptions = (process.env.NODE_ENV === 'dev') ? false : true;
 log.configure({
     transports: [
         new (log.transports.Console)({
@@ -29,11 +27,11 @@ log.configure({
             prettyPrint: true,
         }),
         new (log.transports.File)({
-            level:              'error',
-            filename:           logs_path,
-            prettyPrint:        true,
-            json:               false,
-            handleExceptions:   canHandleExceptions
+            level: 'error',
+            filename: logs_path,
+            prettyPrint: true,
+            json: false,
+            handleExceptions: canHandleExceptions
         })
     ]
 });
@@ -63,7 +61,7 @@ const config = {
     VIDEO_WINDOW_WIDTH: 480,
     VIDEO_WINDOW_HEIGHT: 400,
     VIDEO_WINDOW_BG_COLOR: '#000',
-    SERVER_PORTS: [8791,8238,8753],
+    SERVER_PORTS: [8791, 8238, 8753],
     SERVER_HOSTNAME: 'localhost',
     SUPPORTED_REQUESTS: ['youtube', 'vimeo', 'twitch']
 
@@ -94,15 +92,15 @@ autoUpdater.on('update-downloaded', (ev, info) => {
     const btns = ['ok', 'later'];
 
 
-    sendMsgToUser('info', title, msg, btns, index =>{
+    sendMsgToUser('info', title, msg, btns, index => {
         // if ok let's update app!
-        if(index == '0') autoUpdater.quitAndInstall();
+        if (index == '0') autoUpdater.quitAndInstall();
     });
 
 });
 
-autoUpdater.on('error', err =>{
-    log.error('Error while updating: ',err);
+autoUpdater.on('error', err => {
+    log.error('Error while updating: ', err);
 });
 
 
@@ -111,7 +109,7 @@ autoUpdater.on('error', err =>{
 //             Background dog Start
 //
 //*****************************************************
-function start(){
+function start() {
     log.info('Lift Off of the fluctus!!');
 
     // Check for updates
@@ -119,8 +117,8 @@ function start(){
 
 
     // If test mode is on -> Dummy window so end2end tests can run
-    if(process.env.NODE_ENV === 'test'){
-        let test_window =   new BrowserWindow({alwaysOnTop: true, show: false});
+    if (process.env.NODE_ENV === 'test') {
+        let test_window = new BrowserWindow({ alwaysOnTop: true, show: false });
         test_window.loadURL(`file://${__dirname}/resources/browserWindows/test.html`);
 
     }
@@ -134,22 +132,22 @@ function start(){
 
     // create menu
     const contextMenu = Menu.buildFromTemplate([
-            {
-                label: 'Show logs',
-                click: () => {
-                    shell.openItem(logs_path);
-                }
-            },
-            {
-                label: `Version: ${app.getVersion()}`,
-            },
-            {
-                type: 'separator',
-            },
-            {
-                label: 'Exit',
-                role: 'quit'
+        {
+            label: 'Show logs',
+            click: () => {
+                shell.openItem(logs_path);
             }
+        },
+        {
+            label: `Version: ${app.getVersion()}`,
+        },
+        {
+            type: 'separator',
+        },
+        {
+            label: 'Exit',
+            role: 'quit'
+        }
     ]);
     // set menu
     trayIcon.setContextMenu(contextMenu);
@@ -167,194 +165,194 @@ function start(){
 
 
     // Get primary screen size info
-    const {workAreaSize}= require('electron').screen.getPrimaryDisplay();
+    const { workAreaSize } = screen.getPrimaryDisplay();
 
 
     let requested_url = null;       // request url
 
     // Create server
-    const server = http.createServer((req, res) =>{
-            log.info('Request Headers: ', req.headers);
-            log.info('Request Method: ',  req.method);
-            log.info('Request Url: ',     req.url);
+    const server = http.createServer((req, res) => {
+        log.info('Request Headers: ', req.headers);
+        log.info('Request Method: ', req.method);
+        log.info('Request Url: ', req.url);
 
-            // Get parsed request url
-            requested_url = url.parse(req.url);
+        // Get parsed request url
+        requested_url = url.parse(req.url);
 
-            // body for the request
-            let request_body = [];
+        // body for the request
+        let request_body = [];
 
-            // set headers
-            res.writeHead(200, {'Content-Type': 'application/json'});
+        // set headers
+        res.writeHead(200, { 'Content-Type': 'application/json' });
 
-            // Handle request
-            switch(true){
-                // for ping requests
-                case (req.method == 'GET' && requested_url.pathname == '/ping'):
+        // Handle request
+        switch (true) {
+            // for ping requests
+            case (req.method == 'GET' && requested_url.pathname == '/ping'):
 
-                    res.end(JSON.stringify({status: 'alive'}));
+                res.end(JSON.stringify({ status: 'alive' }));
 
                 break;
 
-                // For video requests
-                case (req.method == 'POST' && requested_url.pathname == '/start_video'):
-                    //handle body of the request
-                    req.on('data', chunk =>{
-                        request_body.push(chunk);
+            // For video requests
+            case (req.method == 'POST' && requested_url.pathname == '/start_video'):
+                //handle body of the request
+                req.on('data', chunk => {
+                    request_body.push(chunk);
 
-                    }).on('error', err =>{
-                        log.error(err.stack);
+                }).on('error', err => {
+                    log.error(err.stack);
 
-                    }).on('end', function(){
+                }).on('end', function() {
 
-                        // get opens windows
-                        let opened_video_panels =  BrowserWindow.getAllWindows().length;
-                        log.info('Number of opened video panels: ', opened_video_panels);
-
-
-                        // concat Buffer data; parse it to string; then parse it to JSON object
-                        request_body = JSON.parse(Buffer.concat(request_body).toString());
-                        log.info('Body: ', request_body);
-
-                        log.info('VideoBoxCounter: ', videoBoxCounter);
-
-                        // Check if video_type of request_body is supported
-                        const supported_request = config.SUPPORTED_REQUESTS.find(item => item == request_body.video_type);
-
-                        // If request type is not supported.. let's end this conversation
-                        if(!supported_request) res.end(JSON.stringify({status: 'not_supported'}));
+                    // get opens windows
+                    let opened_video_panels = BrowserWindow.getAllWindows().length;
+                    log.info('Number of opened video panels: ', opened_video_panels);
 
 
-                        // Get video panel position [x,y]
-                        const video_panel_position = getVideoPanelPosition(workAreaSize, opened_video_panels);
+                    // concat Buffer data; parse it to string; then parse it to JSON object
+                    request_body = JSON.parse(Buffer.concat(request_body).toString());
+                    log.info('Body: ', request_body);
+
+                    log.info('VideoBoxCounter: ', videoBoxCounter);
+
+                    // Check if video_type of request_body is supported
+                    const supported_request = config.SUPPORTED_REQUESTS.find(item => item == request_body.video_type);
+
+                    // If request type is not supported.. let's end this conversation
+                    if (!supported_request) res.end(JSON.stringify({ status: 'not_supported' }));
 
 
-                        // Create videoWindow
-                        videoBoxContainers[++videoBoxCounter] = new BrowserWindow({
-                            width:           config.VIDEO_WINDOW_WIDTH,
-                            height:          config.VIDEO_WINDOW_HEIGHT,
-                            minWidth:        config.VIDEO_WINDOW_WIDTH,
-                            minHeight:       config.VIDEO_WINDOW_HEIGHT,
-                            x:               video_panel_position[0],
-                            y:               video_panel_position[1],
-                            backgroundColor: config.VIDEO_WINDOW_BG_COLOR,
-                            maximizable:     false,
-                            alwaysOnTop:     true,
-                            show:            false,
-                            frame:           true,
-                            icon:            icon
-
-                        });
-
-                        // local videoBox reference
-                        const videoBox = videoBoxContainers[videoBoxCounter];
-
-                        // encode request_body into url param
-                        let query = url.format({ query: request_body })
-
-                        // Load window -> Naming convention:(supported_request value + VideoPanel.html)
-                        videoBox.loadURL(`file://${__dirname}/resources/browserWindows/${supported_request}VideoPanel.html${query}`);
-
-                        // Debug
-                        if(process.env.NODE_ENV === 'dev'){
-                            videoBox.webContents.openDevTools({
-                                detach: true
-                            });
-                        }
+                    // Get video panel position [x,y]
+                    const video_panel_position = getVideoPanelPosition(workAreaSize, opened_video_panels);
 
 
-                        // WINDOW EVENTS
-                        videoBox.on('closed', () => {
-                            // Remove current videoBox from global reference
-                            videoBoxContainers.splice(videoBoxCounter, 1);
-                        });
-
-                        videoBox.once('ready-to-show', () => {
-                            videoBox.show();
-                        });
-
-
-                        videoBox.webContents.on('new-window', (e, w_url, frameName, disposition, options) =>{
-                            e.preventDefault();
-                            log.info('On new-window event: ', {url: w_url, frame_name: frameName, disposition: disposition, options: options});
-
-                            // Open all external links externally(Web browser..etc) by Default
-                            log.info(`Opening ${w_url} externally..`);
-                            shell.openExternal(w_url);
-
-                        });
-
-
-                        // Window Error events
-                        videoBox.webContents.on('crashed', () =>{
-                            const options = {
-                                type: 'info',
-                                title: 'Fluctus crashed',
-                                message: 'something made this crash..',
-                                buttons: ['Reload', 'close'],
-                            }
-                            dialog.showMessageBox(options, index =>{
-                                if(index === 0){
-                                     videoBox.reload();
-
-                                }else{
-                                    videoBox.close();
-                                }
-                            });
-                        });
-
-                        videoBox.on('unresponsive', () =>{
-                            const options = {
-                                type: 'info',
-                                title: 'Fluctus is still waiting..',
-                                message: 'This is taking too long..',
-                                buttons: ['Reload', 'close'],
-                            }
-                            dialog.showMessageBox(options, index =>{
-                                if(index === 0){
-                                     videoBox.reload();
-
-                                }else{
-                                    videoBox.close();
-                                }
-                            });
-                        });
-
-
-                        log.info('Window size: ', videoBox.getSize());
-                        log.info('Window position: ', videoBox.getPosition());
-
-                        res.end(JSON.stringify({status: 'ok'}));
+                    // Create videoWindow
+                    videoBoxContainers[++videoBoxCounter] = new BrowserWindow({
+                        width: config.VIDEO_WINDOW_WIDTH,
+                        height: config.VIDEO_WINDOW_HEIGHT,
+                        minWidth: config.VIDEO_WINDOW_WIDTH,
+                        minHeight: config.VIDEO_WINDOW_HEIGHT,
+                        x: video_panel_position[0],
+                        y: video_panel_position[1],
+                        backgroundColor: config.VIDEO_WINDOW_BG_COLOR,
+                        maximizable: false,
+                        alwaysOnTop: true,
+                        show: false,
+                        frame: true,
+                        icon: icon
 
                     });
+
+                    // local videoBox reference
+                    const videoBox = videoBoxContainers[videoBoxCounter];
+
+                    // encode request_body into url param
+                    let query = url.format({ query: request_body })
+
+                    // Load window -> Naming convention:(supported_request value + VideoPanel.html)
+                    videoBox.loadURL(`file://${__dirname}/resources/browserWindows/${supported_request}VideoPanel.html${query}`);
+
+                    // Debug
+                    if (process.env.NODE_ENV === 'dev') {
+                        videoBox.webContents.openDevTools({
+                            detach: true
+                        });
+                    }
+
+
+                    // WINDOW EVENTS
+                    videoBox.on('closed', () => {
+                        // Remove current videoBox from global reference
+                        videoBoxContainers.splice(videoBoxCounter, 1);
+                    });
+
+                    videoBox.once('ready-to-show', () => {
+                        videoBox.show();
+                    });
+
+
+                    videoBox.webContents.on('new-window', (e, w_url, frameName, disposition, options) => {
+                        e.preventDefault();
+                        log.info('On new-window event: ', { url: w_url, frame_name: frameName, disposition: disposition, options: options });
+
+                        // Open all external links externally(Web browser..etc) by Default
+                        log.info(`Opening ${w_url} externally..`);
+                        shell.openExternal(w_url);
+
+                    });
+
+
+                    // Window Error events
+                    videoBox.webContents.on('crashed', () => {
+                        const options = {
+                            type: 'info',
+                            title: 'Fluctus crashed',
+                            message: 'something made this crash..',
+                            buttons: ['Reload', 'close'],
+                        }
+                        dialog.showMessageBox(options, index => {
+                            if (index === 0) {
+                                videoBox.reload();
+
+                            } else {
+                                videoBox.close();
+                            }
+                        });
+                    });
+
+                    videoBox.on('unresponsive', () => {
+                        const options = {
+                            type: 'info',
+                            title: 'Fluctus is still waiting..',
+                            message: 'This is taking too long..',
+                            buttons: ['Reload', 'close'],
+                        }
+                        dialog.showMessageBox(options, index => {
+                            if (index === 0) {
+                                videoBox.reload();
+
+                            } else {
+                                videoBox.close();
+                            }
+                        });
+                    });
+
+
+                    log.info('Window size: ', videoBox.getSize());
+                    log.info('Window position: ', videoBox.getPosition());
+
+                    res.end(JSON.stringify({ status: 'ok' }));
+
+                });
                 break;
 
-                // For anything else..
-                default:
-                    res.end(JSON.stringify({status: 'not_allowed..'}));
+            // For anything else..
+            default:
+                res.end(JSON.stringify({ status: 'not_allowed..' }));
                 break;
-            }
+        }
 
 
     });
     // get last port on ports list
     let port = config.SERVER_PORTS.pop();
-    server.listen({port: port, hostname: config.SERVER_HOSTNAME}, () => { log.info(` Background Dog is listening.. on door ${port}`); });
+    server.listen({ port: port, hostname: config.SERVER_HOSTNAME }, () => { log.info(` Background Dog is listening.. on door ${port}`); });
 
     // Server Events
     server.on('error', (err) => {
         log.error(`\n\nERROR_CODE: ${err.code} | \n\n ${err.stack}`);
 
-        switch(err.code){
+        switch (err.code) {
             case 'EADDRINUSE':
             case 'EACCES':
                 log.warn(`Port ${port} already in use... trying next one..`);
                 // try in another port
-                setTimeout(() =>{
+                setTimeout(() => {
                     port = config.SERVER_PORTS.pop();
-                    server.listen({port: port, hostname: config.SERVER_HOSTNAME});
-                },1000)
-            break;
+                    server.listen({ port: port, hostname: config.SERVER_HOSTNAME });
+                }, 1000)
+                break;
         }
     });
 
@@ -377,14 +375,14 @@ function start(){
  * @param  {[string]} btns -> array of butttons : ["ok" , "zz"]
  * @return {[type]}     [description]
  */
-function sendMsgToUser(type,title, msg, btns,  cb){
+function sendMsgToUser(type, title, msg, btns, cb) {
     dialog.showMessageBox({
-        "type": type ,
+        "type": type,
         "title": title,
         "message": msg,
         "buttons": btns
 
-    }, index =>{
+    }, index => {
 
         cb(index);
     })
@@ -397,7 +395,7 @@ function sendMsgToUser(type,title, msg, btns,  cb){
  * @param  {[int]} number_of_opened_panels
  * @return {[array]}       left and top offset for video panel
  */
-function getVideoPanelPosition(work_area_size,number_of_opened_panels){
+function getVideoPanelPosition(work_area_size, number_of_opened_panels) {
 
     console.log("work area: ", work_area_size);
     console.log("opened video panels: ", number_of_opened_panels);
@@ -410,7 +408,7 @@ function getVideoPanelPosition(work_area_size,number_of_opened_panels){
     const padding_x = 10;
 
     // get panels per row
-    let panels_per_row = Math.floor(work_area_size.width / (config.VIDEO_WINDOW_WIDTH + padding_x) );
+    let panels_per_row = Math.floor(work_area_size.width / (config.VIDEO_WINDOW_WIDTH + padding_x));
     log.info('boxes per row: ', panels_per_row);
 
     // Start at bottom right of screen
@@ -418,30 +416,30 @@ function getVideoPanelPosition(work_area_size,number_of_opened_panels){
     let initial_y = (work_area_size.height - config.VIDEO_WINDOW_HEIGHT - padding_y);
 
 
-     let x = null;
-     let y = null;
+    let x = null;
+    let y = null;
 
-     switch(true){
-         // For first row
-         case number_of_opened_panels <= panels_per_row:
-             x = initial_x - (config.VIDEO_WINDOW_WIDTH + padding_x)*(number_of_opened_panels - 1);
-             y = initial_y;
-         break;
+    switch (true) {
+        // For first row
+        case number_of_opened_panels <= panels_per_row:
+            x = initial_x - (config.VIDEO_WINDOW_WIDTH + padding_x) * (number_of_opened_panels - 1);
+            y = initial_y;
+            break;
 
-         // for second row
-         case number_of_opened_panels > panels_per_row && number_of_opened_panels <= panels_per_row * 2:
-             x = initial_x - (config.VIDEO_WINDOW_WIDTH + padding_x)*(number_of_opened_panels - panels_per_row - 1);
-             y = initial_y - ( config.VIDEO_WINDOW_HEIGHT + padding_y + 20);
-         break;
+        // for second row
+        case number_of_opened_panels > panels_per_row && number_of_opened_panels <= panels_per_row * 2:
+            x = initial_x - (config.VIDEO_WINDOW_WIDTH + padding_x) * (number_of_opened_panels - panels_per_row - 1);
+            y = initial_y - (config.VIDEO_WINDOW_HEIGHT + padding_y + 20);
+            break;
 
-         // Anything taking more than 2 rows let's place them at bottom right of screen
-         default:
-             x = initial_x;
-             y = initial_y;
-         break;
-     }
+        // Anything taking more than 2 rows let's place them at bottom right of screen
+        default:
+            x = initial_x;
+            y = initial_y;
+            break;
+    }
 
 
-     return [parseInt(x),parseInt(y)];
+    return [parseInt(x), parseInt(y)];
 
 }
