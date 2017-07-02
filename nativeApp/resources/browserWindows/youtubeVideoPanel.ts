@@ -22,9 +22,10 @@ const video_query = video.query;
 
 // Youtube video player
 let player;
+declare var YT: any;
 
 function onYouTubeIframeAPIReady() {
-   player = new window['YT'].Player('video_player', {
+   player = new YT.Player('video_player', {
      height: '100%',
      width: '100%',
      events: {
