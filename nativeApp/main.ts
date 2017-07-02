@@ -340,7 +340,7 @@ function start() {
     server.listen({ port: port, hostname: config.SERVER_HOSTNAME }, () => { log.info(` Background Dog is listening.. on door ${port}`); });
 
     // Server Events
-    server.on('error', (err) => {
+    server.on('error', (err: any) => {
         log.error(`\n\nERROR_CODE: ${err.code} | \n\n ${err.stack}`);
 
         switch (err.code) {

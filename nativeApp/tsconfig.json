@@ -1,0 +1,17 @@
+{
+    "compilerOptions":{
+        "target": "es5",
+        "removeComments": true,
+        "inlineSourceMap": true,
+        "lib":[
+            "ES6",
+            "ES5",
+            "DOM",
+            "ScriptHost"
+        ]
+    },
+    "files":[
+        "main.ts"
+
+    ]
+}
