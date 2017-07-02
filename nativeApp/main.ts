@@ -211,13 +211,13 @@ function start() {
 
 
                     // concat Buffer data; parse it to string; then parse it to JSON object
-                    request_body = JSON.parse(Buffer.concat(request_body).toString());
-                    log.info('Body: ', request_body);
+                    const request_body_object: object = JSON.parse(Buffer.concat(request_body).toString());
+                    log.info('Body: ', request_body_object);
 
                     log.info('VideoBoxCounter: ', videoBoxCounter);
 
                     // Check if video_type of request_body is supported
-                    const supported_request = config.SUPPORTED_REQUESTS.find(item => item == request_body.video_type);
+                    const supported_request = config.SUPPORTED_REQUESTS.find(item => item == request_body_object['video_type']);
 
                     // If request type is not supported.. let's end this conversation
                     if (!supported_request) res.end(JSON.stringify({ status: 'not_supported' }));
@@ -248,7 +248,7 @@ function start() {
                     const videoBox = videoBoxContainers[videoBoxCounter];
 
                     // encode request_body into url param
-                    let query = url.format({ query: request_body })
+                    let query = url.format({ query: request_body_object })
 
                     // Load window -> Naming convention:(supported_request value + VideoPanel.html)
                     videoBox.loadURL(`file://${__dirname}/resources/browserWindows/${supported_request}VideoPanel.html${query}`);

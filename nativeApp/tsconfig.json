@@ -9,9 +9,5 @@
             "DOM",
             "ScriptHost"
         ]
-    },
-    "files":[
-        "main.ts"
-
-    ]
+    }
 }
