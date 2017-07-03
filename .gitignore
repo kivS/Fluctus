@@ -3,3 +3,5 @@ node_modules/
 *.log
 .DS_Store
 nativeApp/main.js
+nativeApp/resources/**/*.js
+
