@@ -119,7 +119,7 @@ function start() {
     // If test mode is on -> Dummy window so end2end tests can run
     if (process.env.NODE_ENV === 'test') {
         let test_window = new BrowserWindow({ alwaysOnTop: true, show: false });
-        test_window.loadURL(`file://${__dirname}/resources/browserWindows/test.html`);
+        test_window.loadURL(`file://${__dirname}/resources/video_panels/test.html`);
 
     }
 
@@ -251,7 +251,7 @@ function start() {
                     let query = url.format({ query: request_body_object })
 
                     // Load window -> Naming convention:(supported_request value + VideoPanel.html)
-                    videoBox.loadURL(`file://${__dirname}/resources/browserWindows/${supported_request}VideoPanel.html${query}`);
+                    videoBox.loadURL(`file://${__dirname}/resources/video_panels/${supported_request}.html${query}`);
 
                     // Debug
                     if (process.env.NODE_ENV === 'dev') {

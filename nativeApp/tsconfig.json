@@ -10,5 +10,9 @@
             "DOM",
             "ScriptHost"
         ]
-    }
+    },
+    "exclude":[
+        "dist/*",
+        "node_modules"
+    ]
 }
