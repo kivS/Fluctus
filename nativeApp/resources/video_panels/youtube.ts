@@ -44,7 +44,7 @@ function onPlayerReady(){
   const starting_time = payload.video_currentTime || video_query.t || 0;
   console.log('Starting video at(seconds): ', starting_time);
 
-  // For playlists
+ /* // For playlists
   if('list' in video_query){
 
     player.cuePlaylist({
@@ -62,7 +62,14 @@ function onPlayerReady(){
         startSeconds: starting_time
     });
 
-  }
+  }*/
+
+  // only single videos while playlist bug is not fixed
+  player.cueVideoById({
+      videoId: video_query.v,
+      startSeconds: starting_time
+  });
+ 
 }
 
 
