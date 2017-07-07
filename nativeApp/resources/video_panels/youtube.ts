@@ -1,20 +1,13 @@
-// removes Object.defineProperty(exports, "__esModule", { value: true }); from compiled js
-export = 0;
-
-import {remote} from 'electron';
-import * as url from 'url';
-const log = remote.getGlobal('logger');
-
 const TAG = 'From youtube video panel - ';
 
 
 
 // Parse payload in URL and parse it into object
-const payload = url.parse(location.search, true).query;
+const payload = _parse_url(location.search, true).query;
 console.log('Payload: ', payload);
 
 // Get video info from payload
-const video = url.parse(payload.video_url, true);
+const video = _parse_url(payload.video_url, true);
 console.log('Youtube Video Parsed query: ', video);
 
 // Get video query (videoId & listId)
@@ -90,12 +83,12 @@ function onError(err){
 
   if(youtube_error_code){
 
-    log.error(TAG, yotube_error);
+    _log.error(TAG, yotube_error);
     console.error('kaput: ', yotube_error);
 
   }else{
     // make it crash..
-    process.crash();
+    _process_crash();
   }
 
 
