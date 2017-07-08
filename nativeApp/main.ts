@@ -240,7 +240,11 @@ function start() {
                         alwaysOnTop: true,
                         show: false,
                         frame: true,
-                        icon: icon
+                        icon: icon,
+                        webPreferences: {
+                            preload: path.join(__dirname, 'resources', 'video_panels', 'preload.js'),
+                            nodeIntegration: false
+                        }
 
                     });
 
