@@ -239,7 +239,7 @@ function start() {
                         maximizable: false,
                         alwaysOnTop: true,
                         show: false,
-                        frame: true,
+                        frame: false,
                         icon: icon,
                         webPreferences: {
                             preload: path.join(__dirname, 'resources', 'video_panels', 'preload.js'),

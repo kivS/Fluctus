@@ -7,4 +7,5 @@ process.once('loaded', function() {
   global['_log'] = remote.getGlobal('logger');
   global['_parse_url'] = url.parse;
   global['_process_crash'] = process.crash;
+  global['_getCurrentWindow'] = remote.getCurrentWindow();
 });
