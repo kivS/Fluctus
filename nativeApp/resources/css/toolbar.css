@@ -51,6 +51,10 @@
 }
 
 
-.toolbar_window_btns .toolbar_btn:last-child:hover svg{
+.toolbar_window_btns #closeBtn:hover svg{
   stroke:red;
+}
+
+.toolbar_window_btns #closeBtn:active svg{
+  stroke:white;
 }
