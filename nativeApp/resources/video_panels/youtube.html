@@ -129,7 +129,16 @@
         _getCurrentWindow.reload();
       });
 
+      // handle toolbar visibility
+     /* _getCurrentWindow.on('blur', () =>{
+          console.log('panel lost focus.. hiding toolbar');
+          document.getElementsByClassName('toolbar')[0].style.visibility = "hidden";
+      });
 
+       _getCurrentWindow.on('focus', () =>{
+          document.getElementsByClassName('toolbar')[0].style.visibility = "visible";
+      });
+      */
       
 
       // Parse payload in URL and parse it into object
