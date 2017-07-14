@@ -202,7 +202,6 @@ function start() {
 
             // For video requests
             case (req.method == 'POST' && requested_url.pathname == '/start_video'):
-                console.time('APP_START_VIDEO_PANEL');
                 //handle body of the request
                 req.on('data', chunk => {
                     request_body.push(chunk);
@@ -211,6 +210,8 @@ function start() {
                     log.error(err.stack);
 
                 }).on('end', function() {
+
+                    console.time('APP_START_VIDEO_PANEL');
 
                     // get opens windows
                     let opened_video_panels = BrowserWindow.getAllWindows().length;
@@ -279,8 +280,8 @@ function start() {
                     });
 
                     videoBox.once('ready-to-show', () => {
-                        console.timeEnd('APP_START_VIDEO_PANEL');
                         videoBox.show();
+                        console.timeEnd('APP_START_VIDEO_PANEL');
                     });
 
 
