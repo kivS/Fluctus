@@ -1,3 +1,6 @@
+console.time('APP_START_UP');
+console.time('APP_IMPORTS')
+
 import { app, BrowserWindow, Tray, Menu, dialog, shell, screen } from 'electron';
 
 // Make sure that only one instance of the program gets to trive!
@@ -10,6 +13,7 @@ import * as path from 'path';
 import * as log from 'winston';
 import { autoUpdater } from 'electron-updater';
 import * as autoLaunch from 'auto-launch';
+console.timeEnd('APP_IMPORTS');
 
 let trayIcon;
 let videoBoxContainers = Array();
@@ -110,6 +114,8 @@ autoUpdater.on('error', err => {
 //
 //*****************************************************
 function start() {
+    console.timeEnd('APP_START_UP');
+
     log.info('Lift Off of the fluctus!!');
 
     // Check for updates
@@ -196,6 +202,7 @@ function start() {
 
             // For video requests
             case (req.method == 'POST' && requested_url.pathname == '/start_video'):
+                console.time('APP_START_VIDEO_PANEL');
                 //handle body of the request
                 req.on('data', chunk => {
                     request_body.push(chunk);
@@ -222,10 +229,10 @@ function start() {
                     // If request type is not supported.. let's end this conversation
                     if (!supported_request) res.end(JSON.stringify({ status: 'not_supported' }));
 
-
+                    console.time('VIDEO_WINDOW_GET_POSITION');
                     // Get video panel position [x,y]
                     const video_panel_position = getVideoPanelPosition(workAreaSize, opened_video_panels);
-
+                    console.timeEnd('VIDEO_WINDOW_GET_POSITION');
 
                     // Create videoWindow
                     videoBoxContainers[++videoBoxCounter] = new BrowserWindow({
@@ -272,6 +279,7 @@ function start() {
                     });
 
                     videoBox.once('ready-to-show', () => {
+                        console.timeEnd('APP_START_VIDEO_PANEL');
                         videoBox.show();
                     });
 
