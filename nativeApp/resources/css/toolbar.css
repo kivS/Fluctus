@@ -1,0 +1,60 @@
+
+/* toolbar*/
+.toolbar{
+  -webkit-app-region: drag;
+
+   height: 28px; 
+
+   background-color: #36393E;
+
+   padding: none;
+
+   margin: 0px; 
+}
+
+.toolbar_window_btns{
+  width: 50px;
+  float: right;
+  padding-top: 4px;
+}
+
+.toolbar_extra_btns{
+  width: 70%;
+  float: left;
+  padding-top: 4px;
+}
+
+.toolbar_extra_btns:first-child{
+  margin-left: 8px;
+}
+
+.toolbar_btn{
+  -webkit-app-region: no-drag;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  height: 20px;
+  background: none;
+
+}
+
+.toolbar_btn:focus{
+  outline: none;
+}
+
+.toolbar_btn:hover svg{
+  stroke:white;
+}
+
+.toolbar_btn:active svg{
+  stroke:#AEAFB1;
+}
+
+
+.toolbar_window_btns #closeBtn:hover svg{
+  stroke:red;
+}
+
+.toolbar_window_btns #closeBtn:active svg{
+  stroke:white;
+}

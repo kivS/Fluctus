@@ -1,3 +1,6 @@
+console.time('APP_START_UP');
+console.time('APP_IMPORTS')
+
 import { app, BrowserWindow, Tray, Menu, dialog, shell, screen } from 'electron';
 
 // Make sure that only one instance of the program gets to trive!
@@ -10,6 +13,7 @@ import * as path from 'path';
 import * as log from 'winston';
 import { autoUpdater } from 'electron-updater';
 import * as autoLaunch from 'auto-launch';
+console.timeEnd('APP_IMPORTS');
 
 let trayIcon;
 let videoBoxContainers = Array();
@@ -110,6 +114,8 @@ autoUpdater.on('error', err => {
 //
 //*****************************************************
 function start() {
+    console.timeEnd('APP_START_UP');
+
     log.info('Lift Off of the fluctus!!');
 
     // Check for updates
@@ -205,6 +211,8 @@ function start() {
 
                 }).on('end', function() {
 
+                    console.time('APP_START_VIDEO_PANEL');
+
                     // get opens windows
                     let opened_video_panels = BrowserWindow.getAllWindows().length;
                     log.info('Number of opened video panels: ', opened_video_panels);
@@ -222,10 +230,10 @@ function start() {
                     // If request type is not supported.. let's end this conversation
                     if (!supported_request) res.end(JSON.stringify({ status: 'not_supported' }));
 
-
+                    console.time('VIDEO_WINDOW_GET_POSITION');
                     // Get video panel position [x,y]
                     const video_panel_position = getVideoPanelPosition(workAreaSize, opened_video_panels);
-
+                    console.timeEnd('VIDEO_WINDOW_GET_POSITION');
 
                     // Create videoWindow
                     videoBoxContainers[++videoBoxCounter] = new BrowserWindow({
@@ -239,7 +247,7 @@ function start() {
                         maximizable: false,
                         alwaysOnTop: true,
                         show: false,
-                        frame: true,
+                        frame: false,
                         icon: icon,
                         webPreferences: {
                             preload: path.join(__dirname, 'resources', 'video_panels', 'preload.js'),
@@ -273,6 +281,7 @@ function start() {
 
                     videoBox.once('ready-to-show', () => {
                         videoBox.show();
+                        console.timeEnd('APP_START_VIDEO_PANEL');
                     });
 
 
