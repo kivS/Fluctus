@@ -80,6 +80,11 @@
 
     });
 
+    player.ready().then(function() {
+      // disable drag & drop on iframe
+      _disableDragAndDrop();
+    });
+
     // set video time if there's time
     if(payload.time){
       player.setCurrentTime(parseFloat(payload.time)).then(seconds =>{

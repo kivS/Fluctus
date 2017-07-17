@@ -91,6 +91,8 @@
       // Events
       function onPlayerReady(){
         console.log('Youtube Player Ready');
+        // disable drag & drop on iframe
+        _disableDragAndDrop();
 
         // Check if start time on video is set then remove all non number characters and return int
         const starting_time = payload.video_currentTime || video_query.t || 0;

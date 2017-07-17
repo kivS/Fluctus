@@ -70,6 +70,7 @@
 
       _log.info(TAG, "Hello from video panel!!!");
 
+
       // get payload and parse it into object 
       const payload = _parse_url(location.search, true).query;
       console.log('Payload: ', payload);
@@ -79,6 +80,12 @@
       const soundcloud = SC.Widget(document.getElementById('player'));
 
       soundcloud.load(payload.video_url);
+
+      soundcloud.bind(SC.Widget.Events.READY, () =>{
+          // disable drag & drop on iframe
+          _disableDragAndDrop();
+      });
+
 
     </script>
     
