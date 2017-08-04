@@ -62,8 +62,8 @@ log.info(`Prepare for take off!  Version: ${app.getVersion()}`);
 //
 //*****************************************************
 const config = {
-    VIDEO_WINDOW_WIDTH: 480,
-    VIDEO_WINDOW_HEIGHT: 400,
+    VIDEO_WINDOW_WIDTH: 500,
+    VIDEO_WINDOW_HEIGHT: 440,
     VIDEO_WINDOW_BG_COLOR: '#000',
     SERVER_PORTS: [8791, 8238, 8753],
     SERVER_HOSTNAME: 'localhost',
@@ -247,7 +247,7 @@ function start() {
                         maximizable: false,
                         alwaysOnTop: true,
                         show: false,
-                        frame: false,
+                        frame: true,
                         icon: icon,
                         webPreferences: {
                             preload: path.join(__dirname, 'resources', 'video_panels', 'preload.js'),
