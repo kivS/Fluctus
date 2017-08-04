@@ -25,7 +25,7 @@ process.once('loaded', function() {
 
 
 function disableDragAndDrop() {
-    // disables drag and drop on 
+    // disables drag and drop on iframe
     console.log('disable drag & drop - Active');
     let _iframe = document.getElementsByTagName('iframe')[0].contentDocument;
 

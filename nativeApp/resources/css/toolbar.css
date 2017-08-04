@@ -2,14 +2,13 @@
 /* toolbar*/
 .toolbar{
   -webkit-app-region: drag;
-
    height: 28px; 
-
    background-color: #36393E;
-
    padding: none;
-
-   margin: 0px; 
+   margin: 0px;
+   transition-property: visibility;
+   transition-duration: 0.3s;
+   transition-timing-function: ease-in-out;
 }
 
 .toolbar_window_btns{
