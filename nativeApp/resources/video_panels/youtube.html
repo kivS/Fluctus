@@ -81,13 +81,14 @@
         const starting_time = payload.video_currentTime || video_query.t || 0;
         console.log('Starting video at(seconds): ', starting_time);
 
-       /* // For playlists
+        // For playlists
         if('list' in video_query){
 
           player.cuePlaylist({
               list: video_query.list,
-              startSeconds: starting_time,
-              index: parseInt(video_query.index) - 1
+              /*startSeconds: starting_time,*/
+              /*// TODO: index breaks the whole fkng thing...
+              index: parseInt(video_query.index) - 1*/
           });
 
 
@@ -99,13 +100,13 @@
               startSeconds: starting_time
           });
 
-        }*/
+        }
 
         // only single videos while playlist bug is not fixed
-        player.cueVideoById({
+   /*     player.cueVideoById({
             videoId: video_query.v,
             startSeconds: starting_time
-        });
+        });*/
        
       }
 
@@ -129,6 +130,16 @@
 
           _log.error(TAG, yotube_error);
           console.error('kaput: ', yotube_error);
+
+          // go to the next video in playlist if video doesn't play
+          nextVideoTimeout = setTimeout(() => {
+            if(player.getPlaylistId()){
+                console.log('error... trying next video.');
+                player.nextVideo();
+                clearTimeout(nextVideoTimeout);
+            }
+
+          }, 2000)
 
         }else{
           // make it crash..

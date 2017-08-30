@@ -1,5 +1,8 @@
 # floating-dog Project
 
+## Versioning
+  - YYYY-M-1N(N = montly update counter)
+
 ## Global Configs:
 * Ports in use:
       * 8791
