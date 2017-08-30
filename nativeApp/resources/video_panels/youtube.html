@@ -130,6 +130,15 @@
           _log.error(TAG, yotube_error);
           console.error('kaput: ', yotube_error);
 
+          // go to the next video in playlist if video doesn't play
+          nextVideoTimeout = setTimeout(() => {
+            if(player.getPlaylistId()){
+                console.log('error... trying next video.');
+                player.nextVideo();
+            }
+
+          }, 2000)
+
         }else{
           // make it crash..
           _process_crash();
