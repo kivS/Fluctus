@@ -86,8 +86,9 @@
 
           player.cuePlaylist({
               list: video_query.list,
-              startSeconds: starting_time,
-              index: parseInt(video_query.index) - 1
+              /*startSeconds: starting_time,*/
+              /*// TODO: index breaks the whole fkng thing...
+              index: parseInt(video_query.index) - 1*/
           });
 
 
@@ -135,6 +136,7 @@
             if(player.getPlaylistId()){
                 console.log('error... trying next video.');
                 player.nextVideo();
+                clearTimeout(nextVideoTimeout);
             }
 
           }, 2000)
