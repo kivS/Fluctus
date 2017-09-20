@@ -13,6 +13,9 @@ import * as path from 'path';
 import * as log from 'winston';
 import { autoUpdater } from 'electron-updater';
 import * as autoLaunch from 'auto-launch';
+
+import { config } from './config';
+
 console.timeEnd('APP_IMPORTS');
 
 let trayIcon;
@@ -54,22 +57,6 @@ let auto_launch = new autoLaunch({
 
 log.info(`Prepare for take off!  Version: ${app.getVersion()}`);
 
-
-
-
-//*****************************************************
-//             CONFIGS
-//
-//*****************************************************
-const config = {
-    VIDEO_WINDOW_WIDTH: 500,
-    VIDEO_WINDOW_HEIGHT: 440,
-    VIDEO_WINDOW_BG_COLOR: '#000',
-    SERVER_PORTS: [8791, 8238, 8753],
-    SERVER_HOSTNAME: 'localhost',
-    SUPPORTED_REQUESTS: ['youtube', 'vimeo', 'twitch', 'soundcloud']
-
-}
 
 
 //*****************************************************

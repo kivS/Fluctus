@@ -29,7 +29,7 @@
 
         ```
 
-### HTTP API
+### Main HTTP API
 
   * **ping:**
       - Launches Pings native app local server
@@ -43,7 +43,7 @@
 
 
   * **start_video:**
-      - Launches video panel with with payload
+      - Launches video panel with payload
       - Method: POST
       - Payload: video_type, rest of Object
       - On success returns:
@@ -70,7 +70,16 @@
   - Transport: Json
 
   #### Youtube
-  
+    - video_currentTime --> Number
+    - video_type        --> String | eg: youtube
+    - video_url         --> Url    | String enconded url object
+
+    video_url
+      - list --> playlist id
+      - v    --> video id
+
+
+    
 
 ---
 
