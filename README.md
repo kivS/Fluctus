@@ -1,25 +1,35 @@
 # floating-dog Project
+  
 
-## Versioning
-  - YYYY-M-1N(N = montly update counter)
+---
 
-## Global Configs:
-* Ports in use:
+## Native Desktop App
+
+### Structure
+  - main.ts implements http server, global logging, auto-update, notifications, player positioning in screen
+  - on http call from web extension, main.ts calls starts a renderer process to display player(player depends on request. eg: youtube player)
+  - the video player process has no access to node api and communicates with the main process via a preload script 
+  - the preload script implements pre-defined main resources the video player can access to 
+
+
+### Versioning
+  - YYYY-M-1N(N = montly update counter, initial value 00)
+
+### Global Configs:
+  * Ports in use:
       * 8791
       * 8238
       * 8753
 
-## Native Desktop App
 
 ### Configs
-
-* **Supported video_type list:**
+  * **Supported video_type list:**
    -   ```javascript
        SUPPORTED_REQUESTS: ['youtube']
 
         ```
 
-### API
+### HTTP API
 
   * **ping:**
       - Launches Pings native app local server
@@ -54,3 +64,15 @@
         { "status": "not_supported"}
 
       ```
+
+
+### Video/Audio Players API
+  - Transport: Json
+
+  #### Youtube
+  
+
+---
+
+
+## Chrome Extension
