@@ -238,7 +238,7 @@ function start() {
                         icon: icon,
                         webPreferences: {
                             preload: path.join(__dirname, 'resources', 'video_panels', 'preload.js'),
-                            nodeIntegration: false
+                            nodeIntegration: (process.env.NODE_ENV === 'dev')? true:false
                         }
 
                     });
