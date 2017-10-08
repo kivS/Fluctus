@@ -1,4 +1,4 @@
-# floating-dog Project
+# Fluctus Project
   
 
 ---
@@ -6,10 +6,10 @@
 ## Native Desktop App
 
 ### Structure
-  - main.ts implements http server, global logging, auto-update, notifications, player positioning in screen
-  - on http call from web extension, main.ts calls starts a renderer process to display player(player depends on request. eg: youtube player)
-  - the player process has no access to node api and communicates with the main process via a preload script 
-  - the preload script implements pre-defined main resources the video player can access to 
+  - main.ts implements http server, global logging, auto-update, notifications, player panel positioning in screen
+  - on http call from web extension, main.ts starts a renderer process to display player panel(player depends on request. eg: youtube player)
+  - the player panel process has no access to node api and communicates with the main process via a preload script 
+  - the preload script implements pre-defined main resources the player panel can access to 
 
 
 ### Versioning
@@ -23,7 +23,7 @@
 
 
 ### Configs
-  * **Supported video_type list:**
+  * **Supported player_type list:**
    -   ```javascript
        SUPPORTED_REQUESTS: ['youtube']
 
@@ -43,9 +43,9 @@
 
 
   * **start_player:**
-      - Launches player panel with player_type & payload
+      - Launches player panel with player_type
       - Method: POST
-      - Payload: video_type, rest of Object
+      - Payload: player_type, rest of Object
       - On success returns:
         ```json
         { "status": "ok"}
@@ -59,9 +59,15 @@
 
       ```
 
-      - On open video panels where video_type is not supported:
+      - On open player panel where player_type is not supported:
        ```json
-        { "status": "not_supported"}
+        { "status": "not_supported!"}
+
+      ```
+
+       - On open player panel where player_type is not present:
+       ```json
+        { "status": "player_type not present.."}
 
       ```
 
@@ -69,14 +75,13 @@
 ### Video/Audio Players API
   - Transport: Json
 
-  #### Youtube
+> Youtube
+    - player_type        --> String | eg: youtube
     - video_currentTime --> Number
-    - video_type        --> String | eg: youtube
     - video_url         --> Url    | String enconded url object
-
-    video_url
-      - list --> playlist id
-      - v    --> video id
+    - video_url:
+        - list --> playlist id
+        - v    --> video id
 
 
     
