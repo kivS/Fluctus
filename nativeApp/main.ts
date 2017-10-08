@@ -205,10 +205,16 @@ function start() {
                     const supported_request = config.SUPPORTED_REQUESTS.find(item => item == request_body_object['player_type']);
 
                     // if player_type is not present let's end the convo 
-                    if(!request_body_object['player_type']) res.end(JSON.stringify({ status: 'not_allowed..' }));
+                    if(!request_body_object['player_type']){
+                        res.end(JSON.stringify({ status: 'player_type not present..' }));
+                        return;
+                    }
 
                     // If request type is not supported.. let's end this conversation as well
-                    if (!supported_request) res.end(JSON.stringify({ status: 'not_supported' }));
+                    if (!supported_request){
+                        res.end(JSON.stringify({ status: 'not_supported!' }));
+                        return;
+                    }
                   
 
                     console.time('VIDEO_WINDOW_GET_POSITION');
