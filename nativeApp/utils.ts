@@ -3,7 +3,7 @@
 //             HELPER FUNCTIONS
 //
 //*****************************************************
-import { config } from './config'
+import { config } from './configs'
 
 const log = global['logger']
 

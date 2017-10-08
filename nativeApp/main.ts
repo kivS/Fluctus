@@ -19,7 +19,7 @@ import * as path from 'path';
 import { autoUpdater } from 'electron-updater';
 import * as autoLaunch from 'auto-launch';
 
-import { config, logger } from './config';
+import { config, logger } from './configs';
 
 // get location for logs
 let logs_path = path.join(app.getPath('home'), 'fluctus.log');
