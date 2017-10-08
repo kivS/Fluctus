@@ -1,6 +1,12 @@
 console.time('APP_START_UP');
 console.time('APP_IMPORTS')
 
+// Debug
+if (process.env.NODE_ENV === 'dev') {
+    console.log(process.versions);
+}
+
+
 import { app, BrowserWindow, Tray, Menu, dialog, shell, screen } from 'electron';
 
 // Make sure that only one instance of the program gets to trive!
