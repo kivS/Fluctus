@@ -8,7 +8,7 @@
 ### Structure
   - main.ts implements http server, global logging, auto-update, notifications, player positioning in screen
   - on http call from web extension, main.ts calls starts a renderer process to display player(player depends on request. eg: youtube player)
-  - the video player process has no access to node api and communicates with the main process via a preload script 
+  - the player process has no access to node api and communicates with the main process via a preload script 
   - the preload script implements pre-defined main resources the video player can access to 
 
 
@@ -42,8 +42,8 @@
         ```
 
 
-  * **start_video:**
-      - Launches video panel with payload
+  * **start_player:**
+      - Launches player panel with player_type & payload
       - Method: POST
       - Payload: video_type, rest of Object
       - On success returns:

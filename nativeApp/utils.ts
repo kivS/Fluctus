@@ -40,7 +40,7 @@ export function sendMsgToUser(type, title, msg, btns, cb) {
  * @param  {[int]} number_of_opened_panels
  * @return {[array]}       left and top offset for video panel
  */
-export function getVideoPanelPosition(work_area_size, number_of_opened_panels): number[] {
+export function getPlayerPanelPosition(work_area_size, number_of_opened_panels): number[] {
 
     console.log("work area: ", work_area_size);
     console.log("opened video panels: ", number_of_opened_panels);
