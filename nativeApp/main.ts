@@ -16,11 +16,16 @@ if (shouldSeppuku) app.quit();
 import * as http from 'http';
 import * as url from 'url';
 import * as path from 'path';
-import * as log from 'winston';
 import { autoUpdater } from 'electron-updater';
 import * as autoLaunch from 'auto-launch';
 
-import { config } from './config';
+import { config, logger } from './config';
+
+// get location for logs
+let logs_path = path.join(app.getPath('home'), 'fluctus.log');
+const log = logger(logs_path)
+
+import * as utils from './utils'
 
 console.timeEnd('APP_IMPORTS');
 
@@ -28,28 +33,7 @@ let trayIcon;
 let videoBoxContainers = Array();
 let videoBoxCounter = -1;
 
-// get location for logs
-let logs_path = path.join(app.getPath('home'), 'fluctus.log');
 
-// Configure winston logs
-const canHandleExceptions = (process.env.NODE_ENV === 'dev') ? false : true;
-log.configure({
-    transports: [
-        new (log.transports.Console)({
-            level: 'info',
-            prettyPrint: true,
-        }),
-        new (log.transports.File)({
-            level: 'error',
-            filename: logs_path,
-            prettyPrint: true,
-            json: false,
-            handleExceptions: canHandleExceptions
-        })
-    ]
-});
-// set logger as global for window instances
-global['logger'] = log;
 // Set autoUpdater log to winston
 autoUpdater.logger = log;
 
@@ -225,7 +209,7 @@ function start() {
 
                     console.time('VIDEO_WINDOW_GET_POSITION');
                     // Get video panel position [x,y]
-                    const video_panel_position = getVideoPanelPosition(workAreaSize, opened_video_panels);
+                    const video_panel_position = utils.getVideoPanelPosition(workAreaSize, opened_video_panels);
                     console.timeEnd('VIDEO_WINDOW_GET_POSITION');
 
                     // Create videoWindow
@@ -395,57 +379,3 @@ function sendMsgToUser(type, title, msg, btns, cb) {
 }
 
 
-/**
- * Get position for video panel
- * @param  {[object]} work_area_size          --> screen size available
- * @param  {[int]} number_of_opened_panels
- * @return {[array]}       left and top offset for video panel
- */
-function getVideoPanelPosition(work_area_size, number_of_opened_panels): number[] {
-
-    console.log("work area: ", work_area_size);
-    console.log("opened video panels: ", number_of_opened_panels);
-
-    // Increment number of opened panels to compensate delay (starts at 0)
-    number_of_opened_panels++;
-
-    // Padding for window on screen
-    const padding_y = 10;
-    const padding_x = 10;
-
-    // get panels per row
-    let panels_per_row = Math.floor(work_area_size.width / (config.VIDEO_WINDOW_WIDTH + padding_x));
-    log.info('boxes per row: ', panels_per_row);
-
-    // Start at bottom right of screen
-    let initial_x = (work_area_size.width - config.VIDEO_WINDOW_WIDTH - padding_x);
-    let initial_y = (work_area_size.height - config.VIDEO_WINDOW_HEIGHT - padding_y);
-
-
-    let x = null;
-    let y = null;
-
-    switch (true) {
-        // For first row
-        case number_of_opened_panels <= panels_per_row:
-            x = initial_x - (config.VIDEO_WINDOW_WIDTH + padding_x) * (number_of_opened_panels - 1);
-            y = initial_y;
-            break;
-
-        // for second row
-        case number_of_opened_panels > panels_per_row && number_of_opened_panels <= panels_per_row * 2:
-            x = initial_x - (config.VIDEO_WINDOW_WIDTH + padding_x) * (number_of_opened_panels - panels_per_row - 1);
-            y = initial_y - (config.VIDEO_WINDOW_HEIGHT + padding_y + 20);
-            break;
-
-        // Anything taking more than 2 rows let's place them at bottom right of screen
-        default:
-            x = initial_x;
-            y = initial_y;
-            break;
-    }
-
-
-    return [parseInt(x), parseInt(y)];
-
-}
