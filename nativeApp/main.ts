@@ -73,7 +73,7 @@ autoUpdater.on('update-downloaded', (ev, info) => {
     const btns = ['ok', 'later'];
 
 
-    sendMsgToUser('info', title, msg, btns, index => {
+    utils.sendMsgToUser('info', title, msg, btns, index => {
         // if ok let's update app!
         if (index == '0') autoUpdater.quitAndInstall();
     });
@@ -349,33 +349,4 @@ function start() {
 
 
 }// end of start()
-
-
-
-////*****************************************************
-//             HELPER FUNCTIONS
-//
-//*****************************************************
-
-/**
- * Send message dialog to user
- * @param  {[string]} type -> info, error ,etc..
- * @param  {[string]} title -> title
- * @param  {[string]} msg -> message
- * @param  {[string]} btns -> array of butttons : ["ok" , "zz"]
- * @return {[type]}     [description]
- */
-function sendMsgToUser(type, title, msg, btns, cb) {
-    dialog.showMessageBox({
-        "type": type,
-        "title": title,
-        "message": msg,
-        "buttons": btns
-
-    }, index => {
-
-        cb(index);
-    })
-}
-
 

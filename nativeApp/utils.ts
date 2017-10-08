@@ -4,8 +4,35 @@
 //
 //*****************************************************
 import { config } from './configs'
+import { dialog } from 'electron';
 
 const log = global['logger']
+
+
+
+/**
+ * Send message dialog to user
+ * @param  {[string]} type -> info, error ,etc..
+ * @param  {[string]} title -> title
+ * @param  {[string]} msg -> message
+ * @param  {[string]} btns -> array of butttons : ["ok" , "zz"]
+ * @return {[type]}     [description]
+ */
+export function sendMsgToUser(type, title, msg, btns, cb) {
+    dialog.showMessageBox({
+        "type": type,
+        "title": title,
+        "message": msg,
+        "buttons": btns
+
+    }, index => {
+
+        cb(index);
+    })
+}
+
+
+
 
 /**
  * Get position for video panel
