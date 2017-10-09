@@ -74,29 +74,24 @@
 
 ### Video/Audio Players API
   - Transport: Json
+  - Obligatory field: player_type -> String | eg: youtube
 
-  Youtube:
-    - player_type        --> String | eg: youtube
-    - video_currentTime --> Number
-    - video_url:         --> Url  | String enconded url object
-        - list --> playlist id
-        - v    --> video id
+#### Youtube:
+- video_currentTime --> Number
+- video_url:         --> Url  | String enconded url object
+  - list --> playlist id
+  - v    --> video id
 
-  
-  Vimeo:
-    - player_type
-    - video_url --> URL or video ID
-    - time      --> start time in seconds
+#### Vimeo:
+- video_url --> URL or video ID
+- time      --> start time in seconds
     
 
-  Soundcloud:
-    - player_type
-    - video_url
+#### Soundcloud:
+- video_url
 
-
-  Twitch:
-    - player_type
-    - video_url
+#### Twitch:
+- video_url
 
 ---
 
