@@ -16,18 +16,18 @@
   - YYYY-M-1N(N = montly update counter, initial value 00)
 
 ### Global Configs:
-  * Ports in use:
+  * Reserved Ports:
       * 8791
       * 8238
-      * 8753
+      * 8753 (default)
 
 
 ### Configs
-  * **Supported player_type list:**
-   -   ```javascript
-       SUPPORTED_REQUESTS: ['youtube']
+**Supported player_type list:**
+  ```javascript
+  SUPPORTED_REQUESTS: ['youtube', 'vimeo', 'twitch', 'soundcloud']
 
-        ```
+  ```
 
 ### Main HTTP API
 
