@@ -204,13 +204,13 @@ function start() {
                     // Check if video_type of request_body is supported
                     const supported_request = config.SUPPORTED_REQUESTS.find(player_type => player_type == request_body_object['player_type']);
 
-                    // if player_type is not present let's end the convo 
+                    // if player_type is not present lets end the convo 
                     if(!request_body_object['player_type']){
                         res.end(JSON.stringify({ status: 'player_type not present..' }));
                         return;
                     }
 
-                    // If player type is not supported.. let's end this conversation as well
+                    // If player type is not supported.. lets end this conversation as well
                     if (!supported_request){
                         res.end(JSON.stringify({ status: 'not_supported!' }));
                         return;
