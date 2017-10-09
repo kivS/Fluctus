@@ -34,7 +34,7 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
-    "electron": "^1.6.11",
+    "electron": "^1.8.1",
     "electron-builder": "^13.6.0",
     "electron-publisher-s3": "^15.0.1",
     "electron-rebuild": "^1.5.7",
@@ -42,5 +42,8 @@
     "request": "^2.79.0",
     "spectron": "^3.6.0",
     "typescript": "^2.4.1"
+  },
+  "jshintConfig":{
+    "esversion": 6
   }
 }
