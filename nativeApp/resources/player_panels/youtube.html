@@ -34,7 +34,7 @@
     <div class="app">
         <div id="video_player"></div>
     </div>
-    <script src="../scripts/toolbar.js"></script>
+    <script src="../player_panel_scripts/toolbar.js"></script>
     <script>
       // Load the IFrame Player API code asynchronously.
       var tag = document.createElement('script');
@@ -122,7 +122,7 @@
           '101': 'The owner of the requested video does not allow it to be played in embedded players.',
           '150': 'The owner of the requested video does not allow it to be played in embedded players.'
 
-        }
+        };
 
         let yotube_error = error_codes[`${youtube_error_code}`] || 'Weird youtube error... no ideia what!';
 
