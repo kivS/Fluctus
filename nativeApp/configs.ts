@@ -1,5 +1,8 @@
 import * as log from 'winston';
 
+
+//--------------------------------------------------------------------------------------------------
+
 export const config = {
     VIDEO_WINDOW_WIDTH: 500,
     VIDEO_WINDOW_HEIGHT: 440,
@@ -7,6 +10,14 @@ export const config = {
     SERVER_PORTS: [8791, 8238, 8753],
     SERVER_HOSTNAME: 'localhost',
     SUPPORTED_REQUESTS: ['youtube', 'vimeo', 'twitch', 'soundcloud']
+}
+
+
+//--------------------------------------------------------------------------------------------------
+
+function timestampFormat(){
+    const date = new Date()
+    return date.toLocaleString()
 }
 
 
@@ -18,11 +29,15 @@ export function logger(logs_path){
             new (log.transports.Console)({
                 level: 'info',
                 prettyPrint: true,
+                timestamp: timestampFormat,
+                colorize: true
             }),
             new (log.transports.File)({
                 level: 'info',
                 filename: logs_path,
                 prettyPrint: true,
+                eol: '\n\n',
+                timestamp: timestampFormat,
                 json: false,
                 handleExceptions: false
             })
@@ -36,3 +51,4 @@ export function logger(logs_path){
 
 }
 
+//--------------------------------------------------------------------------------------------------
