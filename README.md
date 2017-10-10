@@ -43,7 +43,7 @@
 
 
   * **start_player:**
-      - Launches player panel with player_type
+      - Launches requested player panel 
       - Method: POST
       - Payload: player_type, rest of Object
       - On success returns:
@@ -74,28 +74,25 @@
 
 ### Video/Audio Players API
   - Transport: Json
+  - player_type is required for each request
 
   Youtube:
-    - player_type        --> String | eg: youtube
-    - video_currentTime --> Number
+    - video_currentTime  --> Video start time in seconds
     - video_url:         --> Url  | String enconded url object
-        - list --> playlist id
-        - v    --> video id
+        - list           --> playlist id
+        - v              --> video id
 
   
   Vimeo:
-    - player_type
     - video_url --> URL or video ID
-    - time      --> start time in seconds
+    - time      --> video start time in seconds
     
 
   Soundcloud:
-    - player_type
     - video_url
 
 
   Twitch:
-    - player_type
     - video_url
 
 ---
