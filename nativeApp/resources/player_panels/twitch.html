@@ -58,20 +58,20 @@
       console.log('Payload: ', payload);
 
 
-      // Get video info from payload
-      const video = _parse_url(payload.video_url, true);
-      console.log('Youtube Video Parsed query: ', video);
-
-      // get channel id
-      const channel_id = video.path.replace('/','');
-      console.log('Channel id: ', channel_id);
-
       // create player
       let player = new Twitch.Player("video_player", {});
 
-      // play online video on channel
-      player.setChannel(channel_id);
 
+      if("video_id" in payload){
+        player.setVideo(payload.video_id);
+
+      }else{
+        // play online video on channel
+        player.setChannel(payload.channel_id);
+
+      }
+
+     
       player.addEventListener(Twitch.Player.READY, () =>{
         // disable drag & drop on iframe
         _disableDragAndDrop();

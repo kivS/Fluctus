@@ -93,7 +93,8 @@
 
 
   Twitch:
-    - video_url
+    - video_id | channel_id      --> Video(prefix must be 'v', eg: v123443545) or channel ID
+
 
 ---
 
