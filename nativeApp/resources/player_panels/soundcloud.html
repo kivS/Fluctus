@@ -62,7 +62,7 @@
       // Load soundcloud
       const soundcloud = SC.Widget(document.getElementById('player'));
 
-      soundcloud.load(payload.video_url);
+      soundcloud.load(payload.url);
 
       soundcloud.bind(SC.Widget.Events.READY, () =>{
           // disable drag & drop on iframe

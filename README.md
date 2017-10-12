@@ -89,7 +89,7 @@
     
 
   Soundcloud:
-    - video_url
+    - url
 
 
   Twitch:
