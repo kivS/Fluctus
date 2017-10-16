@@ -1,8 +1,8 @@
 const Application = require('spectron').Application;
 const path = require('path');
 const assert = require('assert');
-const http = require('http');
-const request = require('request');
+const fetch = require('node-fetch');
+
 
 const app_path = path.join(__dirname, '..', 'main.js');
 
@@ -14,35 +14,42 @@ const config = {
  * New application wrapper
  * @return {[type]} [description]
  */
-function new_app() {
+ function new_app() {
   return new Application({
-      path: path.join(__dirname, '..', 'node_modules', '.bin', 'electron'),
-      args: [app_path]
-    })
-}
-
-
-/**
- * Send start_video request 
- * @param  {[type]}   payload [description]
- * @param  {Function} cb      --> callback
- * @return {[type]}           error || response && body of request
- */
-function start_video_request(payload, cb){
-  request.post({
-     url: `${config.server}/start_video`,
-     headers: {"Content-Type": "application/json"},
-     body: JSON.stringify(payload)
-
-  }, (err, res, body)=>{
-      if(err) cb(err)
-      else cb(null, res, body)
+    path: path.join(__dirname, '..', 'node_modules', '.bin', 'electron'),
+    args: [app_path]
   })
-  
 }
 
 
-/****************************************************************************************************************
+function make_request(url, method, payload){
+
+  return new Promise((resolve, reject) => {
+
+    const body = JSON.stringify(payload) || '';
+
+    fetch(url,{
+        method: method,
+        headers: {"Content-Type": "application/json"},
+        body: body
+    })
+    .then(response =>{
+        return response.json()
+    })
+    .then(data => {
+        resolve(data);
+
+    })
+    .catch(err =>{
+        reject(err);
+    })
+
+  })
+}
+
+
+/****************************************************************************************************************/
+
 
 
 
@@ -50,7 +57,7 @@ function start_video_request(payload, cb){
  *    TESTS
  */
 
-describe('Application Startup', function () {
+ describe('Application lift off!', function () {
   this.timeout(60000)
 
   beforeEach(function () {
@@ -62,62 +69,39 @@ describe('Application Startup', function () {
     if (this.app && this.app.isRunning()) {
       // close app
       return this.app.stop()
- 
+
     }
   })
 
 
   describe('On launch', function() {
-      it('should get Dummy test page', function(done) {
-          this.app.browserWindow.getTitle().then(title =>{
-             assert.equal(title, "TEST_PAGE");
-             done();
-          });
-      })
+    it('should get Dummy test page', function() {
+      return this.app.browserWindow.getTitle().then(title =>{
+       assert.equal(title, "TEST_PAGE");
+
+     });
+    })
   })
 
 
-  describe('On local server startup', function(){
+  describe('On local server request received', function(){
+
       it('should return status: "alive" when pinged!', function() {
+        return make_request(`${config.server}/ping`, 'GET', null).then(data =>{
+            assert.equal(data.status, 'alive');
+        })
+      })
 
-          let url = `${config.server}/ping`;
-
-          return new Promise((resolve, reject) => {
-              http.get(url, response => {
-                response.setEncoding('utf8');
-
-                var response_data = [];
-
-                response.on('data', data => {
-                  response_data.push(data);
-                });
-
-                response.on('end', () => {
-                  var resp = JSON.parse(response_data.toString());
-                  
-                  resolve(resp.status);
-
-                });
-
-                response.on('error', error => { 
-                  reject(error);
-                });
-
-              });
-
-          }).then(result =>{
-              assert.equal('alive', result);
-
-          }).catch(error =>{
-              console.error(error);
-          })
-
+      it('should return status: "not_allowed.." for non defined endpoints', function(){
+        return make_request(`${config.server}/all_yo_moneh`, 'POST', null).then(data =>{
+            assert.equal(data.status, 'not_allowed..');
+        }) 
       })
  
   })
 
 
-  describe('On video panel startup', function (){
+ /* describe('On video panel startup', function (){
 
       it('should display youtube video panel if the request type is youtube', function(){
           // open youtube video panel
@@ -204,7 +188,7 @@ describe('Application Startup', function () {
           
       })
 
-  })
-
+  })*/
+  
 
 }) //
