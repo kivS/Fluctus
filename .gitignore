@@ -3,5 +3,5 @@ node_modules/
 *.log
 .DS_Store
 nativeApp/*.js
-nativeApp/resources/**/*.js
+nativeApp/resources/player_panels/*.js
 

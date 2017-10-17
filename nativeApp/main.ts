@@ -275,7 +275,7 @@ function start() {
 
                     playerPanel.once('ready-to-show', () => {
                         playerPanel.show();
-                        console.timeEnd('APP_START_VIDEO_PANEL');
+                        console.timeEnd('APP_START_PLAYER_PANEL');
                     });
 
 

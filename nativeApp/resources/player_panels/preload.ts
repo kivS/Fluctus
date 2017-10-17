@@ -11,6 +11,29 @@ process.once('loaded', function() {
   global['_process_crash'] = process.crash;
   global['_getCurrentWindow'] = remote.getCurrentWindow();
   global['_disableDragAndDrop'] = disableDragAndDrop;
+  global['_get_env'] = () =>{
+    if(process.env.NODE_ENV){
+      let env;
+      switch (process.env.NODE_ENV) {
+        case "dev":
+          env = 'dev';
+          break;
+
+        case "test":
+          env = 'test';
+          break;
+        
+        default:
+          env='prod';
+          break;
+      }
+
+      return env;
+
+    }else{
+      return 'prod';
+    }
+  }
 
   // disables drag and drop on toolbar
   document.addEventListener('dragover', (event) => {
