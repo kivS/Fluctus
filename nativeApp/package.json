@@ -14,7 +14,7 @@
     "dist": "build --win --linux --x64 --ia32",
     "publish": "build --win --linux --x64 --ia32 -p always",
     "postinstall": "install-app-deps",
-    "test:e2e": "NODE_ENV=test mocha tests/test.js"
+    "test": "NODE_ENV=test mocha tests/test.js"
   },
   "build": {
     "appId": "vik.my.fluctus",

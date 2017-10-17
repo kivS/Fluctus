@@ -58,7 +58,7 @@ function make_request(url, method, payload){
  */
 
  describe('Application lift off!', function () {
-  this.timeout(60000)
+  this.timeout(30000)
 
   beforeEach(function () {
     this.app = new_app()
@@ -92,57 +92,114 @@ function make_request(url, method, payload){
         })
       })
 
-      it('should return status: "not_allowed.." for non defined endpoints', function(){
+      it('should return status: "not_allowed.." for non defined POST endpoints', function(){
         return make_request(`${config.server}/all_yo_moneh`, 'POST', null).then(data =>{
             assert.equal(data.status, 'not_allowed..');
         }) 
+      })
+
+      it('should return status: "not_allowed.." for non defined GET endpoints', function(){
+        return make_request(`${config.server}/all_yo_moneh`, 'GET', null).then(data =>{
+            assert.equal(data.status, 'not_allowed..');
+        }) 
+      })
+
+      it('should return status: "not_allowed.." for non defined PUT endpoints', function(){
+        return make_request(`${config.server}/all_yo_moneh`, 'PUT', null).then(data =>{
+            assert.equal(data.status, 'not_allowed..');
+        }) 
+      })
+
+      it('should return status: "not_supported!" when player_type is not in the allowed list', function(){
+        return make_request(`${config.server}/start_player`, 'POST', {player_type: 'bananaHammer'}).then(data => {
+          assert.equal(data.status, 'not_supported!')
+        })  
+      })
+
+      it('should return status: "player_type not present.."  when player_type is not present in the start_player request', function(){
+        return make_request(`${config.server}/start_player`, 'POST', {banana:'good'}).then(data => {
+          assert.equal(data.status, 'player_type not present..')
+        })
+      })
+
+      it('should return stastus: "ok" when start_player request POST has player_type ', function(){
+        return make_request(`${config.server}/start_player`, 'POST', {player_type: 'youtube'}).then(data => {
+          assert.equal(data.status, 'ok')
+        })
       })
  
   })
 
 
- /* describe('On video panel startup', function (){
+  describe('On player panel startup', function (done){
 
-      it('should display youtube video panel if the request type is youtube', function(){
+      it('should display youtube player panel if the request type is youtube', function(){
           // open youtube video panel
           let payload = {
-            video_type: 'youtube',
+            player_type: 'youtube',
             video_url: 'https://www.youtube.com/watch?v=RWUPhKPjaBw&t=2560s'
           }
-
-          return new Promise((resolve) =>{
-            start_video_request(payload, (err, res, body) =>{
-                this.app.client.windowByIndex(1).then(() =>{
-                    this.app.client.getHTML('#page_id', false).then(page_id =>{
-                        resolve(page_id)
-                    })
-                })
+          
+          return new Promise(resolve =>{
+            return make_request(`${config.server}/start_player`, 'POST', payload)
+            .then((data) =>{
+              
+              this.app.client.windowByIndex(1).then(() =>{
+                  this.app.client.getHTML('#page_id', false).then(page_id =>{
+                      resolve(page_id)
+                  })
+              })
             })
-
-          }).then(result =>{
+          })
+          .then(result =>{
               assert.equal('YOUTUBE_PAGE', result);
           })
           
       })
 
-      it('should display vimeo video panel if the request type is vimeo', function(){
+      it('should display vimeo player panel if the request type is vimeo', function(){
           // open vimeo video panel
           let payload = {
-            video_type: 'vimeo',
+            player_type: 'vimeo',
             video_url: 'pokimane'
           }
 
-          return new Promise((resolve) =>{
-            start_video_request(payload, (err, res, body) =>{
+          return new Promise(resolve =>{
+            return make_request(`${config.server}/start_player`, 'POST', payload)
+              .then((data) =>{
                 this.app.client.windowByIndex(1).then(() =>{
                     this.app.client.getHTML('#page_id', false).then(page_id =>{
                         resolve(page_id)
                     })
                 })
-            })
-
-          }).then(result =>{
+              })
+          })
+          .then(result =>{
               assert.equal('VIMEO_PAGE', result);
+          })
+      })
+
+      
+
+      it('should display twitch video panel if the request type is twitch', function(){
+          // open twitch video panel
+          let payload = {
+            player_type: 'twitch',
+            video_url: 'pokimane'
+          }
+
+          return new Promise(resolve =>{
+             make_request(`${config.server}/start_player`, 'POST', payload)
+              .then((data) =>{
+                this.app.client.windowByIndex(1).then(() =>{
+                    this.app.client.getHTML('#page_id', false).then(page_id =>{
+                        resolve(page_id)
+                    })
+                })
+              })
+          })
+          .then(result =>{
+              assert.equal('TWITCH_PAGE', result);
           })
           
       })
@@ -150,45 +207,26 @@ function make_request(url, method, payload){
       it('should display twitch video panel if the request type is twitch', function(){
           // open twitch video panel
           let payload = {
-            video_type: 'twitch',
-            video_url: 'pokimane'
+              "player_type": "soundcloud",
+              "video_url": "https://soundcloud.com/twiml"
           }
 
-          return new Promise((resolve) =>{
-            start_video_request(payload, (err, res, body) =>{
+          return new Promise(resolve =>{
+             make_request(`${config.server}/start_player`, 'POST', payload)
+              .then((data) =>{
                 this.app.client.windowByIndex(1).then(() =>{
                     this.app.client.getHTML('#page_id', false).then(page_id =>{
                         resolve(page_id)
                     })
                 })
-            })
-
-          }).then(result =>{
-              assert.equal('TWITCH_PAGE', result);
+              })
+          })
+          .then(result =>{
+              assert.equal('SOUNDCLOUD_PAGE', result);
           })
           
       })
-
-      it('should return status: "not_supported" when the request type is... not supported!', function(){
-          // open youtube video panel
-          let payload = {
-            video_type: 'potato',
-            video_url: 'https://www.xpotatox.com/watch?p=ahahhah'
-          }
-
-          return new Promise((resolve) =>{
-            start_video_request(payload, (err, res, body) =>{
-              let response = JSON.parse(body);
-              resolve(response.status)
-            })
-
-          }).then(result =>{
-             assert.equal('not_supported', result);
-          })
-          
-      })
-
-  })*/
+  })
   
 
 }) //
