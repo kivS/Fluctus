@@ -9,12 +9,12 @@
   "main": "main.js",
   "scripts": {
     "start": "NODE_ENV=dev electron .",
-    "rebuild": "electron-rebuild -v 1.6.2",
+    "rebuild": "electron-rebuild -v 1.8.1",
     "pack": "build --dir --win --linux --x64",
     "dist": "build --win --linux --x64 --ia32",
     "publish": "build --win --linux --x64 --ia32 -p always",
     "postinstall": "install-app-deps",
-    "test:e2e": "NODE_ENV=test mocha tests/test.js"
+    "test": "NODE_ENV=test mocha tests/test.js"
   },
   "build": {
     "appId": "vik.my.fluctus",
@@ -31,6 +31,7 @@
   "dependencies": {
     "auto-launch": "^5.0.1",
     "electron-updater": "^2.4.3",
+    "node-fetch": "^1.7.3",
     "winston": "^2.3.1"
   },
   "devDependencies": {
@@ -38,12 +39,11 @@
     "electron-builder": "^13.6.0",
     "electron-publisher-s3": "^15.0.1",
     "electron-rebuild": "^1.5.7",
-    "mocha": "^3.2.0",
-    "request": "^2.79.0",
+    "mocha": "^4.0.1",
     "spectron": "^3.6.0",
     "typescript": "^2.4.1"
   },
-  "jshintConfig":{
+  "jshintConfig": {
     "esversion": 6
   }
 }

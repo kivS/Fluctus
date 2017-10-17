@@ -201,14 +201,15 @@ function start() {
 
                     log.info('playerPanelCounter: ', playerPanelCounter);
 
-                    // Check if video_type of request_body is supported
-                    const supported_request = config.SUPPORTED_REQUESTS.find(player_type => player_type == request_body_object['player_type']);
-
                     // if player_type is not present lets end the convo 
-                    if(!request_body_object['player_type']){
+                    if(!request_body_object || !request_body_object['player_type']){
                         res.end(JSON.stringify({ status: 'player_type not present..' }));
                         return;
                     }
+
+                    // Check if video_type of request_body is supported
+                    const supported_request = config.SUPPORTED_REQUESTS.find(player_type => player_type == request_body_object['player_type']);
+
 
                     // If player type is not supported.. lets end this conversation as well
                     if (!supported_request){
