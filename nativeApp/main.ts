@@ -1,10 +1,16 @@
-console.time('APP_START_UP');
-console.time('APP_IMPORTS')
 
 // Debug
-if (process.env.NODE_ENV === 'dev') {
+if(process.env.NODE_ENV === 'dev') {
     console.log(process.versions);
+
+}else{
+    // no console overhead in prod
+    console.time = function(){};
+    console.timeEnd = function(){};
 }
+
+console.time('APP_START_UP');
+console.time('APP_IMPORTS')
 
 
 import { app, BrowserWindow, Tray, Menu, dialog, shell, screen } from 'electron';

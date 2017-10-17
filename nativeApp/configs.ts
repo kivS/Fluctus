@@ -33,7 +33,7 @@ export function logger(logs_path){
                 colorize: true
             }),
             new (log.transports.File)({
-                level: 'info',
+                level: 'error',
                 filename: logs_path,
                 prettyPrint: true,
                 eol: '\n\n',
