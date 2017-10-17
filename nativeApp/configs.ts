@@ -17,7 +17,7 @@ export const config = {
 
 function timestampFormat(){
     const date = new Date()
-    return date.toLocaleString()
+    return date.toString()
 }
 
 
