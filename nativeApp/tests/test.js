@@ -11,16 +11,7 @@ const config = {
   server: 'http://localhost:8753'
 }
 
-/**
- * New application wrapper
- * @return {[type]} [description]
- */
- function new_app() {
-  return new Application({
-    path: electron,
-    args: [app_path]
-  })
-}
+
 
 
 function make_request(url, method, payload){
@@ -62,8 +53,13 @@ function make_request(url, method, payload){
   this.timeout(15000)
 
   beforeEach(function () {
-    this.app = new_app()
+    this.app = new Application({
+        path: electron,
+        args: [app_path]
+    })
+
     return this.app.start()
+
   })
 
   afterEach(function () {
@@ -203,8 +199,7 @@ function make_request(url, method, payload){
           })
           .then(result =>{
               assert.equal('TWITCH_PAGE', result);
-          })
-          
+          })k          
       })
 
       it('should display twitch video panel if the request type is twitch', function(){
