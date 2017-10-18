@@ -5,6 +5,8 @@
 
 ## Native Desktop App
 
+[![Build Status](https://travis-ci.com/kivS/floating-dog.svg?token=sg5BpRwHDJkqqN1EJg9d&branch=master)](https://travis-ci.com/kivS/floating-dog)
+
 ### Structure
   - main.ts implements http server, global logging, auto-update, notifications, player panel positioning in screen
   - on http call from web extension, main.ts starts a renderer process to display player panel(player depends on request. eg: youtube player)
@@ -74,48 +76,26 @@
 
 ### Video/Audio Players API
   - Transport: Json
-
   - player_type is required for each request
 
-  Youtube:
+#### Youtube:
     - video_currentTime  --> Video start time in seconds
     - video_url:         --> Url  | String enconded url object
-        - list           --> playlist id
-        - v              --> video id
+        -- list           --> playlist id
+        -- v              --> video id
 
   
-  Vimeo:
+#### Vimeo:
     - video_url --> URL or video ID
     - time      --> video start time in seconds
     
 
-  Soundcloud:
+#### Soundcloud:
     - url
 
 
-  Twitch:
-    - video_id | channel_id      --> Video(prefix must be 'v', eg: v123443545) or channel ID
-
-=======
-  - Obligatory field: player_type -> String | eg: youtube
-
-#### Youtube:
-- video_currentTime --> Number
-- video_url:         --> Url  | String enconded url object
-  - list --> playlist id
-  - v    --> video id
-
-#### Vimeo:
-- video_url --> URL or video ID
-- time      --> start time in seconds
-    
-
-#### Soundcloud:
-- video_url
-
 #### Twitch:
-- video_url
-
+    - video_id | channel_id      --> Video(prefix must be 'v', eg: v123443545) or channel ID
 
 ---
 
