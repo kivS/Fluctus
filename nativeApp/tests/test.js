@@ -1,4 +1,5 @@
 const Application = require('spectron').Application;
+const electron = require('electron');
 const path = require('path');
 const assert = require('assert');
 const fetch = require('node-fetch');
@@ -16,7 +17,7 @@ const config = {
  */
  function new_app() {
   return new Application({
-    path: path.join(__dirname, '..', 'node_modules', '.bin', 'electron'),
+    path: electron,
     args: [app_path]
   })
 }
@@ -58,7 +59,7 @@ function make_request(url, method, payload){
  */
 
  describe('Application lift off!', function () {
-  this.timeout(30000)
+  this.timeout(15000)
 
   beforeEach(function () {
     this.app = new_app()
@@ -66,11 +67,14 @@ function make_request(url, method, payload){
   })
 
   afterEach(function () {
-    if (this.app && this.app.isRunning()) {
+    if(this.app && this.app.isRunning()) {
       // close app
       return this.app.stop()
 
     }
+
+    return undefined;
+
   })
 
 
