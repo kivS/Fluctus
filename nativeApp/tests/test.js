@@ -199,7 +199,7 @@ function make_request(url, method, payload){
           })
           .then(result =>{
               assert.equal('TWITCH_PAGE', result);
-          })k          
+          })        
       })
 
       it('should display twitch video panel if the request type is twitch', function(){
