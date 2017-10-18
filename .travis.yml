@@ -8,17 +8,17 @@ node_js:
 
 cache: yarn
 
-    
 before_install:
+  - sudo apt-get -qq update
+  - apt install xvfb libxtst6 libxss1 libgtk2.0-0 -y
+  - apt install libnss3 libasound2 libgconf-2-4 -y
   - cd nativeApp
   
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
-  - pwd
-
-
+  
 script:
   - node --version
   - npm --version
