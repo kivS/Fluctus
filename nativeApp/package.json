@@ -31,7 +31,6 @@
   "dependencies": {
     "auto-launch": "^5.0.1",
     "electron-updater": "^2.4.3",
-    "node-fetch": "^1.7.3",
     "winston": "^2.3.1"
   },
   "devDependencies": {
@@ -39,6 +38,7 @@
     "electron-builder": "^13.6.0",
     "electron-publisher-s3": "^15.0.1",
     "electron-rebuild": "^1.5.7",
+    "node-fetch": "^1.7.3",
     "mocha": "^4.0.1",
     "spectron": "^3.6.0",
     "typescript": "^2.4.1"
