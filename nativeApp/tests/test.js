@@ -79,10 +79,9 @@ function make_request(url, method, payload){
 
 
   describe('On launch', function() {
-    it('should get Dummy test page', function(done) {
+    it('should get Dummy test page', function() {
       return this.app.browserWindow.getTitle().then(title =>{
        assert.equal(title, "TEST_PAGE");
-       done()
      });
     })
   })
