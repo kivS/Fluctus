@@ -25,4 +25,4 @@ script:
   - npm --version
   - yarn --version
   - yarn install
-  - yarn run test
+  - xvfb-run yarn run test
