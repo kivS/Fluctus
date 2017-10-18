@@ -13,6 +13,7 @@
     "pack": "build --dir --win --linux --x64",
     "dist": "build --win --linux --x64 --ia32",
     "publish": "build --win --linux --x64 --ia32 -p always",
+    "build-ts": "tsc",
     "postinstall": "install-app-deps",
     "test": "NODE_ENV=test mocha tests/test.js"
   },
