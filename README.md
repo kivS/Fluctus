@@ -74,6 +74,7 @@
 
 ### Video/Audio Players API
   - Transport: Json
+
   - player_type is required for each request
 
   Youtube:
@@ -94,6 +95,26 @@
 
   Twitch:
     - video_id | channel_id      --> Video(prefix must be 'v', eg: v123443545) or channel ID
+
+=======
+  - Obligatory field: player_type -> String | eg: youtube
+
+#### Youtube:
+- video_currentTime --> Number
+- video_url:         --> Url  | String enconded url object
+  - list --> playlist id
+  - v    --> video id
+
+#### Vimeo:
+- video_url --> URL or video ID
+- time      --> start time in seconds
+    
+
+#### Soundcloud:
+- video_url
+
+#### Twitch:
+- video_url
 
 
 ---
