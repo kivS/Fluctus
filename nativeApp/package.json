@@ -8,14 +8,14 @@
   "homepage": "https://kivs.github.io/Fluctus",
   "main": "main.js",
   "scripts": {
-    "start": "NODE_ENV=dev electron .",
-    "rebuild": "electron-rebuild -v 1.8.1",
-    "pack": "build --dir --win --linux --x64",
-    "dist": "build --win --linux --x64 --ia32",
-    "publish": "build --win --linux --x64 --ia32 -p always",
     "build-ts": "tsc",
+    "start": "yarn run build-ts; NODE_ENV=dev electron .",
+    "rebuild": "electron-rebuild -v 1.8.1",
+    "pack": "yarn run build-ts; build --dir --win --linux --x64",
+    "dist": "yarn run build-ts; build --win --linux --x64 --ia32",
+    "publish": "yarn run build-ts; build --win --linux --x64 --ia32 -p always",
     "postinstall": "install-app-deps",
-    "test": "NODE_ENV=test mocha tests/test.js"
+    "test": "yarn run build-ts; NODE_ENV=test mocha tests/test.js"
   },
   "build": {
     "appId": "vik.my.fluctus",

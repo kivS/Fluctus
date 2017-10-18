@@ -57,7 +57,7 @@ function make_request(url, method, payload){
         path: electron,
         args: [app_path]
     })
-
+ 
     return this.app.start()
 
   })

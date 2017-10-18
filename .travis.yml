@@ -25,5 +25,4 @@ script:
   - npm --version
   - yarn --version
   - yarn install
-  - yarn run build-ts
   - yarn run test
