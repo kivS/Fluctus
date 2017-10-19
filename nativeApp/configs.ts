@@ -19,8 +19,11 @@ export const config = {
 //--------------------------------------------------------------------------------------------------
 
 function timestampFormat(){
-    const date = new Date()
-    return date.toString()
+    let date = new Date().toString().split(' ');
+    const [w, m, d, y, t] = date; 
+
+
+    return `${w} ${d} ${m} ${y} ${t}` ;
 }
 
 
