@@ -128,7 +128,13 @@ function start() {
             }
         },
         {
+            type: 'separator',
+        },
+        {
             label: `Version: ${app.getVersion()}`,
+            click: () =>{
+                shell.openItem(config.RELEASE_PAGE_URL)
+            }
         },
         {
             type: 'separator',
