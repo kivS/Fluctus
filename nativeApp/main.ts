@@ -121,6 +121,48 @@ function start() {
 
     // create menu
     const contextMenu = Menu.buildFromTemplate([
+    {
+            label: 'Saved by me!',
+            click: () => {
+                 let saved_by_user = new BrowserWindow({
+                      width: config.SAVED_BY_USER_WINDOW_WIDTH,
+                      height: config.SAVED_BY_USER_WINDOW_HEIGHT,
+                      minWidth: config.SAVED_BY_USER_WINDOW_WIDTH,
+                      minHeight: config.SAVED_BY_USER_WINDOW_HEIGHT,
+                      alwaysOnTop: true, 
+                      show: false,
+                      backgroundColor: 'white',
+                      maximizable: false,
+                      icon: icon,
+                      webPreferences: {
+                          preload: path.join(__dirname, 'resources', 'player_panels', 'preload.js'),
+                          nodeIntegration: (process.env.NODE_ENV === 'dev')? true:false
+                      }
+                  });
+
+                 saved_by_user.loadURL(`file://${__dirname}/resources/player_panels/saved_by_user.html`);
+                 
+                 // Debug
+                 if (process.env.NODE_ENV === 'dev') {
+                     saved_by_user.webContents.openDevTools({
+                         mode: 'detach'
+                     });
+                 }
+
+                 saved_by_user.once('ready-to-show', () => {
+                   saved_by_user.show()
+                 })
+
+                 saved_by_user.on('closed', () =>{
+                     saved_by_user = null;
+                 })
+
+                
+            }
+        },
+        {
+            type: 'separator',
+        },
         {
             label: 'Show logs',
             click: () => {
