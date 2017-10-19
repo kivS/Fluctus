@@ -9,7 +9,7 @@
   "main": "main.js",
   "scripts": {
     "build-ts": "tsc",
-    "start": "yarn run build-ts; NODE_ENV=dev electron .",
+    "start": "yarn run build-ts; NODE_ENV=dev gulp dev",
     "rebuild": "electron-rebuild -v 1.8.1",
     "pack": "yarn run build-ts; build --dir --win --linux --x64",
     "dist": "yarn run build-ts; build --win --linux --x64 --ia32",
@@ -37,10 +37,12 @@
   "devDependencies": {
     "electron": "^1.8.1",
     "electron-builder": "^13.6.0",
+    "electron-connect": "^0.6.2",
     "electron-publisher-s3": "^15.0.1",
     "electron-rebuild": "^1.5.7",
-    "node-fetch": "^1.7.3",
+    "gulp": "^3.9.1",
     "mocha": "^4.0.1",
+    "node-fetch": "^1.7.3",
     "spectron": "^3.6.0",
     "typescript": "^2.4.1"
   },
