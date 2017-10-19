@@ -12,7 +12,7 @@ const settings_file_path = path.join(remote.app.getPath('home'), 'fluctus_settin
  process.once('loaded', function() {
 
    // init settings file
-   initSettings()
+   initSettings();
 
    global['_log'] = remote.getGlobal('logger');
    global['_parse_url'] = url.parse;
@@ -87,7 +87,7 @@ function getSettings(){
       fs.readFile(settings_file_path, 'utf-8', (err, data) =>{
         if(err) reject(err);
 
-        let json_data = null;
+        let json_data;
 
         try{
           json_data = JSON.parse(data)
@@ -95,9 +95,13 @@ function getSettings(){
         }catch(e){
            reject("error_parsing_settings")
         }
-        
-        if(json_data) resolve(json_data)
+
+        if(json_data) resolve(JSON.parse(json_data))
+
       })
+
+  }).catch(error =>{
+    global['_log'].error(error);
   })
  
 
@@ -114,7 +118,17 @@ function saveSettings(data){
 
 function initSettings(){
   // data to save in settings file
-  const data = {updated_at: new Date().getTime() }
+  const data = {
+    'savedList':{
+      'x1':{
+        updated_at: new Date().getTime(),
+        provider: 'youtube',
+        url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        name: 'Visible name, shortcut. Click here to rename',
+      }
+    }
+
+  }
 
   return new Promise((resolve, reject) =>{
     fs.stat(settings_file_path, (err, status) =>{
