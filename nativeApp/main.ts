@@ -119,6 +119,7 @@ function start() {
     trayIcon = new Tray(icon);
     trayIcon.setToolTip('Fluctus is waiting..');
 
+    let saved_by_user = null;
     // create menu
     const contextMenu = Menu.buildFromTemplate([
         {    
@@ -129,8 +130,10 @@ function start() {
                     shell.openItem(path.join(app.getPath('home'), 'fluctus_settings.json'))
                 }*/
 
+               // don't allow multiple 'saved by me' windows
+               if(saved_by_user) return;
 
-                 let saved_by_user = new BrowserWindow({
+               saved_by_user = new BrowserWindow({
                       width: config.SAVED_BY_USER_WINDOW_WIDTH,
                       height: config.SAVED_BY_USER_WINDOW_HEIGHT,
                       minWidth: config.SAVED_BY_USER_WINDOW_WIDTH,

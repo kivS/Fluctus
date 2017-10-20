@@ -63,14 +63,14 @@
         </td>
       </tr>
     -->
-        </table>
-      </div>
-    </body>
-    <script src="../player_panel_scripts/disable_console.js"></script>
-    <script>
-      const TAG = 'SAVED_BY_USER - ';
+    </table>
+  </div>
+</body>
+<script src="../player_panel_scripts/disable_console.js"></script>
+<script>
+  const TAG = 'SAVED_BY_USER - ';
 
-      _log.info(TAG, "Lift off!");
+  _log.info(TAG, "Lift off!");
 
     // get settings
     _settings().then(settings =>{
@@ -85,7 +85,7 @@
           
           // maintain position of a & b in relation to this universe
           return 0; 
-      })
+        })
 
       console.log(sorted_savedList);
 
@@ -93,7 +93,7 @@
       sorted_savedList.forEach( item => {
 
         let [saved_item_id, saved_item] = item;
-   
+        
         // Create table row
         let table_row = document.createElement('TR');
         // set id for each item
@@ -158,7 +158,7 @@
         // create delete btn
         let btn_delete = document.createElement('button');
         // set text
-        btn_delete.textContent = 'Delete'
+        btn_delete.textContent = 'Delete';
         // set class for styling
         btn_delete.className = 'btn_delete';
         // add on click event
