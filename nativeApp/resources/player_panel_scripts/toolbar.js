@@ -11,6 +11,16 @@
    _getCurrentWindow.reload();
  });
 
+ document.getElementById('saveBtn').addEventListener('click', e =>{
+   // Parse payload in URL and parse it into object
+    const payload = _parse_url(location.search, true).query;
+    console.log('Payload: ', payload);
+
+    // save current media 
+    _save_item(payload);
+    
+ });
+
  // handle toolbar visibility
  _getCurrentWindow.on('blur', () =>{
      console.log('panel lost focus.. hiding toolbar');

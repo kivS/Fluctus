@@ -2,7 +2,7 @@ import {remote} from 'electron';
 import * as url from 'url';
 import * as path from 'path';
 import * as fs from 'fs';
-import {make_request} from '../../utils.js';
+import {make_request, simple_json_hasher} from '../../utils.js';
 
 // Settings file path
 const settings_file_path = path.join(remote.app.getPath('home'), 'fluctus_settings.json');
@@ -22,7 +22,8 @@ const settings_file_path = path.join(remote.app.getPath('home'), 'fluctus_settin
    global['_disableDragAndDrop'] = disableDragAndDrop;
    global['_get_env'] = getEnv;
    global['_settings'] = getSettings;
-   global['_save_settings'] = saveSettings;
+   global['_save_item'] = saveItem;
+   global['_delete_item'] = deleteItem;
    global['_open_player_panel'] = openPlayerPanel;
 
 
@@ -97,7 +98,7 @@ function getSettings(){
            reject("error_parsing_settings")
         }
 
-        if(json_data) resolve(JSON.parse(json_data))
+        if(json_data) resolve(json_data)
 
       })
 
@@ -109,28 +110,75 @@ function getSettings(){
 }
 
 
+/**
+ * Save item to settings savedList
+ * @param {[type]} data [description]
+ */
+function saveItem(data){
 
-function saveSettings(data){
-  fs.writeFile(settings_file_path, JSON.stringify(data), (error) =>{
-    if(error) global['_log'].error(error)
+  // hash data to create 32 bits identifier
+  const itemToSaveID = simple_json_hasher(data).toString();
+
+  const itemToSave = {
+
+      updated_at: new Date().getTime(),
+      payload: data,
+      name: 'Visible name, shortcut. Click here to rename'
+  }
+
+  console.log('Item to be saved:', itemToSave);
+
+  // get current settings
+  getSettings().then(settings =>{
+    // add item to saveList
+    settings['savedList'][itemToSaveID] = itemToSave;
+    console.log('Settings:', settings);
+
+    // rewrite settings with changes made
+    saveSettings(settings);
+
   })
 }
 
+/**
+ * Given saved item id, delete it from settings savedList
+ * @param {[type]} id [description]
+ */
+function deleteItem(id){
+  // get current settings
+  getSettings().then(settings =>{
+    // add item to saveList
+    if(settings['savedList'][id]){
+      console.log('Deleting item with id:', id);
+      delete(settings['savedList'][id]);
+
+      // rewrite settings with changes made
+      saveSettings(settings);
+
+    }
+    
+
+  })
+}
 
 function initSettings(){
   // data to save in settings file
+
   const data = {
     'savedList':{
       'x1':{
         updated_at: new Date().getTime(),
-        provider: 'youtube',
-        url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
         name: 'Visible name, shortcut. Click here to rename',
+        payload:{
+           player_type: 'youtube',
+           video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        },
       }
     }
 
   }
 
+  // check if settings file exists, if not create one..
   return new Promise((resolve, reject) =>{
     fs.stat(settings_file_path, (err, status) =>{
       if(err) reject(err);
@@ -145,7 +193,7 @@ function initSettings(){
   .catch(error =>{
     // 
     global['_log'].info('No settings file. Creating one..');
-    saveSettings(JSON.stringify(data))
+    saveSettings(data)
   })
 
 }
@@ -153,17 +201,23 @@ function initSettings(){
 
 /**
  * Given a saved item lets play on the player panel
+ * TODO: we need to keep the port in use in memory
  */
-function openPlayerPanel(saved_item){
-  const payload = {
-    player_type: saved_item.provider,
-    video_url: saved_item.url
-
-  }
+function openPlayerPanel(payload){
 
   return make_request('http://localhost:8753/start_player', 'POST', payload)
     .catch(error =>{
       global['_log'].error(error);
     })
 
+}
+
+/**
+ * Rewrite settings file
+ * @param {[type]} data [description]
+ */
+function saveSettings(data){
+  fs.writeFile(settings_file_path, JSON.stringify(data), (error) =>{
+    if(error) global['_log'].error(error)
+  })
 }

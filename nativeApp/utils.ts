@@ -124,3 +124,25 @@ export function make_request(url, method, payload){
 
   })
 }
+
+
+/**
+ * simple One-way hash function for IDS
+ * @param {[type]} json_data [description]
+ */
+export function simple_json_hasher(json_data){
+    const guinea_pig = JSON.stringify(json_data);
+    let hash = 0;
+
+    if(guinea_pig.length == 0) return hash;
+
+    for(let i = 0; i < guinea_pig.length; i++){
+        // get char code
+        let aChar = guinea_pig.charCodeAt(i);
+
+        //binary manipulations to return a 32 bits id
+        hash = ( (hash << 5) - hash ) + aChar;
+        hash = hash & hash;
+    }
+    return hash;
+}
