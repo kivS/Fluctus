@@ -123,6 +123,7 @@ function saveItem(data){
   const itemToSave = {
 
       updated_at: new Date().getTime(),
+      created_at: new Date().getTime(),
       payload: data,
       name: 'Visible name, shortcut. Click here to rename'
   }
@@ -190,6 +191,7 @@ function initSettings(){
     'savedList':{
       'x1':{
         updated_at: new Date().getTime(),
+        created_at: new Date().getTime(),
         name: 'Visible name, shortcut. Click here to rename',
         payload:{
            player_type: 'youtube',

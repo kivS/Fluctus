@@ -66,6 +66,7 @@
         </table>
       </div>
     </body>
+    <script src="../player_panel_scripts/disable_console.js"></script>
     <script>
       const TAG = 'SAVED_BY_USER - ';
 
@@ -75,17 +76,24 @@
     _settings().then(settings =>{
       console.log(settings);
 
+      const sorted_savedList = Object.entries(settings.savedList).sort( (a,b) =>{
+          // if created_at of a >  created_at of b then a goes down  
+          if(a[1].created_at > b[1].created_at) return 1;
+          
+          // if created_at of a < created_at of b then a goes up
+          if(a[1].created_at < b[1].created_at) return -1;
+          
+          // maintain position of a & b in relation to this universe
+          return 0; 
+      })
+
+      console.log(sorted_savedList);
+
       // Load saved items
-      for (let key in settings.savedList) {
-        if(!settings.savedList.hasOwnProperty(key)) continue;
+      sorted_savedList.forEach( item => {
 
-        const saved_item = settings.savedList[key];
-        const saved_item_id = key;
-
-        console.log(saved_item_id, saved_item);
-
-    
-
+        let [saved_item_id, saved_item] = item;
+   
         // Create table row
         let table_row = document.createElement('TR');
         // set id for each item
@@ -168,7 +176,7 @@
         // add the table row to the table
         document.getElementById('savedList').appendChild(table_row);
 
-      }
+      })
 
     })
 
