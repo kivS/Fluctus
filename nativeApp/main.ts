@@ -140,7 +140,7 @@ function start() {
                       minHeight: config.SAVED_BY_USER_WINDOW_HEIGHT,
                       alwaysOnTop: true, 
                       show: false,
-                      backgroundColor: 'black',
+                      backgroundColor: '#36393E',
                       maximizable: false,
                       icon: icon,
                       webPreferences: {

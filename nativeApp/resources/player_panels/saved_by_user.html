@@ -9,6 +9,7 @@
     width: 100vw;
     height: 100vh;
     margin: 0px;
+    color: white;
   }
   .app{
     width: 96vw;
@@ -20,6 +21,7 @@
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
+    margin-bottom: 20px;
   }
 
   td, th{
@@ -36,6 +38,20 @@
   td:nth-child(even){
     text-align: center;
   }
+
+  ::-webkit-scrollbar
+  {
+    width: 12px;
+    background-color: #F5F5F5;
+
+  } 
+  ::-webkit-scrollbar-thumb
+  {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: "black";
+  }
+
 </style>
 </head>
 <body>
@@ -93,7 +109,7 @@
       sorted_savedList.forEach( item => {
 
         let [saved_item_id, saved_item] = item;
-        
+
         // Create table row
         let table_row = document.createElement('TR');
         // set id for each item
@@ -139,12 +155,15 @@
         name_input.onblur = (e) =>{
           console.log('You just edited: ', saved_item_id, 'text: ', e.target.innerText);
 
-          // update name of item 
-          saved_item.name = e.target.innerText;
-          console.log('Item edited. Current settings:', settings);
+          // save only if data changes
+          if(saved_item.name != e.target.innerText){
+            // update name of item 
+            saved_item.name = e.target.innerText;
+            console.log('Item edited. Current settings:', settings);
 
-          // make it persistent
-          _edit_item(saved_item_id, saved_item);
+            // make it persistent
+            _edit_item(saved_item_id, saved_item);
+          }
         }
         // append name input to table data
         td_item_name.appendChild(name_input);
