@@ -2,6 +2,7 @@ import {remote} from 'electron';
 import * as url from 'url';
 import * as path from 'path';
 import * as fs from 'fs';
+import {make_request} from '../../utils.js';
 
 // Settings file path
 const settings_file_path = path.join(remote.app.getPath('home'), 'fluctus_settings.json');
@@ -22,7 +23,7 @@ const settings_file_path = path.join(remote.app.getPath('home'), 'fluctus_settin
    global['_get_env'] = getEnv;
    global['_settings'] = getSettings;
    global['_save_settings'] = saveSettings;
-
+   global['_open_player_panel'] = openPlayerPanel;
 
 
    // disables drag and drop on toolbar
@@ -146,5 +147,23 @@ function initSettings(){
     global['_log'].info('No settings file. Creating one..');
     saveSettings(JSON.stringify(data))
   })
+
+}
+
+
+/**
+ * Given a saved item lets play on the player panel
+ */
+function openPlayerPanel(saved_item){
+  const payload = {
+    player_type: saved_item.provider,
+    video_url: saved_item.url
+
+  }
+
+  return make_request('http://localhost:8753/start_player', 'POST', payload)
+    .catch(error =>{
+      global['_log'].error(error);
+    })
 
 }
