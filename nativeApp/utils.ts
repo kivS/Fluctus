@@ -5,6 +5,7 @@
 //*****************************************************
 import { config } from './configs'
 import { dialog } from 'electron';
+import fetch from 'node-fetch';
 
 const log = global['logger']
 
@@ -87,4 +88,39 @@ export function getPlayerPanelPosition(work_area_size, number_of_opened_panels):
 
     return [parseInt(x), parseInt(y)];
 
+}
+
+
+
+
+
+/**
+ * make http requests
+ * @param {[type]} url     [description]
+ * @param {[type]} method  [description]
+ * @param {[type]} payload [description]
+ */
+export function make_request(url, method, payload){
+
+  return new Promise((resolve, reject) => {
+
+    const body = JSON.stringify(payload) || '';
+
+    fetch(url,{
+        method: method,
+        headers: {"Content-Type": "application/json"},
+        body: body
+    })
+    .then(response =>{
+        return response.json()
+    })
+    .then(data => {
+        resolve(data);
+
+    })
+    .catch(err =>{
+        reject(err);
+    })
+
+  })
 }

@@ -121,9 +121,15 @@ function start() {
 
     // create menu
     const contextMenu = Menu.buildFromTemplate([
-    {
+        {    
             label: 'Saved by me!',
             click: () => {
+               /* // dev debug
+                if(process.env.NODE_ENV === 'dev') {
+                    shell.openItem(path.join(app.getPath('home'), 'fluctus_settings.json'))
+                }*/
+
+
                  let saved_by_user = new BrowserWindow({
                       width: config.SAVED_BY_USER_WINDOW_WIDTH,
                       height: config.SAVED_BY_USER_WINDOW_HEIGHT,

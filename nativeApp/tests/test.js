@@ -2,7 +2,7 @@ const Application = require('spectron').Application;
 const electron = require('electron');
 const path = require('path');
 const assert = require('assert');
-const fetch = require('node-fetch');
+const {make_request} = require('../utils.js');
 
 
 const app_path = path.join(__dirname, '..', 'main.js');
@@ -12,32 +12,6 @@ const config = {
 }
 
 
-
-
-function make_request(url, method, payload){
-
-  return new Promise((resolve, reject) => {
-
-    const body = JSON.stringify(payload) || '';
-
-    fetch(url,{
-        method: method,
-        headers: {"Content-Type": "application/json"},
-        body: body
-    })
-    .then(response =>{
-        return response.json()
-    })
-    .then(data => {
-        resolve(data);
-
-    })
-    .catch(err =>{
-        reject(err);
-    })
-
-  })
-}
 
 
 /****************************************************************************************************************/
