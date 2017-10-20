@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Hello World!</title>
+  <style>
+  body{
+    width: 100vw;
+    height: 100vh;
+    margin: 0px;
+  }
+  .app{
+    width: 96vw;
+    height: 100vh;
+    margin: auto;
+    overflow-y: auto;
+  }
+  table{
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  td, th{
+    border: 1px solid  #dddddd;
+    padding: 8px;
+    word-wrap: break-word; 
+    text-align: center;
+  }
+
+  .btnDelete{
+    border: none;
+  }
+
+  td:nth-child(even){
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <table id="savedList">
+      <caption>
+        <h4 id="pageListCaption">Saved by me!</h4>
+      </caption>
+      <tr>
+        <th>Link</th>
+        <th>Name</th>
+        <th>Action</th>
+      </tr>
+
+    <!--
+      <tr>
+        <td>
+          <a title="potato" href="#">Youtube</a>
+        </td>
+        <td title="Click here to rename the item">
+          <p contenteditable>pbannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn</p>
+        </td>
+        <td>
+          <button>delete</button>
+        </td>
+      </tr>
+    -->
+        </table>
+      </div>
+    </body>
+    <script>
+      const TAG = 'SAVED_BY_USER - ';
+
+      _log.info(TAG, "Lift off!");
+
+    // get settings
+    _settings().then(settings =>{
+      console.log(settings);
+
+      // Load saved items
+      for (let key in settings.savedList) {
+        if(!settings.savedList.hasOwnProperty(key)) continue;
+
+        const saved_item = settings.savedList[key];
+        const saved_item_id = key;
+
+        console.log(saved_item_id, saved_item);
+
+    
+
+        // Create table row
+        let table_row = document.createElement('TR');
+        // set id for each item
+        table_row.id = saved_item_id;
+
+
+        // create link table data
+        let td_link = document.createElement('TD');
+        // create link 
+        let media_link = document.createElement('a');
+        // set link title = url, tries out different type of urls depending on the defined api(eg: youtube, vimeo, twitch)
+        media_link.title = saved_item.payload.video_url || saved_item.payload.url || saved_item.payload.video_id || saved_item.payload.channel_id || ''; 
+        // set link content
+        media_link.text = saved_item.payload.player_type;
+        // set link url 
+        media_link.href = '#';
+        // set onclick event, open video panel
+        media_link.onclick = (e) =>{
+          console.log("Open video panel! - ID:", saved_item_id);
+          _open_player_panel(saved_item.payload).then(data =>{
+            console.log(data);
+          })
+        }
+        // append link to td_link 
+        td_link.appendChild(media_link);
+        //append table data to table row
+        table_row.appendChild(td_link);
+
+
+        // create item name table data
+        let td_item_name = document.createElement('TD');
+        // create name input element
+        let name_input = document.createElement('p');
+        // define class for styling 
+        name_input.className = 'name_input';
+        //  set input name tip
+        name_input.title = 'Click here to rename item!';
+        // set text content
+        name_input.textContent = saved_item.name;
+        // make the content editable
+        name_input.contentEditable = 'true';
+        // add event for when user finishes editing text
+        name_input.onblur = (e) =>{
+          console.log('You just edited: ', saved_item_id, 'text: ', e.target.innerText);
+
+          // update name of item 
+          saved_item.name = e.target.innerText;
+          console.log('Item edited. Current settings:', settings);
+
+          // make it persistent
+          _edit_item(saved_item_id, saved_item);
+        }
+        // append name input to table data
+        td_item_name.appendChild(name_input);
+        // append table item name to table row
+        table_row.appendChild(td_item_name);
+
+
+
+        // create actions table data
+        let td_actions = document.createElement('TD');
+        // create delete btn
+        let btn_delete = document.createElement('button');
+        // set text
+        btn_delete.textContent = 'Delete'
+        // set class for styling
+        btn_delete.className = 'btn_delete';
+        // add on click event
+        btn_delete.onclick = (e) =>{
+          console.log('so you want to delete me huh?!', '- ID: ', saved_item_id);
+          _delete_item(saved_item_id);
+          document.getElementById(saved_item_id).hidden = true;
+        }
+        // append btn to table data
+        td_actions.appendChild(btn_delete);
+        // append table data to table row
+        table_row.appendChild(td_actions);
+
+
+        // add the table row to the table
+        document.getElementById('savedList').appendChild(table_row);
+
+      }
+
+    })
+
+
+
+
+
+  </script>
+  </html>

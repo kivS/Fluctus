@@ -23,6 +23,7 @@ const settings_file_path = path.join(remote.app.getPath('home'), 'fluctus_settin
    global['_get_env'] = getEnv;
    global['_settings'] = getSettings;
    global['_save_item'] = saveItem;
+   global['_edit_item'] = editItem;
    global['_delete_item'] = deleteItem;
    global['_open_player_panel'] = openPlayerPanel;
 
@@ -140,6 +141,7 @@ function saveItem(data){
   })
 }
 
+
 /**
  * Given saved item id, delete it from settings savedList
  * @param {[type]} id [description]
@@ -156,10 +158,30 @@ function deleteItem(id){
       saveSettings(settings);
 
     }
-    
-
   })
 }
+
+
+function editItem(id, item){
+  console.log('Editing item:', id, item);
+
+  // get settings
+  getSettings().then(settings =>{
+    if(settings['savedList'][id]){
+      
+       settings['savedList'][id] = item;
+       // update time of update
+       settings['savedList'][id]['updated_at'] =  new Date().getTime();
+
+       console.log('Edit saved! ID -', id);
+
+      // rewrite settings with changes made
+      saveSettings(settings);
+
+    }
+  })
+}
+
 
 function initSettings(){
   // data to save in settings file
