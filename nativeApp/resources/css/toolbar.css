@@ -57,3 +57,8 @@
 .toolbar_window_btns #closeBtn:active svg{
   stroke:white;
 }
+
+
+#saveBtn{
+  visibility: hidden;
+}

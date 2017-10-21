@@ -26,6 +26,7 @@ const settings_file_path = path.join(remote.app.getPath('home'), 'fluctus_settin
    global['_edit_item'] = editItem;
    global['_delete_item'] = deleteItem;
    global['_open_player_panel'] = openPlayerPanel;
+   global['_simple_json_hasher'] = simple_json_hasher;
 
 
    // disables drag and drop on toolbar
