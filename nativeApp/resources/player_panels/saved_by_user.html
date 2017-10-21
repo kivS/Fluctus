@@ -53,13 +53,35 @@
   .btn_delete{
     border: none;
     background: none;
-    color: white;
-    border: 1.3px solid;
-    border-radius: 25px;
+  }
+
+  .btn_delete:focus, .btn_delete:active{
+    outline: none;
+  }
+
+  .btn_delete:hover svg{
+    stroke:red;
+    cursor: pointer;
+  }
+
+  .btn_delete:active svg{
+    stroke:white;
+    cursor: wait ;
   }
 
   .name_input{
     padding: 5px 0;
+  }
+  .name_input:hover{
+    cursor: pointer;
+  }
+  .name_input:focus{
+    cursor: text;
+  }
+
+  .media_link:active{
+    color: white;
+    outline: none;
   }
 
   td a{
@@ -81,7 +103,6 @@
         <th>Name</th>
        
       </tr>
-
     <!--
       <tr>
         <td>
@@ -140,6 +161,8 @@
         media_link.title = saved_item.payload.video_url || saved_item.payload.url || saved_item.payload.video_id || saved_item.payload.channel_id || ''; 
         // set link content
         media_link.text = saved_item.payload.player_type;
+        // class name 
+        media_link.className = 'media_link';
         // set link url 
         media_link.href = '#';
         // set onclick event, open video panel
@@ -192,10 +215,19 @@
         let td_actions = document.createElement('TD');
         // create delete btn
         let btn_delete = document.createElement('button');
-        // set text
-        btn_delete.textContent = 'Delete';
+        // set icon
+        btn_delete.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        `;
         // set class for styling
         btn_delete.className = 'btn_delete';
+        // set tooltip
+        btn_delete.title = 'Delete';
         // add on click event
         btn_delete.onclick = (e) =>{
           console.log('so you want to delete me huh?!', '- ID: ', saved_item_id);

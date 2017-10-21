@@ -11,8 +11,8 @@ export const config = {
     SERVER_HOSTNAME: 'localhost',
     SUPPORTED_REQUESTS: ['youtube', 'vimeo', 'twitch', 'soundcloud'],
     RELEASE_PAGE_URL: 'https://github.com/kivS/floating-dog/releases',
-    SAVED_BY_USER_WINDOW_WIDTH: 500,
-    SAVED_BY_USER_WINDOW_HEIGHT: 300,
+    SAVED_BY_USER_WINDOW_WIDTH: 1040,
+    SAVED_BY_USER_WINDOW_HEIGHT: 360,
 }
 
 
