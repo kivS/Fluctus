@@ -141,7 +141,10 @@ function saveItem(data){
     saveSettings(settings);
 
     // display notification to user
-    const notify = new Notification('Saved!', { icon: '../images/icon.png' });
+    const notify = new Notification('Saved!', {
+     icon: '../images/icon.png',
+     silent: true,
+    });
 
     // make sure notification goes away in a timely manner!
     notify.onshow = () =>{
