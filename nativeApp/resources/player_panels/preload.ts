@@ -140,6 +140,18 @@ function saveItem(data){
     // rewrite settings with changes made
     saveSettings(settings);
 
+    // display notification to user
+    const notify = new Notification('Saved!', { icon: '../images/icon.png' });
+
+    // make sure notification goes away in a timely manner!
+    notify.onshow = () =>{
+      const closeNotifTimeOut = setTimeout( () =>{
+        notify.close();
+        clearTimeout(closeNotifTimeOut);
+      }, 1000)
+    }
+
+
   })
 }
 
