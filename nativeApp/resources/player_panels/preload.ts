@@ -126,7 +126,7 @@ function saveItem(data){
       updated_at: new Date().getTime(),
       created_at: new Date().getTime(),
       payload: data,
-      name: 'Visible name, shortcut. Click here to rename'
+      name: 'Just some dummy name, You can click here to rename it.'
   }
 
   console.log('Item to be saved:', itemToSave);
@@ -205,10 +205,10 @@ function initSettings(){
       'x1':{
         updated_at: new Date().getTime(),
         created_at: new Date().getTime(),
-        name: 'Visible name, shortcut. Click here to rename',
+        name: 'Just some dummy name, You can click here to rename it.',
         payload:{
            player_type: 'youtube',
-           video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+           video_url: 'https://www.youtube.com/watch?v=GrP3jHuLQ9o',
         },
       }
     }

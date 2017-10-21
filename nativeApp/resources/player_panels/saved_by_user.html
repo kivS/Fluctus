@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Hello World!</title>
+  <title>Saved Media</title>
   <style>
   body{
     width: auto;
@@ -46,6 +46,8 @@
     text-align: center;
   }
 
+  tr:hover {background-color: #3a4048}
+
   td:nth-child(even){
     text-align: center;
   }
@@ -84,6 +86,10 @@
     outline: none;
   }
 
+  .media_link:focus{
+    outline: none;
+  }
+
   td a{
     text-transform: capitalize;
     text-decoration-line: none;
@@ -96,7 +102,7 @@
   <div class="app">
     <table id="savedList">
       <caption>
-        <h4 id="pageListCaption">Saved by me!</h4>
+        <h4 id="pageListCaption">Saved Videos &amp; Music</h4>
       </caption>
       <tr>
         <th>Open</th>
