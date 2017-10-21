@@ -60,7 +60,7 @@
   }
 
   .btn_delete:hover svg{
-    stroke:red;
+    stroke: #c75b5b;
     cursor: pointer;
   }
 
@@ -99,7 +99,7 @@
         <h4 id="pageListCaption">Saved by me!</h4>
       </caption>
       <tr>
-        <th>Link</th>
+        <th>Open</th>
         <th>Name</th>
        
       </tr>
@@ -168,6 +168,7 @@
         // set onclick event, open video panel
         media_link.onclick = (e) =>{
           console.log("Open video panel! - ID:", saved_item_id);
+          e.preventDefault();
           _open_player_panel(saved_item.payload).then(data =>{
             console.log(data);
           })
@@ -202,6 +203,14 @@
 
             // make it persistent
             _edit_item(saved_item_id, saved_item);
+          }
+        }
+        // on press Enter lets stop editing
+        name_input.onkeypress = (e) =>{
+          if(e.code == 'Enter'){
+            console.log('Enter Key pressed:', e);
+            e.preventDefault();
+            name_input.blur();
           }
         }
         // append name input to table data
