@@ -5,7 +5,7 @@
 
 ## Native Desktop App
 
-[![Build Status](https://travis-ci.com/kivS/floating-dog.svg?token=sg5BpRwHDJkqqN1EJg9d&branch=master)](https://travis-ci.com/kivS/floating-dog)
+[![Build Status](https://travis-ci.com/kivS/Fluctus.svg?token=sg5BpRwHDJkqqN1EJg9d&branch=master)](https://travis-ci.com/kivS/Fluctus)
 
 ### Structure
   - main.ts implements http server, global logging, auto-update, notifications, player panel positioning in screen
