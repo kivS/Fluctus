@@ -104,6 +104,8 @@
 
 
 ### Chrome
+- https://github.com/kivS/fluctus-chrome-extension
 
 
 ### Firefox
+- https://github.com/kivS/fluctus-firefox-extension
