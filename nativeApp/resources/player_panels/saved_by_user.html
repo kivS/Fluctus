@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Saved Media</title>
+  <style>
+  body{
+    width: auto;
+    height: auto;
+    color: white;
+    margin:0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    font-family: monospace;
+  }
+
+  ::-webkit-scrollbar
+  {
+    width: 10px;
+    background-color: '#F5F5F5';
+
+  } 
+  ::-webkit-scrollbar-thumb
+  {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #c16e12;
+  }
+
+  .app{
+    width: auto;
+    height: auto;
+    margin: 2px 10px;
+  }
+  table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  td, th{
+    border: 1px solid  #dddddd;
+    padding: 8px;
+    word-wrap: break-word; 
+    text-align: center;
+  }
+
+  tr:hover {background-color: #3a4048}
+
+  td:nth-child(even){
+    text-align: center;
+  }
+
+  .btn_delete{
+    border: none;
+    background: none;
+  }
+
+  .btn_delete:focus, .btn_delete:active{
+    outline: none;
+  }
+
+  .btn_delete:hover svg{
+    stroke: #c75b5b;
+    cursor: pointer;
+  }
+
+  .btn_delete:active svg{
+    stroke:white;
+    cursor: wait ;
+  }
+
+  .name_input{
+    padding: 5px 0;
+  }
+  .name_input:hover{
+    cursor: pointer;
+  }
+  .name_input:focus{
+    cursor: text;
+  }
+
+  .media_link:active{
+    color: white;
+    outline: none;
+  }
+
+  .media_link:focus{
+    outline: none;
+  }
+
+  td a{
+    text-transform: capitalize;
+    text-decoration-line: none;
+    color: #d4750d;
+  }
+
+</style>
+</head>
+<body>
+  <div class="app">
+    <table id="savedList">
+      <caption>
+        <h4 id="pageListCaption">Saved Videos &amp; Music</h4>
+      </caption>
+      <tr>
+        <th>Open</th>
+        <th>Name</th>
+       
+      </tr>
+    <!--
+      <tr>
+        <td>
+          <a title="potato" href="#">Youtube</a>
+        </td>
+        <td title="Click here to rename the item">
+          <p contenteditable>pbannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn</p>
+        </td>
+        <td>
+          <button>delete</button>
+        </td>
+      </tr>
+    -->
+    </table>
+  </div>
+</body>
+<script src="../player_panel_scripts/disable_console.js"></script>
+<script>
+  const TAG = 'SAVED_BY_USER - ';
+
+  _log.info(TAG, "Lift off!");
+
+    // get settings
+    _settings().then(settings =>{
+      console.log(settings);
+
+      const sorted_savedList = Object.entries(settings.savedList).sort( (a,b) =>{
+          // if created_at of a <  created_at of b then a goes down  
+          if(a[1].created_at < b[1].created_at) return 1;
+          
+          // if created_at of a > created_at of b then a goes up
+          if(a[1].created_at > b[1].created_at) return -1;
+          
+          // maintain position of a & b in relation to this universe
+          return 0; 
+        })
+
+      console.log(sorted_savedList);
+
+      // Load saved items
+      sorted_savedList.forEach( item => {
+
+        let [saved_item_id, saved_item] = item;
+
+        // Create table row
+        let table_row = document.createElement('TR');
+        // set id for each item
+        table_row.id = saved_item_id;
+
+
+        // create link table data
+        let td_link = document.createElement('TD');
+        // create link 
+        let media_link = document.createElement('a');
+        // set link title = url, tries out different type of urls depending on the defined api(eg: youtube, vimeo, twitch)
+        media_link.title = saved_item.payload.video_url || saved_item.payload.url || saved_item.payload.video_id || saved_item.payload.channel_id || ''; 
+        // set link content
+        media_link.text = saved_item.payload.player_type;
+        // class name 
+        media_link.className = 'media_link';
+        // set link url 
+        media_link.href = '#';
+        // set onclick event, open video panel
+        media_link.onclick = (e) =>{
+          console.log("Open video panel! - ID:", saved_item_id);
+          e.preventDefault();
+          _open_player_panel(saved_item.payload).then(data =>{
+            console.log(data);
+          })
+        }
+        // append link to td_link 
+        td_link.appendChild(media_link);
+        //append table data to table row
+        table_row.appendChild(td_link);
+
+
+        // create item name table data
+        let td_item_name = document.createElement('TD');
+        // create name input element
+        let name_input = document.createElement('p');
+        // define class for styling 
+        name_input.className = 'name_input';
+        //  set input name tip
+        name_input.title = 'Click here to rename item!';
+        // set text content
+        name_input.textContent = saved_item.name;
+        // make the content editable
+        name_input.contentEditable = 'true';
+        // add event for when user finishes editing text
+        name_input.onblur = (e) =>{
+          console.log('You just edited: ', saved_item_id, 'text: ', e.target.innerText);
+
+          // save only if data changes
+          if(saved_item.name != e.target.innerText){
+            // update name of item 
+            saved_item.name = e.target.innerText;
+            console.log('Item edited. Current settings:', settings);
+
+            // make it persistent
+            _edit_item(saved_item_id, saved_item);
+          }
+        }
+        // on press Enter lets stop editing
+        name_input.onkeypress = (e) =>{
+          if(e.code == 'Enter'){
+            console.log('Enter Key pressed:', e);
+            e.preventDefault();
+            name_input.blur();
+          }
+        }
+        // append name input to table data
+        td_item_name.appendChild(name_input);
+        // append table item name to table row
+        table_row.appendChild(td_item_name);
+
+
+
+        // create actions table data
+        let td_actions = document.createElement('TD');
+        // create delete btn
+        let btn_delete = document.createElement('button');
+        // set icon
+        btn_delete.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        `;
+        // set class for styling
+        btn_delete.className = 'btn_delete';
+        // set tooltip
+        btn_delete.title = 'Delete';
+        // add on click event
+        btn_delete.onclick = (e) =>{
+          console.log('so you want to delete me huh?!', '- ID: ', saved_item_id);
+          _delete_item(saved_item_id);
+          document.getElementById(saved_item_id).hidden = true;
+        }
+        // append btn to table data
+        td_actions.appendChild(btn_delete);
+        // append table data to table row
+        table_row.appendChild(td_actions);
+
+
+        // add the table row to the table
+        document.getElementById('savedList').appendChild(table_row);
+
+      })
+
+    })
+
+
+
+
+
+  </script>
+  </html>

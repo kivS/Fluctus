@@ -119,8 +119,59 @@ function start() {
     trayIcon = new Tray(icon);
     trayIcon.setToolTip('Fluctus is waiting..');
 
+    let saved_by_user = null;
     // create menu
     const contextMenu = Menu.buildFromTemplate([
+        {    
+            label: 'Saved by me!',
+            click: () => {
+               /* // dev debug
+                if(process.env.NODE_ENV === 'dev') {
+                    shell.openItem(path.join(app.getPath('home'), 'fluctus_settings.json'))
+                }*/
+
+               // don't allow multiple 'saved by me' windows
+               if(saved_by_user) return;
+
+               saved_by_user = new BrowserWindow({
+                      width: config.SAVED_BY_USER_WINDOW_WIDTH,
+                      height: config.SAVED_BY_USER_WINDOW_HEIGHT,
+                      minWidth: config.SAVED_BY_USER_WINDOW_WIDTH,
+                      minHeight: config.SAVED_BY_USER_WINDOW_HEIGHT,
+                      alwaysOnTop: true, 
+                      show: false,
+                      backgroundColor: '#36393E',
+                      maximizable: false,
+                      icon: icon,
+                      webPreferences: {
+                          preload: path.join(__dirname, 'resources', 'player_panels', 'preload.js'),
+                          nodeIntegration: (process.env.NODE_ENV === 'dev')? true:false
+                      }
+                  });
+
+                 saved_by_user.loadURL(`file://${__dirname}/resources/player_panels/saved_by_user.html`);
+                 
+                 // Debug
+                 if (process.env.NODE_ENV === 'dev') {
+                     saved_by_user.webContents.openDevTools({
+                         mode: 'detach'
+                     });
+                 }
+
+                 saved_by_user.once('ready-to-show', () => {
+                   saved_by_user.show()
+                 })
+
+                 saved_by_user.on('closed', () =>{
+                     saved_by_user = null;
+                 })
+
+                
+            }
+        },
+        {
+            type: 'separator',
+        },
         {
             label: 'Show logs',
             click: () => {
