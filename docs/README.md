@@ -14,7 +14,7 @@ Fluctus currently supports video & audio from:
 ### How to install?
 
 
-#### 1. Install and run desktop player): 
+#### 1. Install and run desktop player: 
    Operating System | Link
    --- | ---
    **Windows** | [Download](https://github.com/kivS/Fluctus/releases)
