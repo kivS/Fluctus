@@ -1,6 +1,12 @@
 ## What is it?
 
-Fluctus consists of a web extension and a desktop companion app. Videos are played in a floating window that is independant from the browser.
+Fluctus consists of a web extension and a companion player app. Videos & audio are played in a floating window that is independent from the browser.
+
+Fluctus currently supports video & audio from:
+- YouTube
+- Vimeo
+- Twitch
+- Soundcloud
 
 ![Chrome](context_menu.PNG "Example") 
 
@@ -8,18 +14,30 @@ Fluctus consists of a web extension and a desktop companion app. Videos are play
 ### How to install?
 
 
-#### 1. Install and run desktop app(Windows/Linux): 
-   [Download](https://github.com/kivS/Fluctus/releases)
+#### 1. Install and run desktop player): 
+   Operating System | Link
+   --- | ---
+   **Windows** | [Download](https://github.com/kivS/Fluctus/releases)
+   **Linux Ubuntu** | [Download](https://github.com/kivS/Fluctus/releases)
+   
+
 
 
 
 #### 2. Install web extension:
+  Browser | Link
+   --- | ---
+   **Chrome** | [Install](https://chrome.google.com/webstore/detail/fluctus/iadhmckmblfcoipnbjgphhmomfchpboa)
+   **Firefox** | [Install](https://github.com/kivS/Fluctus/releases)
 
-![Chrome](chrome.png "Chrome") 
-[Install](https://chrome.google.com/webstore/detail/fluctus/iadhmckmblfcoipnbjgphhmomfchpboa)
+
 
 ---
 
 
 
-#### 3. Enjoy!
+Source code:
+- [Chrome Extension](https://github.com/kivS/fluctus-chrome-extension)
+- [Firefox Extension](https://github.com/kivS/fluctus-firefox-extension)
+- [Desktop companion app](https://github.com/kivS/Fluctus)
+
