@@ -13,7 +13,7 @@ console.time('APP_START_UP');
 console.time('APP_IMPORTS')
 
 
-import { app, BrowserWindow, Tray, Menu, dialog, shell, screen } from 'electron';
+import { app, BrowserWindow, Tray, Menu, dialog, shell, screen, globalShortcut } from 'electron';
 
 // Make sure that only one instance of the program gets to trive!
 const shouldSeppuku = app.makeSingleInstance((commandLine, workingDirectory) => { });
@@ -36,8 +36,11 @@ import * as utils from './utils'
 console.timeEnd('APP_IMPORTS');
 
 let trayIcon;
+const icon = `${__dirname}/resources/images/icon.png`;
 let playerPanelsContainer = Array();
 let playerPanelCounter = -1;
+// holds the saved by user window reference
+let saved_by_user_window = null;
 
 
 // Set autoUpdater log to winston
@@ -65,6 +68,11 @@ app.on('window-all-closed', () => {
     playerPanelsContainer = Array();
 });
 
+app.on('will-quit', () =>{
+    log.info('app about to close...');
+    // Unregister all shortcuts.
+     globalShortcut.unregisterAll()
+})
 
 
 ////*****************************************************
@@ -92,6 +100,57 @@ autoUpdater.on('error', err => {
 
 
 
+
+
+////*****************************************************
+//             Saved by User Window
+//
+//*****************************************************
+
+function showSavedByUserWindow(){
+    // don't allow multiple 'saved by me' windows
+    if(saved_by_user_window){
+         saved_by_user_window.show();
+         return;
+    }
+
+    saved_by_user_window = new BrowserWindow({
+           width: config.SAVED_BY_USER_WINDOW_WIDTH,
+           height: config.SAVED_BY_USER_WINDOW_HEIGHT,
+           minWidth: config.SAVED_BY_USER_WINDOW_WIDTH,
+           minHeight: config.SAVED_BY_USER_WINDOW_HEIGHT,
+           alwaysOnTop: true, 
+           show: false,
+           backgroundColor: '#36393E',
+           maximizable: false,
+           icon: icon,
+           webPreferences: {
+               preload: path.join(__dirname, 'resources', 'player_panels', 'preload.js'),
+               nodeIntegration: (process.env.NODE_ENV === 'dev')? true:false
+           }
+       });
+
+      saved_by_user_window.loadURL(`file://${__dirname}/resources/player_panels/saved_by_user.html`);
+      
+      // Debug
+      if (process.env.NODE_ENV === 'dev') {
+          saved_by_user_window.webContents.openDevTools({
+              mode: 'detach'
+          });
+      }
+
+      saved_by_user_window.once('ready-to-show', () => {
+        saved_by_user_window.show()
+      })
+
+      saved_by_user_window.on('closed', () =>{
+          saved_by_user_window = null;
+      })
+}
+
+
+
+
 //*****************************************************
 //             Background dog Start
 //
@@ -113,60 +172,23 @@ function start() {
     }
 
 
-    let icon = `${__dirname}/resources/images/icon.png`;
-
     // Set Tray icon
     trayIcon = new Tray(icon);
     trayIcon.setToolTip('Fluctus is waiting..');
 
-    let saved_by_user = null;
+    // global keyboard shortcut to open saved by user window
+    const ret = globalShortcut.register(config.SAVED_BY_USER_WINDOW_KEYBOARD_SHORTCUT, () => {
+        log.info(`Pressed ${config.SAVED_BY_USER_WINDOW_KEYBOARD_SHORTCUT}... Open saved-by-user window!`);
+        showSavedByUserWindow();
+    })
+
     // create menu
     const contextMenu = Menu.buildFromTemplate([
         {    
             label: 'Saved by me!',
+            accelerator: config.SAVED_BY_USER_WINDOW_KEYBOARD_SHORTCUT,
             click: () => {
-               /* // dev debug
-                if(process.env.NODE_ENV === 'dev') {
-                    shell.openItem(path.join(app.getPath('home'), 'fluctus_settings.json'))
-                }*/
-
-               // don't allow multiple 'saved by me' windows
-               if(saved_by_user) return;
-
-               saved_by_user = new BrowserWindow({
-                      width: config.SAVED_BY_USER_WINDOW_WIDTH,
-                      height: config.SAVED_BY_USER_WINDOW_HEIGHT,
-                      minWidth: config.SAVED_BY_USER_WINDOW_WIDTH,
-                      minHeight: config.SAVED_BY_USER_WINDOW_HEIGHT,
-                      alwaysOnTop: true, 
-                      show: false,
-                      backgroundColor: '#36393E',
-                      maximizable: false,
-                      icon: icon,
-                      webPreferences: {
-                          preload: path.join(__dirname, 'resources', 'player_panels', 'preload.js'),
-                          nodeIntegration: (process.env.NODE_ENV === 'dev')? true:false
-                      }
-                  });
-
-                 saved_by_user.loadURL(`file://${__dirname}/resources/player_panels/saved_by_user.html`);
-                 
-                 // Debug
-                 if (process.env.NODE_ENV === 'dev') {
-                     saved_by_user.webContents.openDevTools({
-                         mode: 'detach'
-                     });
-                 }
-
-                 saved_by_user.once('ready-to-show', () => {
-                   saved_by_user.show()
-                 })
-
-                 saved_by_user.on('closed', () =>{
-                     saved_by_user = null;
-                 })
-
-                
+                showSavedByUserWindow();
             }
         },
         {

@@ -143,7 +143,7 @@ function saveItem(data){
     // display notification to user
     const notify = new Notification('Saved!', {
      icon: '../images/icon.png',
-     silent: true,
+     /*silent: true,*/
     });
 
     // make sure notification goes away in a timely manner!
