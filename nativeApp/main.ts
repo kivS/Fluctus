@@ -131,7 +131,10 @@ function start() {
                 }*/
 
                // don't allow multiple 'saved by me' windows
-               if(saved_by_user) return;
+               if(saved_by_user){
+                    saved_by_user.show();
+                    return;
+               }
 
                saved_by_user = new BrowserWindow({
                       width: config.SAVED_BY_USER_WINDOW_WIDTH,
