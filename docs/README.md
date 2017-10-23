@@ -14,21 +14,23 @@ Fluctus currently supports video & audio from:
 ### How to install?
 
 
-#### 1. Install and run desktop player): 
-   Operating System | Link
-   --- | ---
-   **Windows** | [Download](https://github.com/kivS/Fluctus/releases)
-   **Linux Ubuntu** | [Download](https://github.com/kivS/Fluctus/releases)
+#### 1. Install and run desktop player: 
+  - **Windows:** [Download](https://github.com/kivS/Fluctus/releases/download/v1/Fluctus.Setup.2017.10.100.exe)
+
+
+  - **Linux x64:** [Download](https://github.com/kivS/Fluctus/releases/download/v1/Fluctus-2017.10.100-x86_64.AppImage)
    
+   
+  - **Linux x32:** [Download](https://github.com/kivS/Fluctus/releases/download/v1/Fluctus-2017.10.100-ia32.AppImage)
 
 
 
 
 #### 2. Install web extension:
-  Browser | Link
-   --- | ---
-   **Chrome** | [Install](https://chrome.google.com/webstore/detail/fluctus/iadhmckmblfcoipnbjgphhmomfchpboa)
-   **Firefox** | [Install](https://github.com/kivS/Fluctus/releases)
+  - **Chrome:** [Install](https://chrome.google.com/webstore/detail/fluctus/iadhmckmblfcoipnbjgphhmomfchpboa)
+   
+   
+  - **Firefox:** [Install](https://github.com/kivS/Fluctus/releases)
 
 
 
