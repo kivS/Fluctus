@@ -62,202 +62,263 @@ const settings_file_path = path.join(remote.app.getPath('home'), 'fluctus_settin
  }
 
 
-function getEnv(){
-  if(process.env.NODE_ENV){
-    let env;
-    switch (process.env.NODE_ENV) {
-      case "dev":
-      env = 'dev';
-      break;
+ function getEnv(){
+   if(process.env.NODE_ENV){
+     let env;
+     switch (process.env.NODE_ENV) {
+       case "dev":
+       env = 'dev';
+       break;
 
-      case "test":
-      env = 'test';
-      break;
+       case "test":
+       env = 'test';
+       break;
 
-      default:
-      env='prod';
-      break;
-    }
+       default:
+       env='prod';
+       break;
+     }
 
-    return env;
+     return env;
 
-  }else{
-    return 'prod';
-  }
-}
+   }else{
+     return 'prod';
+   }
+ }
 
-function getSettings(){
-  return new Promise((resolve, reject) =>{
-      fs.readFile(settings_file_path, 'utf-8', (err, data) =>{
-        if(err) reject(err);
+ function getSettings(){
+   return new Promise((resolve, reject) =>{
+     fs.readFile(settings_file_path, 'utf-8', (err, data) =>{
+       if(err) reject(err);
 
-        let json_data;
+       let json_data;
 
-        try{
-          json_data = JSON.parse(data)
+       try{
+         json_data = JSON.parse(data)
 
-        }catch(e){
-           reject("error_parsing_settings")
-        }
+       }catch(e){
+         reject("error_parsing_settings")
+       }
 
-        if(json_data) resolve(json_data)
+       if(json_data) resolve(json_data)
 
-      })
+     })
 
-  }).catch(error =>{
-    global['_log'].error(error);
-  })
- 
+   }).catch(error =>{
+     global['_log'].error(error);
+   })
 
-}
+
+ }
 
 
 /**
  * Save item to settings savedList
  * @param {[type]} data [description]
  */
-function saveItem(data){
+ function saveItem(data){
 
-  // hash data to create 32 bits identifier
-  const itemToSaveID = simple_json_hasher(data).toString();
+   // hash data to create 32 bits identifier
+   const itemToSaveID = simple_json_hasher(data).toString();
 
-  const itemToSave = {
+   // get name of current video
+   let name_of_item_promise;
+   let name_of_item_to_save;
 
-      updated_at: new Date().getTime(),
-      created_at: new Date().getTime(),
-      payload: data,
-      name: 'Just some dummy name, You can click here to rename it.'
-  }
+   switch (data.player_type) {
+     case "youtube":
+     console.log('Finding video name of youtube media...');
+       name_of_item_promise = getYoutubeMediaName(data.video_url)
+     break;
 
-  console.log('Item to be saved:', itemToSave);
+     default:
+     console.log('Name of media not found..');
+     // make a resolved promise with null to signal failure to get name
+     name_of_item_promise = Promise.resolve(null);
+     break;
+   }
 
-  // get current settings
-  getSettings().then(settings =>{
-    // add item to saveList
-    settings['savedList'][itemToSaveID] = itemToSave;
-    console.log('Settings:', settings);
+   // wait for name promise
+   name_of_item_promise.then(result => {
 
-    // rewrite settings with changes made
-    saveSettings(settings);
+     name_of_item_to_save = result;
 
-    // display notification to user
-    const notify = new Notification('Saved!', {
-     icon: '../images/icon.png',
-     /*silent: true,*/
-    });
+     const itemToSave = {
 
-    // make sure notification goes away in a timely manner!
-    notify.onshow = () =>{
-      const closeNotifTimeOut = setTimeout( () =>{
-        notify.close();
-        clearTimeout(closeNotifTimeOut);
-      }, 1000)
-    }
+       updated_at: new Date().getTime(),
+       created_at: new Date().getTime(),
+       payload: data,
+       name: !(name_of_item_to_save)? 'Just some dummy name, You can click here to rename it.': name_of_item_to_save
+     }
 
 
-  })
-}
+
+     console.log('Item to be saved:', itemToSave);
+
+     // get current settings
+     getSettings().then(settings =>{
+       // add item to saveList
+       settings['savedList'][itemToSaveID] = itemToSave;
+       console.log('Settings:', settings);
+
+       // rewrite settings with changes made
+       saveSettings(settings);
+
+       // display notification to user
+       const notify = new Notification('Saved!', {
+         icon: '../images/icon.png',
+         /*silent: true,*/
+       });
+
+       // make sure notification goes away in a timely manner!
+       notify.onshow = () =>{
+         const closeNotifTimeOut = setTimeout( () =>{
+           notify.close();
+           clearTimeout(closeNotifTimeOut);
+         }, 1000)
+       }
+
+
+     })
+   })
+
+ }
 
 
 /**
  * Given saved item id, delete it from settings savedList
  * @param {[type]} id [description]
  */
-function deleteItem(id){
-  // get current settings
-  getSettings().then(settings =>{
-    // add item to saveList
-    if(settings['savedList'][id]){
-      console.log('Deleting item with id:', id);
-      delete(settings['savedList'][id]);
+ function deleteItem(id){
+   // get current settings
+   getSettings().then(settings =>{
+     // add item to saveList
+     if(settings['savedList'][id]){
+       console.log('Deleting item with id:', id);
+       delete(settings['savedList'][id]);
 
-      // rewrite settings with changes made
-      saveSettings(settings);
+       // rewrite settings with changes made
+       saveSettings(settings);
 
-    }
-  })
-}
+     }
+   })
+ }
 
 
-function editItem(id, item){
-  console.log('Editing item:', id, item);
+ function editItem(id, item){
+   console.log('Editing item:', id, item);
 
-  // get settings
-  getSettings().then(settings =>{
-    if(settings['savedList'][id]){
-      
+   // get settings
+   getSettings().then(settings =>{
+     if(settings['savedList'][id]){
+
        settings['savedList'][id] = item;
        // update time of update
        settings['savedList'][id]['updated_at'] =  new Date().getTime();
 
        console.log('Edit saved! ID -', id);
 
-      // rewrite settings with changes made
-      saveSettings(settings);
+       // rewrite settings with changes made
+       saveSettings(settings);
 
-    }
-  })
-}
+     }
+   })
+ }
 
 
-function initSettings(){
-  // data to save in settings file
+ function initSettings(){
+   // data to save in settings file
 
-  const data = {
-    'savedList':{
-      'x1':{
-        updated_at: new Date().getTime(),
-        created_at: new Date().getTime(),
-        name: 'Just some dummy name, You can click here to rename it.',
-        payload:{
+   const data = {
+     'savedList':{
+       'x1':{
+         updated_at: new Date().getTime(),
+         created_at: new Date().getTime(),
+         name: 'Just some dummy name, You can click here to rename it.',
+         payload:{
            player_type: 'youtube',
            video_url: 'https://www.youtube.com/watch?v=GrP3jHuLQ9o',
-        },
-      }
-    }
+         },
+       }
+     }
 
-  }
+   }
 
-  // check if settings file exists, if not create one..
-  return new Promise((resolve, reject) =>{
-    fs.stat(settings_file_path, (err, status) =>{
-      if(err) reject(err);
+   // check if settings file exists, if not create one..
+   return new Promise((resolve, reject) =>{
+     fs.stat(settings_file_path, (err, status) =>{
+       if(err) reject(err);
 
-      if(status){
-        global['_log'].info('Settings file is present!');
-        resolve(true)
-      }
+       if(status){
+         global['_log'].info('Settings file is present!');
+         resolve(true)
+       }
 
-    })
-  })
-  .catch(error =>{
-    // 
-    global['_log'].info('No settings file. Creating one..');
-    saveSettings(data)
-  })
+     })
+   })
+   .catch(error =>{
+     // 
+     global['_log'].info('No settings file. Creating one..');
+     saveSettings(data)
+   })
 
-}
+ }
 
 
 /**
  * Given a saved item lets play on the player panel
  * TODO: we need to keep the port in use in memory
  */
-function openPlayerPanel(payload){
+ function openPlayerPanel(payload){
 
-  return make_request('http://localhost:8753/start_player', 'POST', payload)
-    .catch(error =>{
-      global['_log'].error(error);
-    })
+   return make_request('http://localhost:8753/start_player', 'POST', payload)
+   .catch(error =>{
+     global['_log'].error(error);
+   })
 
-}
+ }
 
 /**
  * Rewrite settings file
  * @param {[type]} data [description]
  */
-function saveSettings(data){
-  fs.writeFile(settings_file_path, JSON.stringify(data), (error) =>{
-    if(error) global['_log'].error(error)
-  })
-}
+ function saveSettings(data){
+   fs.writeFile(settings_file_path, JSON.stringify(data), (error) =>{
+     if(error) global['_log'].error(error)
+   })
+ }
+
+
+
+ /**
+  * Get youtube video name
+  * @param {[type]} url [description]
+  */
+  function getYoutubeMediaName(youtube_url){
+    
+    // parse url and get video id
+    const video_id = url.parse(youtube_url, true).query.v;
+    console.log('youtube video id:', video_id);
+
+    // get video info
+    return fetch(`https://youtube.com/get_video_info?video_id=${video_id}`)
+    .then(result => {
+      return result.text() 
+    })
+    .then(data =>{
+      // make a fake url host & add to query string to be able to parse it
+      const video_info = url.parse('https://fake.com?'+data, true).query
+      console.log('video info:', video_info);
+
+      // if video info has title lets return it
+      if(video_info['title']){
+        return video_info['title']
+
+      }else{
+        return null
+      }
+    })
+    .catch(err =>{
+      return null
+    })
+  }
