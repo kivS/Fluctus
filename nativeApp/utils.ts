@@ -6,6 +6,7 @@
 import { config } from './configs'
 import { dialog } from 'electron';
 import fetch from 'node-fetch';
+import * as url from 'url';
 
 const log = global['logger']
 
@@ -145,4 +146,70 @@ export function simple_json_hasher(json_data){
         hash = hash & hash;
     }
     return hash;
+}
+
+
+
+/**
+ * Get youtube video name
+ * @param {[type]} url [description]
+ */
+export function getYoutubeMediaName(youtube_url){
+   
+   // parse url and get video id
+   const video_id = url.parse(youtube_url, true).query.v;
+   console.log('youtube video id:', video_id);
+
+   // get video info
+   return fetch(`https://youtube.com/get_video_info?video_id=${video_id}`)
+   .then(result => {
+     return result.text() 
+   })
+   .then(data =>{
+     // make a fake url host & add to query string to be able to parse it
+     const video_info = url.parse('https://fake.com?'+data, true).query
+     console.log('video info:', video_info);
+
+     // if video info has title lets return it
+     if(video_info['title']){
+       return video_info['title']
+
+     }else{
+       return null
+     }
+   })
+   .catch(err =>{
+     return null
+   })
+ }
+
+
+
+
+/**
+ * Get title of Vimeo video/music
+ * @param {[type]} video_url [description]
+ */
+export function getVimeoMediaName(video_url){
+   console.log('vimeo video url ', video_url);
+
+   // return promise of video title
+   // asking for the oembed of the url gives us the video info 
+   return fetch(`https://vimeo.com/api/oembed.json?url=${video_url}`)
+       .then(result =>{
+           return result.json()
+       })
+       .then(data =>{
+           console.log('result:', data);
+
+           if(data['title']){
+               return data['title']
+
+           }else{
+               return null
+           }
+       })
+       .catch(err =>{
+           return null
+       })
 }

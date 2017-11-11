@@ -2,7 +2,7 @@ import {remote} from 'electron';
 import * as url from 'url';
 import * as path from 'path';
 import * as fs from 'fs';
-import {make_request, simple_json_hasher} from '../../utils.js';
+import {make_request, simple_json_hasher, getYoutubeMediaName, getVimeoMediaName} from '../../utils.js';
 
 // Settings file path
 const settings_file_path = path.join(remote.app.getPath('home'), 'fluctus_settings.json');
@@ -121,20 +121,26 @@ const settings_file_path = path.join(remote.app.getPath('home'), 'fluctus_settin
    // hash data to create 32 bits identifier
    const itemToSaveID = simple_json_hasher(data).toString();
 
-   // get name of current video
+   
    let name_of_item_promise;
    let name_of_item_to_save;
 
+   // get name of current video
    switch (data.player_type) {
      case "youtube":
-     console.log('Finding video name of youtube media...');
+       console.log('Finding video name of youtube media...');
        name_of_item_promise = getYoutubeMediaName(data.video_url)
      break;
 
+     case "vimeo":
+       console.log('Finding video name of vimeo media...');
+       name_of_item_promise = getVimeoMediaName(data.video_url);
+     break;
+
      default:
-     console.log('Name of media not found..');
-     // make a resolved promise with null to signal failure to get name
-     name_of_item_promise = Promise.resolve(null);
+       console.log('Name of media not found..');
+       // make a resolved promise with null to signal failure to get name
+       name_of_item_promise = Promise.resolve(null);
      break;
    }
 
@@ -290,35 +296,3 @@ const settings_file_path = path.join(remote.app.getPath('home'), 'fluctus_settin
 
 
 
- /**
-  * Get youtube video name
-  * @param {[type]} url [description]
-  */
-  function getYoutubeMediaName(youtube_url){
-    
-    // parse url and get video id
-    const video_id = url.parse(youtube_url, true).query.v;
-    console.log('youtube video id:', video_id);
-
-    // get video info
-    return fetch(`https://youtube.com/get_video_info?video_id=${video_id}`)
-    .then(result => {
-      return result.text() 
-    })
-    .then(data =>{
-      // make a fake url host & add to query string to be able to parse it
-      const video_info = url.parse('https://fake.com?'+data, true).query
-      console.log('video info:', video_info);
-
-      // if video info has title lets return it
-      if(video_info['title']){
-        return video_info['title']
-
-      }else{
-        return null
-      }
-    })
-    .catch(err =>{
-      return null
-    })
-  }
