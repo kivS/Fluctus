@@ -30,7 +30,7 @@ Fluctus currently supports video & audio from:
   - **Chrome:** [Install](https://chrome.google.com/webstore/detail/fluctus/iadhmckmblfcoipnbjgphhmomfchpboa)
    
    
-  - **Firefox:** [Install](https://github.com/kivS/Fluctus/releases)
+  - **Firefox:** [Install](https://addons.mozilla.org/en-US/firefox/addon/fluctus-companion/)
 
 
 
