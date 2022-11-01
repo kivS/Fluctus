@@ -46,7 +46,7 @@
     "electron-connect": "^0.6.2",
     "electron-publisher-s3": "^15.0.1",
     "electron-rebuild": "^1.5.7",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "mocha": "^4.0.1",
     "spectron": "^3.6.0",
     "typescript": "^2.4.1"
